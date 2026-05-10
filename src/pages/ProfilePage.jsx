@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
+import { Share } from '@capacitor/share'
 
 const SECTIONS = [
   { key: 'history', label: 'Hair History', placeholder: 'e.g. Heavily bleached 2021–2022, spent 2 years growing it out. Natural color is dark brown.' },
@@ -181,6 +182,19 @@ export default function ProfilePage({ user }) {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  async function nativeShare() {
+    if (!shareUrl) return
+    try {
+      await Share.share({
+        title: 'My hair profile',
+        text: 'Here\'s my hair history before your appointment:',
+        url: shareUrl,
+      })
+    } catch {
+      copyShareLink()
+    }
+  }
+
   async function signOut() {
     await supabase.auth.signOut()
   }
@@ -325,9 +339,17 @@ export default function ProfilePage({ user }) {
 
         {/* Share link */}
         {shareUrl && (
-          <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5">
-            <p className="text-sm font-medium text-stone-100 mb-1">Share with your specialist</p>
-            <p className="text-xs text-stone-500 mb-3">Send this link before your first appointment — no app required for them.</p>
+          <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5 space-y-3">
+            <div>
+              <p className="text-sm font-medium text-stone-100 mb-1">Share with your specialist</p>
+              <p className="text-xs text-stone-500">Send this before your first appointment — no app required on their end.</p>
+            </div>
+            <button
+              onClick={nativeShare}
+              className="w-full py-3 bg-amber-700 text-amber-50 rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors"
+            >
+              Send my hair profile
+            </button>
             <div className="flex gap-2">
               <input
                 readOnly
@@ -336,9 +358,9 @@ export default function ProfilePage({ user }) {
               />
               <button
                 onClick={copyShareLink}
-                className="px-4 py-2 bg-amber-700 text-amber-50 rounded-lg text-xs font-semibold hover:bg-amber-600 transition-colors whitespace-nowrap"
+                className="px-4 py-2 bg-stone-800 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors whitespace-nowrap"
               >
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? 'Copied!' : 'Copy link'}
               </button>
             </div>
           </div>
