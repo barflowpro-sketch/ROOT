@@ -350,19 +350,6 @@ export default function ProfilePage({ user }) {
             >
               Send my hair profile
             </button>
-            <div className="flex gap-2">
-              <input
-                readOnly
-                value={shareUrl}
-                className="flex-1 px-3 py-2 bg-stone-800 border border-stone-700 rounded-lg text-xs text-stone-400 truncate"
-              />
-              <button
-                onClick={copyShareLink}
-                className="px-4 py-2 bg-stone-800 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors whitespace-nowrap"
-              >
-                {copied ? 'Copied!' : 'Copy link'}
-              </button>
-            </div>
           </div>
         )}
       </div>
