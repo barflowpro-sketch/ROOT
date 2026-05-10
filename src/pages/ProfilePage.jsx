@@ -178,6 +178,19 @@ export default function ProfilePage({ user }) {
     await supabase.auth.signOut()
   }
 
+  const completionItems = [
+    { label: 'Name', done: !!profile.name.trim() },
+    { label: 'Photo', done: photos.length > 0 },
+    { label: 'Hair History', done: !!profile.history.trim() },
+    { label: 'What I Love', done: !!profile.loves.trim() },
+    { label: 'What I Hate', done: !!profile.hates.trim() },
+    { label: 'Allergies', done: !!profile.sensitivities.trim() },
+  ]
+  const completedCount = completionItems.filter(i => i.done).length
+  const total = completionItems.length
+  const pct = Math.round((completedCount / total) * 100)
+  const isComplete = completedCount === total
+
   return (
     <div className="min-h-svh bg-stone-50">
       {pendingFile && (
@@ -193,6 +206,29 @@ export default function ProfilePage({ user }) {
           Sign out
         </button>
       </header>
+
+      {/* Completeness bar */}
+      <div className="bg-white border-b border-stone-100 px-6 py-3">
+        <div className="max-w-lg mx-auto">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-stone-500">
+              {isComplete ? 'Profile complete — ready to share!' : `${completedCount} of ${total} sections complete`}
+            </span>
+            <span className="text-xs font-medium text-stone-700">{pct}%</span>
+          </div>
+          <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-green-500' : 'bg-stone-900'}`}
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          {!isComplete && (
+            <p className="text-xs text-stone-400 mt-1.5">
+              Missing: {completionItems.filter(i => !i.done).map(i => i.label).join(', ')}
+            </p>
+          )}
+        </div>
+      </div>
 
       <div className="max-w-lg mx-auto px-6 py-8 space-y-8">
         {/* Name */}
