@@ -18,13 +18,17 @@ export default function SpecialistSignupPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
     } else {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { data: { role: 'specialist' } }
       })
       if (error) setError(error.message)
-      else setSent(true)
+      else if (data.session) {
+        // confirmation off — user is already signed in, App.jsx will redirect
+      } else {
+        setSent(true)
+      }
     }
 
     setLoading(false)
