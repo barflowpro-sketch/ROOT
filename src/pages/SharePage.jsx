@@ -18,10 +18,10 @@ const PHOTO_GROUPS = [
 ]
 
 const LABEL_COLORS = {
-  'before': 'text-blue-700',
-  'after': 'text-green-700',
-  'reference': 'text-purple-700',
-  'never-again': 'text-red-700',
+  'before': 'text-blue-400',
+  'after': 'text-green-400',
+  'reference': 'text-purple-400',
+  'never-again': 'text-red-400',
 }
 
 export default function SharePage() {
@@ -61,17 +61,17 @@ export default function SharePage() {
 
   if (loading) {
     return (
-      <div className="min-h-svh flex items-center justify-center bg-stone-50">
-        <p className="text-stone-400 text-sm">Loading…</p>
+      <div className="min-h-svh flex items-center justify-center bg-stone-950">
+        <p className="text-stone-600 text-sm">Loading…</p>
       </div>
     )
   }
 
   if (notFound) {
     return (
-      <div className="min-h-svh flex items-center justify-center bg-stone-50 px-6">
+      <div className="min-h-svh flex items-center justify-center bg-stone-950 px-6">
         <div className="text-center">
-          <p className="text-stone-900 font-medium">Profile not found</p>
+          <p className="text-stone-100 font-medium">Profile not found</p>
           <p className="text-stone-500 text-sm mt-1">This link may have expired or been removed.</p>
         </div>
       </div>
@@ -83,17 +83,25 @@ export default function SharePage() {
   const hasPhotos = photos.length > 0
 
   return (
-    <div className="min-h-svh bg-stone-50">
-      <header className="bg-white border-b border-stone-200 px-6 py-4">
-        <p className="text-xs text-stone-400 uppercase tracking-widest font-medium">Root — Hair Profile</p>
+    <div className="min-h-svh bg-stone-950">
+      <header className="bg-stone-950 border-b border-stone-800 px-6 py-4">
+        <p className="text-xs text-stone-600 uppercase tracking-widest font-medium">Root — Hair Profile</p>
       </header>
 
       <div className="max-w-lg mx-auto px-6 py-8 space-y-8">
         {/* Identity */}
         <div>
-          <h1 className="text-2xl font-bold text-stone-900">{profile.name || 'Your client'}</h1>
+          <h1 className="text-2xl font-bold text-stone-100">{profile.name || 'Your client'}</h1>
           <p className="text-stone-500 text-sm mt-1">Shared their hair history with you.</p>
         </div>
+
+        {/* Sensitivities — always first */}
+        {profile.sensitivities?.trim() && (
+          <div className="bg-amber-950/40 border border-amber-800/50 rounded-2xl p-5">
+            <h2 className="text-sm font-semibold text-amber-500 mb-2">⚠ Allergies & Sensitivities</h2>
+            <p className="text-sm text-amber-200 whitespace-pre-line">{profile.sensitivities}</p>
+          </div>
+        )}
 
         {/* Photos grouped by label */}
         {hasPhotos && (
@@ -103,7 +111,7 @@ export default function SharePage() {
               if (group.length === 0) return null
               return (
                 <div key={key}>
-                  <h2 className={`text-sm font-semibold mb-2 ${LABEL_COLORS[key]}`}>{label}</h2>
+                  <h2 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${LABEL_COLORS[key]}`}>{label}</h2>
                   <div className="grid grid-cols-3 gap-2">
                     {group.map(photo => (
                       <div key={photo.id} className="aspect-square">
@@ -116,7 +124,7 @@ export default function SharePage() {
             })}
             {unlabeled.length > 0 && (
               <div>
-                <h2 className="text-sm font-semibold text-stone-500 mb-2">Photos</h2>
+                <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500 mb-2">Photos</h2>
                 <div className="grid grid-cols-3 gap-2">
                   {unlabeled.map(photo => (
                     <div key={photo.id} className="aspect-square">
@@ -129,26 +137,18 @@ export default function SharePage() {
           </div>
         )}
 
-        {/* Sensitivities — always show first if filled */}
-        {profile.sensitivities?.trim() && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
-            <h2 className="text-sm font-semibold text-amber-800 mb-2">⚠ Allergies & Sensitivities</h2>
-            <p className="text-sm text-amber-900 whitespace-pre-line">{profile.sensitivities}</p>
-          </div>
-        )}
-
         {/* Other sections */}
         {filled
           .filter(s => s.key !== 'sensitivities')
           .map(({ key, label }) => (
             <div key={key}>
-              <h2 className="text-sm font-medium text-stone-700 mb-2">{label}</h2>
-              <p className="text-sm text-stone-600 whitespace-pre-line leading-relaxed">{profile[key]}</p>
+              <h2 className="text-xs font-medium text-stone-500 uppercase tracking-wider mb-2">{label}</h2>
+              <p className="text-sm text-stone-300 whitespace-pre-line leading-relaxed">{profile[key]}</p>
             </div>
           ))}
 
-        <div className="border-t border-stone-200 pt-6 text-center">
-          <p className="text-xs text-stone-400">Shared via Root · The client owns this profile</p>
+        <div className="border-t border-stone-800 pt-6 text-center">
+          <p className="text-xs text-stone-700">Shared via Root · The client owns this profile</p>
         </div>
       </div>
     </div>

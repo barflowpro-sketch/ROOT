@@ -18,25 +18,25 @@ const LABELS = [
 
 function LabelPicker({ onSelect, onCancel }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60" onClick={onCancel}>
       <div
-        className="w-full max-w-lg bg-white rounded-t-3xl p-6 space-y-3"
+        className="w-full max-w-lg bg-stone-900 border border-stone-800 rounded-t-3xl p-6 space-y-3"
         onClick={e => e.stopPropagation()}
       >
-        <p className="text-sm font-semibold text-stone-900 mb-4">What kind of photo is this?</p>
+        <p className="text-sm font-semibold text-stone-100 mb-4">What kind of photo is this?</p>
         {LABELS.map(({ key, text, desc }) => (
           <button
             key={key}
             onClick={() => onSelect(key)}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors"
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-700 hover:bg-stone-800 transition-colors"
           >
-            <span className="text-sm font-medium text-stone-900">{text}</span>
-            <span className="text-xs text-stone-400">{desc}</span>
+            <span className="text-sm font-medium text-stone-100">{text}</span>
+            <span className="text-xs text-stone-500">{desc}</span>
           </button>
         ))}
         <button
           onClick={onCancel}
-          className="w-full py-3 text-sm text-stone-400 hover:text-stone-600 transition-colors"
+          className="w-full py-3 text-sm text-stone-600 hover:text-stone-400 transition-colors"
         >
           Cancel
         </button>
@@ -46,10 +46,10 @@ function LabelPicker({ onSelect, onCancel }) {
 }
 
 const LABEL_COLORS = {
-  'before': 'bg-blue-100 text-blue-700',
-  'after': 'bg-green-100 text-green-700',
-  'reference': 'bg-purple-100 text-purple-700',
-  'never-again': 'bg-red-100 text-red-700',
+  'before': 'bg-blue-900/60 text-blue-300',
+  'after': 'bg-green-900/60 text-green-300',
+  'reference': 'bg-purple-900/60 text-purple-300',
+  'never-again': 'bg-red-900/60 text-red-300',
 }
 
 const LABEL_TEXT = {
@@ -57,6 +57,13 @@ const LABEL_TEXT = {
   'after': 'After',
   'reference': 'Reference',
   'never-again': 'Never Again',
+}
+
+const SHARE_LABEL_COLORS = {
+  'before': 'text-blue-400',
+  'after': 'text-green-400',
+  'reference': 'text-purple-400',
+  'never-again': 'text-red-400',
 }
 
 export default function ProfilePage({ user }) {
@@ -192,7 +199,7 @@ export default function ProfilePage({ user }) {
   const isComplete = completedCount === total
 
   return (
-    <div className="min-h-svh bg-stone-50">
+    <div className="min-h-svh bg-stone-950">
       {pendingFile && (
         <LabelPicker
           onSelect={handleLabelSelect}
@@ -200,30 +207,30 @@ export default function ProfilePage({ user }) {
         />
       )}
 
-      <header className="bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-stone-900 tracking-tight">Root</h1>
-        <button onClick={signOut} className="text-sm text-stone-400 hover:text-stone-600 transition-colors">
+      <header className="bg-stone-950 border-b border-stone-800 px-6 py-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-stone-100 tracking-tight">Root</h1>
+        <button onClick={signOut} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
           Sign out
         </button>
       </header>
 
       {/* Completeness bar */}
-      <div className="bg-white border-b border-stone-100 px-6 py-3">
+      <div className="bg-stone-900 border-b border-stone-800 px-6 py-3">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs text-stone-500">
               {isComplete ? 'Profile complete — ready to share!' : `${completedCount} of ${total} sections complete`}
             </span>
-            <span className="text-xs font-medium text-stone-700">{pct}%</span>
+            <span className="text-xs font-medium text-amber-600">{pct}%</span>
           </div>
-          <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-stone-800 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-green-500' : 'bg-stone-900'}`}
+              className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-green-500' : 'bg-amber-700'}`}
               style={{ width: `${pct}%` }}
             />
           </div>
           {!isComplete && (
-            <p className="text-xs text-stone-400 mt-1.5">
+            <p className="text-xs text-stone-600 mt-1.5">
               Missing: {completionItems.filter(i => !i.done).map(i => i.label).join(', ')}
             </p>
           )}
@@ -233,24 +240,24 @@ export default function ProfilePage({ user }) {
       <div className="max-w-lg mx-auto px-6 py-8 space-y-8">
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-stone-700 mb-1">Your name</label>
+          <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Your name</label>
           <input
             type="text"
             value={profile.name}
             onChange={e => setProfile(p => ({ ...p, name: e.target.value }))}
-            className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
-            placeholder="What should stylists call you?"
+            className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+            placeholder="What should your stylist call you?"
           />
         </div>
 
         {/* Photos */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-medium text-stone-700">Photos</h2>
+            <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider">Photos</h2>
             <button
               onClick={() => fileRef.current.click()}
               disabled={uploading}
-              className="text-xs font-medium text-stone-900 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+              className="text-xs font-medium text-amber-600 hover:text-amber-500 px-3 py-1.5 rounded-lg border border-stone-800 hover:border-stone-700 transition-colors disabled:opacity-50"
             >
               {uploading ? 'Uploading…' : '+ Add photo'}
             </button>
@@ -260,7 +267,7 @@ export default function ProfilePage({ user }) {
           {photos.length === 0 ? (
             <button
               onClick={() => fileRef.current.click()}
-              className="w-full border-2 border-dashed border-stone-200 rounded-2xl py-10 text-stone-400 text-sm hover:border-stone-300 transition-colors"
+              className="w-full border-2 border-dashed border-stone-800 rounded-2xl py-10 text-stone-600 text-sm hover:border-stone-700 transition-colors"
             >
               Add your first photo — before, after, reference, or "never again"
             </button>
@@ -270,13 +277,13 @@ export default function ProfilePage({ user }) {
                 <div key={photo.id} className="relative group aspect-square">
                   <img src={photo.url} alt="" className="w-full h-full object-cover rounded-xl" />
                   {photo.label && (
-                    <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-stone-100 text-stone-600'}`}>
+                    <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-stone-800 text-stone-400'}`}>
                       {LABEL_TEXT[photo.label] || photo.label}
                     </span>
                   )}
                   <button
                     onClick={() => deletePhoto(photo)}
-                    className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-1 right-1 bg-black/70 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     ×
                   </button>
@@ -285,7 +292,7 @@ export default function ProfilePage({ user }) {
               <button
                 onClick={() => fileRef.current.click()}
                 disabled={uploading}
-                className="aspect-square border-2 border-dashed border-stone-200 rounded-xl text-stone-400 text-2xl hover:border-stone-300 transition-colors flex items-center justify-center"
+                className="aspect-square border-2 border-dashed border-stone-800 rounded-xl text-stone-600 text-2xl hover:border-stone-700 transition-colors flex items-center justify-center"
               >
                 +
               </button>
@@ -296,12 +303,12 @@ export default function ProfilePage({ user }) {
         {/* Text sections */}
         {SECTIONS.map(({ key, label, placeholder }) => (
           <div key={key}>
-            <label className="block text-sm font-medium text-stone-700 mb-1">{label}</label>
+            <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">{label}</label>
             <textarea
               value={profile[key]}
               onChange={e => setProfile(p => ({ ...p, [key]: e.target.value }))}
               rows={3}
-              className="w-full px-4 py-3 rounded-xl border border-stone-200 bg-white text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900 resize-none"
+              className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 resize-none placeholder:text-stone-600"
               placeholder={placeholder}
             />
           </div>
@@ -311,25 +318,25 @@ export default function ProfilePage({ user }) {
         <button
           onClick={save}
           disabled={saving}
-          className="w-full py-3 bg-stone-900 text-white rounded-xl text-sm font-medium hover:bg-stone-800 transition-colors disabled:opacity-50"
+          className="w-full py-3 bg-amber-700 text-amber-50 rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
         >
           {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save profile'}
         </button>
 
         {/* Share link */}
         {shareUrl && (
-          <div className="bg-white border border-stone-200 rounded-2xl p-5">
-            <p className="text-sm font-medium text-stone-900 mb-1">Share with your stylist</p>
+          <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5">
+            <p className="text-sm font-medium text-stone-100 mb-1">Share with your stylist</p>
             <p className="text-xs text-stone-500 mb-3">Send this link before your first appointment — no app required for them.</p>
             <div className="flex gap-2">
               <input
                 readOnly
                 value={shareUrl}
-                className="flex-1 px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-xs text-stone-600 truncate"
+                className="flex-1 px-3 py-2 bg-stone-800 border border-stone-700 rounded-lg text-xs text-stone-400 truncate"
               />
               <button
                 onClick={copyShareLink}
-                className="px-4 py-2 bg-stone-900 text-white rounded-lg text-xs font-medium hover:bg-stone-800 transition-colors whitespace-nowrap"
+                className="px-4 py-2 bg-amber-700 text-amber-50 rounded-lg text-xs font-semibold hover:bg-amber-600 transition-colors whitespace-nowrap"
               >
                 {copied ? 'Copied!' : 'Copy'}
               </button>
