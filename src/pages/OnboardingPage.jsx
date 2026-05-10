@@ -11,7 +11,7 @@ export default function OnboardingPage({ onDone }) {
           {[
             { icon: '📸', title: 'Document your hair', desc: 'Add photos — before, after, inspiration, and the ones you never want repeated.' },
             { icon: '📋', title: 'Build your hair file', desc: 'Record your history, what you love, what you hate, and any allergies or sensitivities.' },
-            { icon: '🔗', title: 'Share with any stylist', desc: 'Send one link before your first appointment. No app required on their end.' },
+            { icon: '🔗', title: 'Share with any specialist', desc: 'Send one link before your first appointment. No app required on their end.' },
           ].map(({ icon, title, desc }) => (
             <div key={title} className="flex gap-4 items-start">
               <span className="text-2xl">{icon}</span>

@@ -92,7 +92,7 @@ export default function SharePage() {
         {/* Identity */}
         <div>
           <h1 className="text-2xl font-bold text-stone-100">{profile.name || 'Your client'}</h1>
-          <p className="text-stone-500 text-sm mt-1">Shared their hair history with you.</p>
+          <p className="text-stone-500 text-sm mt-1">Shared their hair history with their specialist.</p>
         </div>
 
         {/* Sensitivities — always first */}

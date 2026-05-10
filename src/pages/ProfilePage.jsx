@@ -246,7 +246,7 @@ export default function ProfilePage({ user }) {
             value={profile.name}
             onChange={e => setProfile(p => ({ ...p, name: e.target.value }))}
             className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
-            placeholder="What should your stylist call you?"
+            placeholder="What should your specialist call you?"
           />
         </div>
 
@@ -326,7 +326,7 @@ export default function ProfilePage({ user }) {
         {/* Share link */}
         {shareUrl && (
           <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5">
-            <p className="text-sm font-medium text-stone-100 mb-1">Share with your stylist</p>
+            <p className="text-sm font-medium text-stone-100 mb-1">Share with your specialist</p>
             <p className="text-xs text-stone-500 mb-3">Send this link before your first appointment — no app required for them.</p>
             <div className="flex gap-2">
               <input
