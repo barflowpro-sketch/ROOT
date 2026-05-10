@@ -10,6 +10,20 @@ const SECTIONS = [
   { key: 'notes', label: 'Other Notes' },
 ]
 
+const PHOTO_GROUPS = [
+  { key: 'before', label: 'Before' },
+  { key: 'after', label: 'After' },
+  { key: 'reference', label: 'Reference' },
+  { key: 'never-again', label: 'Never Again' },
+]
+
+const LABEL_COLORS = {
+  'before': 'text-blue-700',
+  'after': 'text-green-700',
+  'reference': 'text-purple-700',
+  'never-again': 'text-red-700',
+}
+
 export default function SharePage() {
   const { token } = useParams()
   const [profile, setProfile] = useState(null)
@@ -65,6 +79,8 @@ export default function SharePage() {
   }
 
   const filled = SECTIONS.filter(s => profile[s.key]?.trim())
+  const unlabeled = photos.filter(p => !p.label)
+  const hasPhotos = photos.length > 0
 
   return (
     <div className="min-h-svh bg-stone-50">
@@ -79,21 +95,37 @@ export default function SharePage() {
           <p className="text-stone-500 text-sm mt-1">Shared their hair history with you.</p>
         </div>
 
-        {/* Photos */}
-        {photos.length > 0 && (
-          <div>
-            <h2 className="text-sm font-medium text-stone-700 mb-3">Photos</h2>
-            <div className="grid grid-cols-3 gap-2">
-              {photos.map(photo => (
-                <div key={photo.id} className="aspect-square">
-                  <img
-                    src={photo.url}
-                    alt=""
-                    className="w-full h-full object-cover rounded-xl"
-                  />
+        {/* Photos grouped by label */}
+        {hasPhotos && (
+          <div className="space-y-6">
+            {PHOTO_GROUPS.map(({ key, label }) => {
+              const group = photos.filter(p => p.label === key)
+              if (group.length === 0) return null
+              return (
+                <div key={key}>
+                  <h2 className={`text-sm font-semibold mb-2 ${LABEL_COLORS[key]}`}>{label}</h2>
+                  <div className="grid grid-cols-3 gap-2">
+                    {group.map(photo => (
+                      <div key={photo.id} className="aspect-square">
+                        <img src={photo.url} alt="" className="w-full h-full object-cover rounded-xl" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
+              )
+            })}
+            {unlabeled.length > 0 && (
+              <div>
+                <h2 className="text-sm font-semibold text-stone-500 mb-2">Photos</h2>
+                <div className="grid grid-cols-3 gap-2">
+                  {unlabeled.map(photo => (
+                    <div key={photo.id} className="aspect-square">
+                      <img src={photo.url} alt="" className="w-full h-full object-cover rounded-xl" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

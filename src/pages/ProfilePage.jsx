@@ -9,6 +9,56 @@ const SECTIONS = [
   { key: 'notes', label: 'Anything Else', placeholder: 'e.g. I process fast. I always want to go lighter than I think I do.' },
 ]
 
+const LABELS = [
+  { key: 'before', text: 'Before', desc: 'My current state' },
+  { key: 'after', text: 'After', desc: 'A result I loved' },
+  { key: 'reference', text: 'Reference', desc: 'My goal / inspiration' },
+  { key: 'never-again', text: 'Never Again', desc: 'A result I hated' },
+]
+
+function LabelPicker({ onSelect, onCancel }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={onCancel}>
+      <div
+        className="w-full max-w-lg bg-white rounded-t-3xl p-6 space-y-3"
+        onClick={e => e.stopPropagation()}
+      >
+        <p className="text-sm font-semibold text-stone-900 mb-4">What kind of photo is this?</p>
+        {LABELS.map(({ key, text, desc }) => (
+          <button
+            key={key}
+            onClick={() => onSelect(key)}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-200 hover:bg-stone-50 transition-colors"
+          >
+            <span className="text-sm font-medium text-stone-900">{text}</span>
+            <span className="text-xs text-stone-400">{desc}</span>
+          </button>
+        ))}
+        <button
+          onClick={onCancel}
+          className="w-full py-3 text-sm text-stone-400 hover:text-stone-600 transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  )
+}
+
+const LABEL_COLORS = {
+  'before': 'bg-blue-100 text-blue-700',
+  'after': 'bg-green-100 text-green-700',
+  'reference': 'bg-purple-100 text-purple-700',
+  'never-again': 'bg-red-100 text-red-700',
+}
+
+const LABEL_TEXT = {
+  'before': 'Before',
+  'after': 'After',
+  'reference': 'Reference',
+  'never-again': 'Never Again',
+}
+
 export default function ProfilePage({ user }) {
   const [profile, setProfile] = useState({
     name: '',
@@ -24,6 +74,7 @@ export default function ProfilePage({ user }) {
   const [saved, setSaved] = useState(false)
   const [shareUrl, setShareUrl] = useState(null)
   const [copied, setCopied] = useState(false)
+  const [pendingFile, setPendingFile] = useState(null)
   const fileRef = useRef()
 
   useEffect(() => {
@@ -66,15 +117,14 @@ export default function ProfilePage({ user }) {
       .single()
 
     const shareToken = existing?.share_token || crypto.randomUUID()
-
     const payload = { ...profile, user_id: user.id, share_token: shareToken }
 
     if (existing) {
       const { error } = await supabase.from('profiles').update(payload).eq('user_id', user.id)
-      if (error) { console.error('update error', error); alert(error.message); setSaving(false); return }
+      if (error) { alert(error.message); setSaving(false); return }
     } else {
       const { error } = await supabase.from('profiles').insert(payload)
-      if (error) { console.error('insert error', error); alert(error.message); setSaving(false); return }
+      if (error) { alert(error.message); setSaving(false); return }
     }
 
     setShareUrl(`${window.location.origin}/share/${shareToken}`)
@@ -83,9 +133,16 @@ export default function ProfilePage({ user }) {
     setTimeout(() => setSaved(false), 2000)
   }
 
-  async function uploadPhoto(e) {
+  function handleFileChange(e) {
     const file = e.target.files[0]
     if (!file) return
+    setPendingFile(file)
+    fileRef.current.value = ''
+  }
+
+  async function handleLabelSelect(label) {
+    const file = pendingFile
+    setPendingFile(null)
     setUploading(true)
 
     const reader = new FileReader()
@@ -94,15 +151,13 @@ export default function ProfilePage({ user }) {
 
       const { data: photoRow, error } = await supabase
         .from('photos')
-        .insert({ user_id: user.id, url: base64, storage_path: '' })
+        .insert({ user_id: user.id, url: base64, storage_path: '', label })
         .select()
         .single()
 
       if (error) alert(error.message)
       if (photoRow) setPhotos(prev => [photoRow, ...prev])
-
       setUploading(false)
-      fileRef.current.value = ''
     }
     reader.readAsDataURL(file)
   }
@@ -125,6 +180,13 @@ export default function ProfilePage({ user }) {
 
   return (
     <div className="min-h-svh bg-stone-50">
+      {pendingFile && (
+        <LabelPicker
+          onSelect={handleLabelSelect}
+          onCancel={() => setPendingFile(null)}
+        />
+      )}
+
       <header className="bg-white border-b border-stone-200 px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-stone-900 tracking-tight">Root</h1>
         <button onClick={signOut} className="text-sm text-stone-400 hover:text-stone-600 transition-colors">
@@ -157,7 +219,7 @@ export default function ProfilePage({ user }) {
               {uploading ? 'Uploading…' : '+ Add photo'}
             </button>
           </div>
-          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={uploadPhoto} />
+          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
 
           {photos.length === 0 ? (
             <button
@@ -170,11 +232,12 @@ export default function ProfilePage({ user }) {
             <div className="grid grid-cols-3 gap-2">
               {photos.map(photo => (
                 <div key={photo.id} className="relative group aspect-square">
-                  <img
-                    src={photo.url}
-                    alt=""
-                    className="w-full h-full object-cover rounded-xl"
-                  />
+                  <img src={photo.url} alt="" className="w-full h-full object-cover rounded-xl" />
+                  {photo.label && (
+                    <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-stone-100 text-stone-600'}`}>
+                      {LABEL_TEXT[photo.label] || photo.label}
+                    </span>
+                  )}
                   <button
                     onClick={() => deletePhoto(photo)}
                     className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
