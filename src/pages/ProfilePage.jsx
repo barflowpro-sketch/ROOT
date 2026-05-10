@@ -102,7 +102,7 @@ export default function ProfilePage({ user }) {
           sensitivities: data.sensitivities || '',
           notes: data.notes || '',
         })
-        setShareUrl(`${window.location.origin}/share/${data.share_token}`)
+        setShareUrl(`${import.meta.env.VITE_APP_URL || window.location.origin}/share/${data.share_token}`)
       }
 
       const { data: photoData } = await supabase
@@ -135,7 +135,7 @@ export default function ProfilePage({ user }) {
       if (error) { alert(error.message); setSaving(false); return }
     }
 
-    setShareUrl(`${window.location.origin}/share/${shareToken}`)
+    setShareUrl(`${import.meta.env.VITE_APP_URL || window.location.origin}/share/${shareToken}`)
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
