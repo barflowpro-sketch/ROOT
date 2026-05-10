@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
-export default function AuthPage() {
-  const [mode, setMode] = useState('signin')
+export default function SpecialistSignupPage() {
+  const [mode, setMode] = useState('signup')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
@@ -18,7 +18,11 @@ export default function AuthPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
     } else {
-      const { error } = await supabase.auth.signUp({ email, password })
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { role: 'specialist' } }
+      })
       if (error) setError(error.message)
       else setSent(true)
     }
@@ -41,9 +45,23 @@ export default function AuthPage() {
   return (
     <div className="min-h-svh flex items-center justify-center px-6 bg-stone-950">
       <div className="w-full max-w-sm">
-        <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-stone-100 tracking-tight">Root</h1>
-          <p className="text-stone-500 text-sm mt-2">Your hair history, wherever you go.</p>
+        <div className="mb-10">
+          <a href="/" className="text-stone-600 text-sm hover:text-stone-400 transition-colors">← Back</a>
+          <h1 className="text-3xl font-bold text-stone-100 tracking-tight mt-4">Join as a specialist</h1>
+          <p className="text-stone-500 text-sm mt-2">Get discovered by clients who already know their hair history.</p>
+        </div>
+
+        <div className="bg-stone-900 border border-stone-800 rounded-2xl p-4 mb-6 space-y-2">
+          {[
+            'Clients arrive with their full hair history',
+            'No more cold consultations',
+            'Get discovered by new clients in your city',
+          ].map(item => (
+            <div key={item} className="flex items-start gap-2">
+              <span className="text-amber-600 mt-0.5">✓</span>
+              <p className="text-xs text-stone-400">{item}</p>
+            </div>
+          ))}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,29 +96,19 @@ export default function AuthPage() {
             disabled={loading}
             className="w-full py-3 bg-amber-700 text-amber-50 rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
           >
-            {loading ? 'Please wait…' : mode === 'signin' ? 'Sign in' : 'Create account'}
+            {loading ? 'Please wait…' : mode === 'signin' ? 'Sign in' : 'Create specialist account'}
           </button>
         </form>
 
         <p className="text-center text-sm text-stone-600 mt-8">
-          {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
+          {mode === 'signup' ? 'Already have an account? ' : "Don't have an account? "}
           <button
-            onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(null) }}
+            onClick={() => { setMode(mode === 'signup' ? 'signin' : 'signup'); setError(null) }}
             className="text-amber-600 font-medium hover:text-amber-500 transition-colors"
           >
-            {mode === 'signin' ? 'Sign up' : 'Sign in'}
+            {mode === 'signup' ? 'Sign in' : 'Sign up'}
           </button>
         </p>
-
-        <div className="mt-6 pt-6 border-t border-stone-800 text-center">
-          <p className="text-xs text-stone-600 mb-1">Are you a specialist?</p>
-          <a
-            href="/specialist/signup"
-            className="text-sm text-amber-600 font-medium hover:text-amber-500 transition-colors"
-          >
-            Join as a specialist →
-          </a>
-        </div>
       </div>
     </div>
   )
