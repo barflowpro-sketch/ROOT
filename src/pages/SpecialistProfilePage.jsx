@@ -105,10 +105,14 @@ export default function SpecialistProfilePage({ user }) {
     await supabase.auth.signOut()
   }
 
-  const STATUS_COLORS = {
-    pending: 'text-amber-500',
-    accepted: 'text-green-500',
-    declined: 'text-red-500',
+  const [activeTab, setActiveTab] = useState('requests')
+
+  const pending = bookings.filter(b => b.status === 'pending')
+  const upcoming = bookings.filter(b => b.status === 'accepted')
+
+  function formatDateTime(date, time) {
+    const d = new Date(date)
+    return `${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at ${time?.slice(0, 5)}`
   }
 
   return (
@@ -190,65 +194,115 @@ export default function SpecialistProfilePage({ user }) {
           </button>
         </div>
 
-        {/* Booking requests */}
-        <div className="space-y-4">
-          <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider">Booking Requests</h2>
+        {/* Tabs */}
+        <div>
+          <div className="flex border-b border-stone-800 mb-5">
+            <button
+              onClick={() => setActiveTab('requests')}
+              className={`flex-1 py-2.5 text-xs font-medium transition-colors relative ${activeTab === 'requests' ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
+            >
+              Requests
+              {pending.length > 0 && (
+                <span className="ml-1.5 bg-amber-700 text-amber-50 text-xs rounded-full px-1.5 py-0.5">{pending.length}</span>
+              )}
+              {activeTab === 'requests' && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-600" />}
+            </button>
+            <button
+              onClick={() => setActiveTab('upcoming')}
+              className={`flex-1 py-2.5 text-xs font-medium transition-colors relative ${activeTab === 'upcoming' ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
+            >
+              Upcoming
+              {activeTab === 'upcoming' && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-600" />}
+            </button>
+          </div>
 
-          {bookings.length === 0 ? (
-            <div className="bg-stone-900 border border-stone-800 rounded-2xl p-6 text-center">
-              <p className="text-stone-500 text-sm">No booking requests yet.</p>
-              <p className="text-stone-600 text-xs mt-1">Complete your profile so clients can find you.</p>
-            </div>
-          ) : (
-            bookings.map(booking => (
-              <div key={booking.id} className="bg-stone-900 border border-stone-800 rounded-2xl p-5 space-y-3">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-stone-100">
-                      {booking.client_profile?.name || booking.client?.email}
-                    </p>
-                    <p className="text-xs text-stone-500 mt-0.5">
-                      {new Date(booking.requested_date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at {booking.requested_time?.slice(0, 5)}
-                    </p>
-                  </div>
-                  <span className={`text-xs font-medium capitalize ${STATUS_COLORS[booking.status]}`}>
-                    {booking.status}
-                  </span>
+          {/* Requests tab */}
+          {activeTab === 'requests' && (
+            <div className="space-y-3">
+              {pending.length === 0 ? (
+                <div className="bg-stone-900 border border-stone-800 rounded-2xl p-6 text-center">
+                  <p className="text-stone-500 text-sm">No pending requests.</p>
+                  <p className="text-stone-600 text-xs mt-1">Complete your profile so clients can find you.</p>
                 </div>
+              ) : (
+                pending.map(booking => (
+                  <div key={booking.id} className="bg-stone-900 border border-stone-800 rounded-2xl p-5 space-y-3">
+                    <div>
+                      <p className="text-sm font-semibold text-stone-100">
+                        {booking.client_profile?.name || 'Client'}
+                      </p>
+                      <p className="text-xs text-stone-500 mt-0.5">{formatDateTime(booking.requested_date, booking.requested_time)}</p>
+                    </div>
 
-                {booking.client_note && (
-                  <p className="text-xs text-stone-400 bg-stone-800 rounded-lg px-3 py-2">{booking.client_note}</p>
-                )}
+                    {booking.client_note && (
+                      <p className="text-xs text-stone-400 bg-stone-800 rounded-lg px-3 py-2">{booking.client_note}</p>
+                    )}
 
-                {booking.client_profile?.share_token && (
-                  <a
-                    href={`/share/${booking.client_profile.share_token}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="block text-xs text-amber-600 hover:text-amber-500 transition-colors"
-                  >
-                    View hair profile →
-                  </a>
-                )}
+                    {booking.client_profile?.share_token && (
+                      <a
+                        href={`/share/${booking.client_profile.share_token}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block text-xs text-amber-600 hover:text-amber-500 transition-colors"
+                      >
+                        View hair profile →
+                      </a>
+                    )}
 
-                {booking.status === 'pending' && (
-                  <div className="flex gap-2 pt-1">
-                    <button
-                      onClick={() => respondToBooking(booking.id, 'accepted')}
-                      className="flex-1 py-2 bg-green-800 text-green-200 rounded-lg text-xs font-medium hover:bg-green-700 transition-colors"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      onClick={() => respondToBooking(booking.id, 'declined')}
-                      className="flex-1 py-2 bg-stone-800 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
-                    >
-                      Decline
-                    </button>
+                    <div className="flex gap-2 pt-1">
+                      <button
+                        onClick={() => respondToBooking(booking.id, 'accepted')}
+                        className="flex-1 py-2 bg-green-800 text-green-200 rounded-lg text-xs font-medium hover:bg-green-700 transition-colors"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => respondToBooking(booking.id, 'declined')}
+                        className="flex-1 py-2 bg-stone-800 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+                      >
+                        Decline
+                      </button>
+                    </div>
                   </div>
-                )}
-              </div>
-            ))
+                ))
+              )}
+            </div>
+          )}
+
+          {/* Upcoming tab */}
+          {activeTab === 'upcoming' && (
+            <div className="space-y-3">
+              {upcoming.length === 0 ? (
+                <div className="bg-stone-900 border border-stone-800 rounded-2xl p-6 text-center">
+                  <p className="text-stone-500 text-sm">No confirmed appointments yet.</p>
+                </div>
+              ) : (
+                upcoming.map(booking => (
+                  <div key={booking.id} className="bg-stone-900 border border-stone-800 rounded-2xl p-5 space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-stone-100">
+                          {booking.client_profile?.name || 'Client'}
+                        </p>
+                        <p className="text-xs text-stone-500 mt-0.5">{formatDateTime(booking.requested_date, booking.requested_time)}</p>
+                      </div>
+                      <span className="text-xs font-medium text-green-500">Confirmed</span>
+                    </div>
+
+                    {booking.client_profile?.share_token && (
+                      <a
+                        href={`/share/${booking.client_profile.share_token}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block text-xs text-amber-600 hover:text-amber-500 transition-colors"
+                      >
+                        View hair profile →
+                      </a>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
           )}
         </div>
       </div>
