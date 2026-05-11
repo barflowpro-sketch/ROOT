@@ -108,8 +108,11 @@ export default function ClientBookingsPage({ user }) {
 
   return (
     <div className="min-h-svh bg-stone-950">
-      <header className="bg-stone-950 border-b border-stone-800 px-6 py-4">
+      <header className="bg-stone-950 border-b border-stone-800 px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-stone-100 tracking-tight">My Appointments</h1>
+        <button onClick={() => supabase.auth.signOut()} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
+          Sign out
+        </button>
       </header>
 
       <div className="max-w-lg mx-auto px-6 py-6">

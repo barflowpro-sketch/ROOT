@@ -37,9 +37,14 @@ export default function DiscoveryPage({ user, onBook }) {
 
   return (
     <div className="min-h-svh bg-stone-950">
-      <header className="bg-stone-950 border-b border-stone-800 px-6 py-4">
-        <h1 className="text-xl font-bold text-stone-100 tracking-tight">Find a Specialist</h1>
-        <p className="text-xs text-stone-500 mt-0.5">Search by city and service</p>
+      <header className="bg-stone-950 border-b border-stone-800 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-stone-100 tracking-tight">Find a Specialist</h1>
+          <p className="text-xs text-stone-500 mt-0.5">Search by city and service</p>
+        </div>
+        <button onClick={() => supabase.auth.signOut()} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
+          Sign out
+        </button>
       </header>
 
       <div className="max-w-lg mx-auto px-6 py-6 space-y-6">
