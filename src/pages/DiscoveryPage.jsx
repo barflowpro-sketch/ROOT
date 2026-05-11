@@ -47,8 +47,10 @@ export default function DiscoveryPage({ user, onBook }) {
       query = query.contains('services', [service])
     }
 
-    const { data } = await query
+    const { data, error } = await query
+    console.log('search data:', data, 'error:', error)
     const filtered = (data || []).filter(s => s.services?.length > 0)
+    console.log('filtered:', filtered)
 
     if (filtered.length > 0) {
       const specialistIds = filtered.map(s => s.user_id)
