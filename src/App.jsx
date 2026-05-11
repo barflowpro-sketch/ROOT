@@ -14,9 +14,11 @@ import SpecialistProfilePage from './pages/SpecialistProfilePage'
 import DiscoveryPage from './pages/DiscoveryPage'
 import BookingModal from './components/BookingModal'
 import ClientBookingsPage from './pages/ClientBookingsPage'
+import SpecialistDetailPage from './pages/SpecialistDetailPage'
 
 const CLIENT_ONBOARDING_KEY = 'root_onboarded'
 const SPECIALIST_ONBOARDING_KEY = 'root_specialist_onboarded'
+const SEEN_NOTIFICATIONS_KEY = 'root_seen_notifications'
 
 function App() {
   const { user, loading } = useAuth()
@@ -26,6 +28,8 @@ function App() {
   const [activeTab, setActiveTab] = useState('profile')
   const [bookingTarget, setBookingTarget] = useState(null)
   const [bookingSuccess, setBookingSuccess] = useState(false)
+  const [viewingSpecialist, setViewingSpecialist] = useState(null)
+  const [appointmentBadge, setAppointmentBadge] = useState(0)
 
   useEffect(() => {
     if (!user) { setRoleLoading(false); return }
@@ -41,6 +45,18 @@ function App() {
     setRole('client')
     setOnboarded(!!localStorage.getItem(CLIENT_ONBOARDING_KEY))
     setRoleLoading(false)
+
+    supabase
+      .from('bookings')
+      .select('id')
+      .eq('client_id', user.id)
+      .in('status', ['accepted', 'declined'])
+      .then(({ data }) => {
+        if (!data) return
+        const seen = JSON.parse(localStorage.getItem(SEEN_NOTIFICATIONS_KEY) || '[]')
+        const unseen = data.filter(b => !seen.includes(b.id))
+        setAppointmentBadge(unseen.length)
+      })
   }, [user])
 
   useEffect(() => {
@@ -87,6 +103,14 @@ function App() {
             !onboarded && role === 'client' ? <OnboardingPage onDone={completeOnboarding} /> :
             role === 'specialist' ? <SpecialistProfilePage user={user} /> :
             <>
+              {viewingSpecialist && (
+                <SpecialistDetailPage
+                  specialist={viewingSpecialist}
+                  onBack={() => setViewingSpecialist(null)}
+                  onBook={s => { setViewingSpecialist(null); setBookingTarget(s) }}
+                />
+              )}
+
               {bookingTarget && (
                 <BookingModal
                   specialist={bookingTarget}
@@ -104,7 +128,7 @@ function App() {
 
               <div className="pb-20">
                 {activeTab === 'profile' && <ProfilePage user={user} />}
-                {activeTab === 'discover' && <DiscoveryPage user={user} onBook={setBookingTarget} />}
+                {activeTab === 'discover' && <DiscoveryPage user={user} onView={setViewingSpecialist} />}
                 {activeTab === 'bookings' && <ClientBookingsPage user={user} />}
               </div>
 
@@ -122,10 +146,28 @@ function App() {
                   Find
                 </button>
                 <button
-                  onClick={() => setActiveTab('bookings')}
-                  className={`flex-1 py-4 text-xs font-medium transition-colors ${activeTab === 'bookings' ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
+                  onClick={() => {
+                    setActiveTab('bookings')
+                    if (appointmentBadge > 0) {
+                      supabase
+                        .from('bookings')
+                        .select('id')
+                        .eq('client_id', user.id)
+                        .in('status', ['accepted', 'declined'])
+                        .then(({ data }) => {
+                          if (data) localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(data.map(b => b.id)))
+                        })
+                      setAppointmentBadge(0)
+                    }
+                  }}
+                  className={`flex-1 py-4 text-xs font-medium transition-colors relative ${activeTab === 'bookings' ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
                 >
                   Appointments
+                  {appointmentBadge > 0 && (
+                    <span className="absolute top-2.5 right-1/4 translate-x-3 bg-amber-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
+                      {appointmentBadge}
+                    </span>
+                  )}
                 </button>
               </nav>
             </>

@@ -1,13 +1,31 @@
 import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
+import ClientHairProfileModal from '../components/ClientHairProfileModal'
 
-const SERVICES = [
-  'Hair color',
-  'Haircut',
-  'Braids & locs',
-  'Natural hair',
-  'Beard grooming',
+const SERVICE_GROUPS = [
+  {
+    label: 'General',
+    services: ['Hair color', 'Haircut', 'Beard grooming'],
+  },
+  {
+    label: 'Braids',
+    services: [
+      'Box Braids', 'Cornrows', 'Feed-In Braids', 'Goddess Braids',
+      'Ghana Braids', 'Lemonade Braids', 'Knotless Braids', 'Jumbo Knotless',
+      'Senegalese Twist', 'Crochet Braids', 'Faux Locs', 'Butterfly Locs',
+      'African Braiding', 'Kids Braids',
+    ],
+  },
+  {
+    label: 'Locs',
+    services: [
+      'Starter Locs', 'Loc Retwist', 'Loc Maintenance',
+      'Loc Extensions', 'Loc Detox', 'Dreadlocks', 'Sisterlocks',
+    ],
+  },
 ]
+
+const ALL_DEFAULT_SERVICES = SERVICE_GROUPS.flatMap(g => g.services)
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -24,13 +42,20 @@ export default function SpecialistProfilePage({ user }) {
   const [profile, setProfile] = useState({
     name: '', bio: '', city: '', services: [], photo: '',
     available_days: [], available_start: '09:00', available_end: '18:00',
+    service_prices: {},
   })
   const photoRef = useRef()
+  const portfolioRef = useRef()
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [bookings, setBookings] = useState([])
   const [reviews, setReviews] = useState([])
   const [activeTab, setActiveTab] = useState('requests')
+  const [portfolioPhotos, setPortfolioPhotos] = useState([])
+  const [uploadingPortfolio, setUploadingPortfolio] = useState(false)
+  const [viewingClientId, setViewingClientId] = useState(null)
+  const [viewingClientName, setViewingClientName] = useState('')
+  const [customServiceInput, setCustomServiceInput] = useState('')
 
   useEffect(() => {
     async function load() {
@@ -50,8 +75,16 @@ export default function SpecialistProfilePage({ user }) {
           available_days: data.available_days || [],
           available_start: data.available_start || '09:00',
           available_end: data.available_end || '18:00',
+          service_prices: data.service_prices || {},
         })
       }
+
+      const { data: portfolioData } = await supabase
+        .from('portfolio_photos')
+        .select('*')
+        .eq('specialist_id', user.id)
+        .order('created_at', { ascending: false })
+      setPortfolioPhotos(portfolioData || [])
 
       const { data: bookingData } = await supabase
         .from('bookings')
@@ -112,6 +145,29 @@ export default function SpecialistProfilePage({ user }) {
     reader.readAsDataURL(file)
   }
 
+  function handlePortfolioAdd(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    portfolioRef.current.value = ''
+    setUploadingPortfolio(true)
+    const reader = new FileReader()
+    reader.onload = async (event) => {
+      const { data: row, error } = await supabase
+        .from('portfolio_photos')
+        .insert({ specialist_id: user.id, url: event.target.result })
+        .select()
+        .single()
+      if (!error && row) setPortfolioPhotos(prev => [row, ...prev])
+      setUploadingPortfolio(false)
+    }
+    reader.readAsDataURL(file)
+  }
+
+  async function deletePortfolioPhoto(id) {
+    await supabase.from('portfolio_photos').delete().eq('id', id)
+    setPortfolioPhotos(prev => prev.filter(p => p.id !== id))
+  }
+
   function toggleService(service) {
     setProfile(p => ({
       ...p,
@@ -119,6 +175,13 @@ export default function SpecialistProfilePage({ user }) {
         ? p.services.filter(s => s !== service)
         : [...p.services, service]
     }))
+  }
+
+  function addCustomService() {
+    const name = customServiceInput.trim()
+    if (!name || profile.services.includes(name)) return
+    setProfile(p => ({ ...p, services: [...p.services, name] }))
+    setCustomServiceInput('')
   }
 
   function toggleDay(day) {
@@ -185,6 +248,14 @@ export default function SpecialistProfilePage({ user }) {
 
   return (
     <div className="min-h-svh bg-stone-950">
+      {viewingClientId && (
+        <ClientHairProfileModal
+          clientId={viewingClientId}
+          clientName={viewingClientName}
+          onClose={() => { setViewingClientId(null); setViewingClientName('') }}
+        />
+      )}
+
       <header className="bg-stone-950 border-b border-stone-800 px-6 py-4 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-stone-100 tracking-tight">Root</h1>
@@ -214,6 +285,50 @@ export default function SpecialistProfilePage({ user }) {
             }
           </div>
           <input ref={photoRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+
+          {/* Portfolio */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-stone-400 uppercase tracking-wider">Portfolio</label>
+              <button
+                onClick={() => portfolioRef.current.click()}
+                disabled={uploadingPortfolio}
+                className="text-xs font-medium text-amber-600 hover:text-amber-500 px-3 py-1.5 rounded-lg border border-stone-800 hover:border-stone-700 transition-colors disabled:opacity-50"
+              >
+                {uploadingPortfolio ? 'Uploading…' : '+ Add photo'}
+              </button>
+            </div>
+            <input ref={portfolioRef} type="file" accept="image/*" className="hidden" onChange={handlePortfolioAdd} />
+            {portfolioPhotos.length === 0 ? (
+              <button
+                onClick={() => portfolioRef.current.click()}
+                className="w-full border-2 border-dashed border-stone-800 rounded-2xl py-8 text-stone-600 text-sm hover:border-stone-700 transition-colors"
+              >
+                Add photos of your work
+              </button>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {portfolioPhotos.map(photo => (
+                  <div key={photo.id} className="relative aspect-square">
+                    <img src={photo.url} alt="" className="w-full h-full object-cover rounded-xl" />
+                    <button
+                      onClick={() => deletePortfolioPhoto(photo.id)}
+                      className="absolute top-1 right-1 bg-black/70 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+                <button
+                  onClick={() => portfolioRef.current.click()}
+                  disabled={uploadingPortfolio}
+                  className="aspect-square border-2 border-dashed border-stone-800 rounded-xl text-stone-600 text-2xl hover:border-stone-700 transition-colors flex items-center justify-center"
+                >
+                  +
+                </button>
+              </div>
+            )}
+          </div>
 
           <div>
             <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Name</label>
@@ -249,21 +364,106 @@ export default function SpecialistProfilePage({ user }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-400 mb-3 uppercase tracking-wider">Services</label>
-            <div className="flex flex-wrap gap-2">
-              {SERVICES.map(service => (
-                <button
-                  key={service}
-                  onClick={() => toggleService(service)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
-                    profile.services.includes(service)
-                      ? 'bg-amber-700 border-amber-700 text-amber-50'
-                      : 'bg-transparent border-stone-700 text-stone-400 hover:border-stone-500'
-                  }`}
-                >
-                  {service}
-                </button>
+            <label className="block text-xs font-medium text-stone-400 mb-3 uppercase tracking-wider">Services & Pricing</label>
+            <div className="space-y-5">
+              {SERVICE_GROUPS.map(group => (
+                <div key={group.label}>
+                  <p className="text-xs font-medium text-stone-500 mb-2">{group.label}</p>
+                  <div className="space-y-2">
+                    {group.services.map(service => {
+                      const selected = profile.services.includes(service)
+                      return (
+                        <div key={service} className="flex items-center gap-2">
+                          <button
+                            onClick={() => toggleService(service)}
+                            className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors text-left ${
+                              selected
+                                ? 'bg-amber-700/20 border-amber-700/40 text-amber-400'
+                                : 'bg-transparent border-stone-800 text-stone-500 hover:border-stone-600'
+                            }`}
+                          >
+                            {service}
+                          </button>
+                          {selected && (
+                            <div className="relative w-28">
+                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 text-sm">$</span>
+                              <input
+                                type="number"
+                                min="0"
+                                placeholder="Price"
+                                value={profile.service_prices[service] || ''}
+                                onChange={e => setProfile(p => ({
+                                  ...p,
+                                  service_prices: { ...p.service_prices, [service]: e.target.value }
+                                }))}
+                                className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
               ))}
+
+              {/* Custom services */}
+              {profile.services.filter(s => !ALL_DEFAULT_SERVICES.includes(s)).length > 0 && (
+                <div>
+                  <p className="text-xs font-medium text-stone-500 mb-2">Custom</p>
+                  <div className="space-y-2">
+                    {profile.services.filter(s => !ALL_DEFAULT_SERVICES.includes(s)).map(service => (
+                      <div key={service} className="flex items-center gap-2">
+                        <button
+                          onClick={() => toggleService(service)}
+                          className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium border bg-amber-700/20 border-amber-700/40 text-amber-400 text-left"
+                        >
+                          {service}
+                        </button>
+                        <div className="relative w-28">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 text-sm">$</span>
+                          <input
+                            type="number"
+                            min="0"
+                            placeholder="Price"
+                            value={profile.service_prices[service] || ''}
+                            onChange={e => setProfile(p => ({
+                              ...p,
+                              service_prices: { ...p.service_prices, [service]: e.target.value }
+                            }))}
+                            className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+                          />
+                        </div>
+                        <button
+                          onClick={() => setProfile(p => ({ ...p, services: p.services.filter(s => s !== service) }))}
+                          className="w-8 h-8 flex items-center justify-center text-stone-600 hover:text-red-400 transition-colors text-lg"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Add custom service */}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={customServiceInput}
+                  onChange={e => setCustomServiceInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addCustomService()}
+                  placeholder="Add a custom service…"
+                  className="flex-1 px-4 py-2.5 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+                />
+                <button
+                  onClick={addCustomService}
+                  disabled={!customServiceInput.trim()}
+                  className="px-4 py-2.5 bg-stone-800 text-stone-300 rounded-xl text-sm font-medium hover:bg-stone-700 transition-colors disabled:opacity-40"
+                >
+                  Add
+                </button>
+              </div>
             </div>
           </div>
 
@@ -361,11 +561,13 @@ export default function SpecialistProfilePage({ user }) {
                   {booking.client_note && (
                     <p className="text-xs text-stone-400 bg-stone-800 rounded-lg px-3 py-2">{booking.client_note}</p>
                   )}
-                  {booking.client_profile?.share_token && (
-                    <a href={`/share/${booking.client_profile.share_token}`} target="_blank" rel="noreferrer"
-                      className="block text-xs text-amber-600 hover:text-amber-500 transition-colors">
+                  {booking.client_id && (
+                    <button
+                      onClick={() => { setViewingClientId(booking.client_id); setViewingClientName(booking.client_profile?.name || 'Client') }}
+                      className="text-xs text-amber-600 hover:text-amber-500 transition-colors"
+                    >
                       View hair profile →
-                    </a>
+                    </button>
                   )}
                   <div className="flex gap-2 pt-1">
                     <button onClick={() => respondToBooking(booking.id, 'accepted')}
@@ -398,11 +600,13 @@ export default function SpecialistProfilePage({ user }) {
                     </div>
                     <span className="text-xs font-medium text-green-500">Confirmed</span>
                   </div>
-                  {booking.client_profile?.share_token && (
-                    <a href={`/share/${booking.client_profile.share_token}`} target="_blank" rel="noreferrer"
-                      className="block text-xs text-amber-600 hover:text-amber-500 transition-colors">
+                  {booking.client_id && (
+                    <button
+                      onClick={() => { setViewingClientId(booking.client_id); setViewingClientName(booking.client_profile?.name || 'Client') }}
+                      className="text-xs text-amber-600 hover:text-amber-500 transition-colors"
+                    >
                       View hair profile →
-                    </a>
+                    </button>
                   )}
                   <button onClick={() => cancelBooking(booking.id)}
                     className="w-full py-2 bg-stone-800 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
@@ -431,11 +635,13 @@ export default function SpecialistProfilePage({ user }) {
                       {STATUS_LABEL[booking.status]}
                     </span>
                   </div>
-                  {booking.client_profile?.share_token && (
-                    <a href={`/share/${booking.client_profile.share_token}`} target="_blank" rel="noreferrer"
-                      className="block text-xs text-amber-600 hover:text-amber-500 transition-colors">
+                  {booking.client_id && (
+                    <button
+                      onClick={() => { setViewingClientId(booking.client_id); setViewingClientName(booking.client_profile?.name || 'Client') }}
+                      className="text-xs text-amber-600 hover:text-amber-500 transition-colors"
+                    >
                       View hair profile →
-                    </a>
+                    </button>
                   )}
                 </div>
               ))}

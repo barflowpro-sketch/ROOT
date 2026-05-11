@@ -4,8 +4,15 @@ import { supabase } from '../lib/supabase'
 const SERVICES = [
   'Hair color',
   'Haircut',
-  'Braids & locs',
-  'Natural hair',
+  'Box Braids',
+  'Cornrows',
+  'Knotless Braids',
+  'Senegalese Twist',
+  'Faux Locs',
+  'Butterfly Locs',
+  'Starter Locs',
+  'Loc Retwist',
+  'Dreadlocks',
   'Beard grooming',
 ]
 
@@ -23,7 +30,7 @@ function StarDisplay({ rating, count }) {
   )
 }
 
-export default function DiscoveryPage({ user, onBook }) {
+export default function DiscoveryPage({ user, onView }) {
   const [city, setCity] = useState('')
   const [service, setService] = useState('')
   const [results, setResults] = useState([])
@@ -178,10 +185,10 @@ export default function DiscoveryPage({ user, onBook }) {
                   )}
 
                   <button
-                    onClick={() => onBook(specialist)}
+                    onClick={() => onView(specialist)}
                     className="w-full py-2.5 bg-amber-700 text-amber-50 rounded-xl text-xs font-semibold hover:bg-amber-600 transition-colors"
                   >
-                    Request appointment
+                    View profile
                   </button>
                   </div>
                 </div>
