@@ -46,9 +46,14 @@ export default function ClientBookingsPage({ user }) {
     return `${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at ${time?.slice(0, 5)}`
   }
 
+  const today = new Date().toISOString().split('T')[0]
   const pending = bookings.filter(b => b.status === 'pending')
-  const upcoming = bookings.filter(b => b.status === 'accepted')
-  const past = bookings.filter(b => b.status === 'declined' || b.status === 'cancelled')
+  const upcoming = bookings.filter(b => b.status === 'accepted' && b.requested_date >= today)
+  const past = bookings.filter(b =>
+    b.status === 'declined' ||
+    b.status === 'cancelled' ||
+    (b.status === 'accepted' && b.requested_date < today)
+  )
 
   if (loading) {
     return (

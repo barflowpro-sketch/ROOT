@@ -25,13 +25,16 @@ export default function DiscoveryPage({ user, onBook }) {
       .from('specialist_profiles')
       .select('*')
       .ilike('city', `%${city.trim()}%`)
+      .not('name', 'is', null)
+      .neq('name', '')
+      .not('services', 'is', null)
 
     if (service) {
       query = query.contains('services', [service])
     }
 
     const { data } = await query
-    setResults(data || [])
+    setResults((data || []).filter(s => s.services?.length > 0))
     setLoading(false)
   }
 

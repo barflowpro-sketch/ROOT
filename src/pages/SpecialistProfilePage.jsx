@@ -125,8 +125,9 @@ export default function SpecialistProfilePage({ user }) {
 
   const [activeTab, setActiveTab] = useState('requests')
 
+  const today = new Date().toISOString().split('T')[0]
   const pending = bookings.filter(b => b.status === 'pending')
-  const upcoming = bookings.filter(b => b.status === 'accepted')
+  const upcoming = bookings.filter(b => b.status === 'accepted' && b.requested_date >= today)
 
   function formatDateTime(date, time) {
     const d = new Date(date)
