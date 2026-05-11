@@ -18,6 +18,14 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
   const [error, setError] = useState(null)
   const [bookedTimes, setBookedTimes] = useState([])
 
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const availableDays = specialist.available_days || []
+  const availableStart = specialist.available_start || null
+  const availableEnd = specialist.available_end || null
+
+  const selectedDayName = date ? dayNames[new Date(date + 'T00:00:00').getDay()] : null
+  const dayUnavailable = date && availableDays.length > 0 && !availableDays.includes(selectedDayName)
+
   useEffect(() => {
     if (!date || !specialist.user_id) { setBookedTimes([]); return }
     supabase
@@ -35,6 +43,13 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
         if (time && times.includes(time)) setTime('')
       })
   }, [date])
+
+  const availableSlots = TIME_SLOTS.filter(slot => {
+    if (bookedTimes.includes(slot.value)) return false
+    if (availableStart && slot.value < availableStart) return false
+    if (availableEnd && slot.value >= availableEnd) return false
+    return true
+  })
 
   async function submit() {
     if (!date || !time) { setError('Please pick a date and time.'); return }
@@ -71,10 +86,13 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
           <input
             type="date"
             value={date}
-            onChange={e => setDate(e.target.value)}
+            onChange={e => { setDate(e.target.value); setTime('') }}
             min={new Date().toISOString().split('T')[0]}
             className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
           />
+          {dayUnavailable && (
+            <p className="text-red-400 text-xs mt-1.5">{specialist.name} is not available on {selectedDayName}s. Please pick another day.</p>
+          )}
         </div>
 
         <div>
@@ -82,11 +100,11 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
           <select
             value={time}
             onChange={e => setTime(e.target.value)}
-            disabled={!date}
+            disabled={!date || dayUnavailable}
             className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 disabled:opacity-50"
           >
-            <option value="">{date ? 'Select a time' : 'Pick a date first'}</option>
-            {TIME_SLOTS.filter(slot => !bookedTimes.includes(slot.value)).map(slot => (
+            <option value="">{!date ? 'Pick a date first' : dayUnavailable ? 'Day unavailable' : 'Select a time'}</option>
+            {availableSlots.map(slot => (
               <option key={slot.value} value={slot.value}>{slot.label}</option>
             ))}
           </select>
