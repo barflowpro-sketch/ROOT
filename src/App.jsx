@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Capacitor } from '@capacitor/core'
+import { PushNotifications } from '@capacitor/push-notifications'
 import { useAuth } from './hooks/useAuth'
 import { supabase } from './lib/supabase'
 import AuthPage from './pages/AuthPage'
@@ -39,6 +41,23 @@ function App() {
     setRole('client')
     setOnboarded(!!localStorage.getItem(CLIENT_ONBOARDING_KEY))
     setRoleLoading(false)
+  }, [user])
+
+  useEffect(() => {
+    if (!user || !Capacitor.isNativePlatform()) return
+
+    PushNotifications.requestPermissions().then(result => {
+      if (result.receive === 'granted') PushNotifications.register()
+    })
+
+    const regListener = PushNotifications.addListener('registration', async token => {
+      await supabase.from('push_tokens').upsert(
+        { user_id: user.id, token: token.value, updated_at: new Date().toISOString() },
+        { onConflict: 'user_id' }
+      )
+    })
+
+    return () => { regListener.then(l => l.remove()) }
   }, [user])
 
   function completeOnboarding() {
@@ -89,7 +108,6 @@ function App() {
                 {activeTab === 'bookings' && <ClientBookingsPage user={user} />}
               </div>
 
-              {/* Bottom nav */}
               <nav className="fixed bottom-0 left-0 right-0 bg-stone-950 border-t border-stone-800 flex">
                 <button
                   onClick={() => setActiveTab('profile')}

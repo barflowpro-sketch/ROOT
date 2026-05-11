@@ -9,6 +9,20 @@ const SERVICES = [
   'Beard grooming',
 ]
 
+function StarDisplay({ rating, count }) {
+  const rounded = Math.round(rating)
+  return (
+    <div className="flex items-center gap-1">
+      <span className="text-amber-500 text-xs leading-none">
+        {[1, 2, 3, 4, 5].map(i => (
+          <span key={i} className={i <= rounded ? 'text-amber-500' : 'text-stone-700'}>★</span>
+        ))}
+      </span>
+      <span className="text-stone-500 text-xs">{rating.toFixed(1)} ({count})</span>
+    </div>
+  )
+}
+
 export default function DiscoveryPage({ user, onBook }) {
   const [city, setCity] = useState('')
   const [service, setService] = useState('')
@@ -34,7 +48,31 @@ export default function DiscoveryPage({ user, onBook }) {
     }
 
     const { data } = await query
-    setResults((data || []).filter(s => s.services?.length > 0))
+    const filtered = (data || []).filter(s => s.services?.length > 0)
+
+    if (filtered.length > 0) {
+      const specialistIds = filtered.map(s => s.user_id)
+      const { data: reviewData } = await supabase
+        .from('reviews')
+        .select('specialist_id, rating')
+        .in('specialist_id', specialistIds)
+
+      const ratingMap = {}
+      reviewData?.forEach(r => {
+        if (!ratingMap[r.specialist_id]) ratingMap[r.specialist_id] = { sum: 0, count: 0 }
+        ratingMap[r.specialist_id].sum += r.rating
+        ratingMap[r.specialist_id].count += 1
+      })
+
+      setResults(filtered.map(s => ({
+        ...s,
+        avgRating: ratingMap[s.user_id] ? ratingMap[s.user_id].sum / ratingMap[s.user_id].count : null,
+        ratingCount: ratingMap[s.user_id]?.count || 0,
+      })))
+    } else {
+      setResults([])
+    }
+
     setLoading(false)
   }
 
@@ -51,7 +89,6 @@ export default function DiscoveryPage({ user, onBook }) {
       </header>
 
       <div className="max-w-lg mx-auto px-6 py-6 space-y-6">
-        {/* Search */}
         <div className="space-y-3">
           <input
             type="text"
@@ -97,7 +134,6 @@ export default function DiscoveryPage({ user, onBook }) {
           </button>
         </div>
 
-        {/* Results */}
         {searched && (
           <div className="space-y-3">
             {results.length === 0 ? (
@@ -117,9 +153,14 @@ export default function DiscoveryPage({ user, onBook }) {
                           </div>
                       }
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-semibold text-stone-100">{specialist.name}</h3>
                       <p className="text-xs text-stone-500 mt-0.5">{specialist.city}</p>
+                      {specialist.avgRating && (
+                        <div className="mt-1">
+                          <StarDisplay rating={specialist.avgRating} count={specialist.ratingCount} />
+                        </div>
+                      )}
                     </div>
                   </div>
 
