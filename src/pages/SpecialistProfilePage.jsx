@@ -39,11 +39,27 @@ export default function SpecialistProfilePage({ user }) {
 
       const { data: bookingData } = await supabase
         .from('bookings')
-        .select('*, client:client_id(email), client_profile:client_id(name, history, loves, hates, sensitivities, notes, share_token)')
+        .select('*')
         .eq('specialist_id', user.id)
         .order('created_at', { ascending: false })
 
-      if (bookingData) setBookings(bookingData)
+      if (bookingData && bookingData.length > 0) {
+        const clientIds = [...new Set(bookingData.map(b => b.client_id))]
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('user_id, name, share_token')
+          .in('user_id', clientIds)
+
+        const profileMap = {}
+        profileData?.forEach(p => { profileMap[p.user_id] = p })
+
+        setBookings(bookingData.map(b => ({
+          ...b,
+          client_profile: profileMap[b.client_id] || null
+        })))
+      } else {
+        setBookings([])
+      }
     }
     load()
   }, [user.id])
