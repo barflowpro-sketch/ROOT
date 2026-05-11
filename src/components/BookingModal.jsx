@@ -1,5 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+
+const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
+  const h = Math.floor(i / 2)
+  const m = i % 2 === 0 ? '00' : '30'
+  const value = `${String(h).padStart(2, '0')}:${m}`
+  const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h
+  const ampm = h < 12 ? 'AM' : 'PM'
+  return { value, label: `${hour12}:${m} ${ampm}` }
+})
 
 export default function BookingModal({ specialist, clientId, onClose, onSuccess }) {
   const [date, setDate] = useState('')
@@ -7,6 +16,21 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
   const [note, setNote] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [bookedTimes, setBookedTimes] = useState([])
+
+  useEffect(() => {
+    if (!date) { setBookedTimes([]); return }
+    supabase
+      .from('bookings')
+      .select('requested_time')
+      .eq('specialist_id', specialist.user_id)
+      .eq('requested_date', date)
+      .in('status', ['pending', 'accepted'])
+      .then(({ data }) => {
+        setBookedTimes((data || []).map(b => b.requested_time?.slice(0, 5)))
+        if (time && data?.some(b => b.requested_time?.slice(0, 5) === time)) setTime('')
+      })
+  }, [date])
 
   async function submit() {
     if (!date || !time) { setError('Please pick a date and time.'); return }
@@ -54,17 +78,17 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
           <select
             value={time}
             onChange={e => setTime(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+            disabled={!date}
+            className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 disabled:opacity-50"
           >
-            <option value="">Select a time</option>
-            {Array.from({ length: 48 }, (_, i) => {
-              const h = Math.floor(i / 2)
-              const m = i % 2 === 0 ? '00' : '30'
-              const value = `${String(h).padStart(2, '0')}:${m}`
-              const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h
-              const ampm = h < 12 ? 'AM' : 'PM'
-              const label = `${hour12}:${m} ${ampm}`
-              return <option key={value} value={value}>{label}</option>
+            <option value="">{date ? 'Select a time' : 'Pick a date first'}</option>
+            {TIME_SLOTS.map(slot => {
+              const taken = bookedTimes.includes(slot.value)
+              return (
+                <option key={slot.value} value={slot.value} disabled={taken}>
+                  {taken ? `${slot.label} — Unavailable` : slot.label}
+                </option>
+              )
             })}
           </select>
         </div>

@@ -17,6 +17,7 @@ export default function ClientBookingsPage({ user }) {
   const [editingId, setEditingId] = useState(null)
   const [editDate, setEditDate] = useState('')
   const [editTime, setEditTime] = useState('')
+  const [editBookedTimes, setEditBookedTimes] = useState([])
 
   useEffect(() => {
     async function load() {
@@ -53,10 +54,23 @@ export default function ClientBookingsPage({ user }) {
     setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'cancelled' } : b))
   }
 
-  function startEdit(booking) {
+  async function startEdit(booking) {
     setEditingId(booking.id)
     setEditDate(booking.requested_date)
     setEditTime(booking.requested_time?.slice(0, 5))
+    await fetchEditBookedTimes(booking.specialist_id, booking.requested_date, booking.id)
+  }
+
+  async function fetchEditBookedTimes(specialistId, date, excludeBookingId) {
+    if (!date) { setEditBookedTimes([]); return }
+    const { data } = await supabase
+      .from('bookings')
+      .select('requested_time')
+      .eq('specialist_id', specialistId)
+      .eq('requested_date', date)
+      .in('status', ['pending', 'accepted'])
+      .neq('id', excludeBookingId)
+    setEditBookedTimes((data || []).map(b => b.requested_time?.slice(0, 5)))
   }
 
   async function saveEdit(bookingId) {
@@ -130,7 +144,11 @@ export default function ClientBookingsPage({ user }) {
             <input
               type="date"
               value={editDate}
-              onChange={e => setEditDate(e.target.value)}
+              onChange={e => {
+                setEditDate(e.target.value)
+                setEditTime('')
+                fetchEditBookedTimes(booking.specialist_id, e.target.value, booking.id)
+              }}
               min={new Date().toISOString().split('T')[0]}
               className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
             />
@@ -140,9 +158,14 @@ export default function ClientBookingsPage({ user }) {
               className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
             >
               <option value="">Select a time</option>
-              {TIME_SLOTS.map(slot => (
-                <option key={slot.value} value={slot.value}>{slot.label}</option>
-              ))}
+              {TIME_SLOTS.map(slot => {
+                const taken = editBookedTimes.includes(slot.value)
+                return (
+                  <option key={slot.value} value={slot.value} disabled={taken}>
+                    {taken ? `${slot.label} — Unavailable` : slot.label}
+                  </option>
+                )
+              })}
             </select>
             <div className="flex gap-2">
               <button
