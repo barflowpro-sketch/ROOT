@@ -19,24 +19,18 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
   const [bookedTimes, setBookedTimes] = useState([])
 
   useEffect(() => {
-    console.log('specialist object:', specialist)
     if (!date || !specialist.user_id) { setBookedTimes([]); return }
     supabase
       .from('bookings')
-      .select('requested_time, specialist_id, requested_date, status')
+      .select('requested_time')
       .eq('specialist_id', specialist.user_id)
       .eq('requested_date', date)
       .in('status', ['pending', 'accepted'])
-      .then(({ data, error }) => {
-        console.log('booked times raw:', data, error)
-        console.log('queried specialist_id:', specialist.user_id, 'date:', date)
-        // fetch all bookings for this specialist to compare
-        supabase.from('bookings').select('specialist_id, requested_date, requested_time, status').eq('specialist_id', specialist.user_id).then(r => console.log('all bookings for specialist:', r.data))
+      .then(({ data }) => {
         const times = (data || []).map(b => {
           const t = b.requested_time || ''
           return t.includes(':') ? t.slice(0, 5) : t
         }).filter(Boolean)
-        console.log('booked times normalized:', times)
         setBookedTimes(times)
         if (time && times.includes(time)) setTime('')
       })
@@ -91,7 +85,7 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
             disabled={!date}
             className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 disabled:opacity-50"
           >
-            <option value="">{date ? `Select a time (${48 - bookedTimes.length} available)` : 'Pick a date first'}</option>
+            <option value="">{date ? 'Select a time' : 'Pick a date first'}</option>
             {TIME_SLOTS.filter(slot => !bookedTimes.includes(slot.value)).map(slot => (
               <option key={slot.value} value={slot.value}>{slot.label}</option>
             ))}
