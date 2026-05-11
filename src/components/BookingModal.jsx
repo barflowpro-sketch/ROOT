@@ -19,15 +19,19 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
   const [bookedTimes, setBookedTimes] = useState([])
 
   useEffect(() => {
+    console.log('specialist object:', specialist)
     if (!date || !specialist.user_id) { setBookedTimes([]); return }
     supabase
       .from('bookings')
-      .select('requested_time')
+      .select('requested_time, specialist_id, requested_date, status')
       .eq('specialist_id', specialist.user_id)
       .eq('requested_date', date)
       .in('status', ['pending', 'accepted'])
       .then(({ data, error }) => {
         console.log('booked times raw:', data, error)
+        console.log('queried specialist_id:', specialist.user_id, 'date:', date)
+        // fetch all bookings for this specialist to compare
+        supabase.from('bookings').select('specialist_id, requested_date, requested_time, status').eq('specialist_id', specialist.user_id).then(r => console.log('all bookings for specialist:', r.data))
         const times = (data || []).map(b => {
           const t = b.requested_time || ''
           return t.includes(':') ? t.slice(0, 5) : t
