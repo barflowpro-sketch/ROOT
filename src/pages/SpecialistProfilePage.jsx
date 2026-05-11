@@ -155,16 +155,10 @@ export default function SpecialistProfilePage({ user }) {
           {/* Photo */}
           <div
             onClick={() => photoRef.current.click()}
-            className="w-full h-52 rounded-2xl bg-stone-800 border-2 border-dashed border-stone-700 overflow-hidden flex items-center justify-center cursor-pointer hover:border-stone-500 transition-colors relative"
+            className="w-full h-52 rounded-2xl bg-stone-800 border-2 border-dashed border-stone-700 overflow-hidden flex items-center justify-center cursor-pointer hover:border-stone-500 transition-colors"
           >
             {profile.photo
-              ? <>
-                  <img src={profile.photo} alt="" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-1">
-                    <span className="text-white text-2xl">📷</span>
-                    <span className="text-white text-xs font-medium">Change photo</span>
-                  </div>
-                </>
+              ? <img src={profile.photo} alt="" className="w-full h-full object-cover" />
               : <div className="flex flex-col items-center gap-2">
                   <span className="text-stone-500 text-4xl">+</span>
                   <span className="text-xs text-stone-500">Add profile photo</span>
