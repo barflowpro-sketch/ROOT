@@ -1,10 +1,22 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
+const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
+  const h = Math.floor(i / 2)
+  const m = i % 2 === 0 ? '00' : '30'
+  const value = `${String(h).padStart(2, '0')}:${m}`
+  const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h
+  const ampm = h < 12 ? 'AM' : 'PM'
+  return { value, label: `${hour12}:${m} ${ampm}` }
+})
+
 export default function ClientBookingsPage({ user }) {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('upcoming')
+  const [editingId, setEditingId] = useState(null)
+  const [editDate, setEditDate] = useState('')
+  const [editTime, setEditTime] = useState('')
 
   useEffect(() => {
     async function load() {
@@ -39,6 +51,19 @@ export default function ClientBookingsPage({ user }) {
   async function cancelBooking(bookingId) {
     await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', bookingId)
     setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'cancelled' } : b))
+  }
+
+  function startEdit(booking) {
+    setEditingId(booking.id)
+    setEditDate(booking.requested_date)
+    setEditTime(booking.requested_time?.slice(0, 5))
+  }
+
+  async function saveEdit(bookingId) {
+    if (!editDate || !editTime) return
+    await supabase.from('bookings').update({ requested_date: editDate, requested_time: editTime }).eq('id', bookingId)
+    setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, requested_date: editDate, requested_time: editTime } : b))
+    setEditingId(null)
   }
 
   function formatDateTime(date, time) {
@@ -77,7 +102,8 @@ export default function ClientBookingsPage({ user }) {
     cancelled: 'Cancelled',
   }
 
-  function BookingCard({ booking, showCancel }) {
+  function BookingCard({ booking, showCancel, showEdit }) {
+    const isEditing = editingId === booking.id
     return (
       <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5 space-y-3">
         <div className="flex items-start justify-between">
@@ -99,13 +125,61 @@ export default function ClientBookingsPage({ user }) {
           <p className="text-xs text-stone-400 bg-stone-800 rounded-lg px-3 py-2">{booking.client_note}</p>
         )}
 
-        {showCancel && (
-          <button
-            onClick={() => cancelBooking(booking.id)}
-            className="w-full py-2 bg-stone-800 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
-          >
-            Cancel appointment
-          </button>
+        {isEditing && (
+          <div className="space-y-2">
+            <input
+              type="date"
+              value={editDate}
+              onChange={e => setEditDate(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+              className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+            />
+            <select
+              value={editTime}
+              onChange={e => setEditTime(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+            >
+              <option value="">Select a time</option>
+              {TIME_SLOTS.map(slot => (
+                <option key={slot.value} value={slot.value}>{slot.label}</option>
+              ))}
+            </select>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setEditingId(null)}
+                className="flex-1 py-2 bg-stone-800 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => saveEdit(booking.id)}
+                className="flex-1 py-2 bg-amber-700 text-amber-50 rounded-lg text-xs font-medium hover:bg-amber-600 transition-colors"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!isEditing && (
+          <div className="flex gap-2">
+            {showEdit && (
+              <button
+                onClick={() => startEdit(booking)}
+                className="flex-1 py-2 bg-stone-800 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+              >
+                Edit
+              </button>
+            )}
+            {showCancel && (
+              <button
+                onClick={() => cancelBooking(booking.id)}
+                className="flex-1 py-2 bg-stone-800 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+              >
+                Cancel
+              </button>
+            )}
+          </div>
         )}
       </div>
     )
@@ -152,7 +226,7 @@ export default function ClientBookingsPage({ user }) {
           {activeTab === 'pending' && (
             pending.length === 0
               ? <p className="text-stone-500 text-sm text-center py-10">No pending requests.</p>
-              : pending.map(b => <BookingCard key={b.id} booking={b} showCancel={true} />)
+              : pending.map(b => <BookingCard key={b.id} booking={b} showCancel={true} showEdit={true} />)
           )}
 
           {activeTab === 'past' && (
