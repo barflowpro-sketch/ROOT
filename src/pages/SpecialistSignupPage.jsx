@@ -17,6 +17,7 @@ export default function SpecialistSignupPage() {
     if (mode === 'signin') {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
+      else window.location.href = '/'
     } else {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -107,7 +108,7 @@ export default function SpecialistSignupPage() {
         <p className="text-center text-sm text-stone-600 mt-8">
           {mode === 'signup' ? 'Already have an account? ' : "Don't have an account? "}
           <button
-            onClick={() => { setMode(mode === 'signup' ? 'signin' : 'signup'); setError(null) }}
+            onClick={() => { setMode(mode === 'signup' ? 'signin' : 'signup'); setError(null); setEmail(''); setPassword('') }}
             className="text-amber-600 font-medium hover:text-amber-500 transition-colors"
           >
             {mode === 'signup' ? 'Sign in' : 'Sign up'}
