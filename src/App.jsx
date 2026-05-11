@@ -11,6 +11,7 @@ import SpecialistOnboardingPage from './pages/SpecialistOnboardingPage'
 import SpecialistProfilePage from './pages/SpecialistProfilePage'
 import DiscoveryPage from './pages/DiscoveryPage'
 import BookingModal from './components/BookingModal'
+import ClientBookingsPage from './pages/ClientBookingsPage'
 
 const CLIENT_ONBOARDING_KEY = 'root_onboarded'
 const SPECIALIST_ONBOARDING_KEY = 'root_specialist_onboarded'
@@ -85,6 +86,7 @@ function App() {
               <div className="pb-20">
                 {activeTab === 'profile' && <ProfilePage user={user} />}
                 {activeTab === 'discover' && <DiscoveryPage user={user} onBook={setBookingTarget} />}
+                {activeTab === 'bookings' && <ClientBookingsPage user={user} />}
               </div>
 
               {/* Bottom nav */}
@@ -99,7 +101,13 @@ function App() {
                   onClick={() => setActiveTab('discover')}
                   className={`flex-1 py-4 text-xs font-medium transition-colors ${activeTab === 'discover' ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
                 >
-                  Find a Specialist
+                  Find
+                </button>
+                <button
+                  onClick={() => setActiveTab('bookings')}
+                  className={`flex-1 py-4 text-xs font-medium transition-colors ${activeTab === 'bookings' ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
+                >
+                  Appointments
                 </button>
               </nav>
             </>

@@ -101,6 +101,11 @@ export default function SpecialistProfilePage({ user }) {
     setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status } : b))
   }
 
+  async function cancelBooking(bookingId) {
+    await supabase.from('bookings').update({ status: 'cancelled' }).eq('id', bookingId)
+    setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: 'cancelled' } : b))
+  }
+
   async function signOut() {
     await supabase.auth.signOut()
   }
@@ -299,6 +304,13 @@ export default function SpecialistProfilePage({ user }) {
                         View hair profile →
                       </a>
                     )}
+
+                    <button
+                      onClick={() => cancelBooking(booking.id)}
+                      className="w-full py-2 bg-stone-800 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+                    >
+                      Cancel appointment
+                    </button>
                   </div>
                 ))
               )}
