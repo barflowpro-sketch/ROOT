@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 
 const SERVICES = [
@@ -15,7 +15,9 @@ export default function SpecialistProfilePage({ user }) {
     bio: '',
     city: '',
     services: [],
+    photo: '',
   })
+  const photoRef = useRef()
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [bookings, setBookings] = useState([])
@@ -34,6 +36,7 @@ export default function SpecialistProfilePage({ user }) {
           bio: data.bio || '',
           city: data.city || '',
           services: data.services || [],
+          photo: data.photo || '',
         })
       }
 
@@ -63,6 +66,16 @@ export default function SpecialistProfilePage({ user }) {
     }
     load()
   }, [user.id])
+
+  function handlePhotoChange(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      setProfile(p => ({ ...p, photo: event.target.result }))
+    }
+    reader.readAsDataURL(file)
+  }
 
   function toggleService(service) {
     setProfile(p => ({
@@ -137,6 +150,29 @@ export default function SpecialistProfilePage({ user }) {
         {/* Profile form */}
         <div className="space-y-5">
           <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider">Your Profile</h2>
+
+          {/* Photo */}
+          <div className="flex items-center gap-4">
+            <div
+              onClick={() => photoRef.current.click()}
+              className="w-20 h-20 rounded-2xl bg-stone-800 border-2 border-dashed border-stone-700 overflow-hidden flex items-center justify-center cursor-pointer hover:border-stone-500 transition-colors flex-shrink-0"
+            >
+              {profile.photo
+                ? <img src={profile.photo} alt="" className="w-full h-full object-cover" />
+                : <span className="text-stone-600 text-2xl">+</span>
+              }
+            </div>
+            <div>
+              <p className="text-sm text-stone-300 font-medium">Profile photo</p>
+              <button
+                onClick={() => photoRef.current.click()}
+                className="text-xs text-amber-600 hover:text-amber-500 transition-colors mt-0.5"
+              >
+                {profile.photo ? 'Change photo' : 'Add photo'}
+              </button>
+            </div>
+            <input ref={photoRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+          </div>
 
           <div>
             <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Name</label>

@@ -100,9 +100,19 @@ export default function DiscoveryPage({ user, onBook }) {
             ) : (
               results.map(specialist => (
                 <div key={specialist.id} className="bg-stone-900 border border-stone-800 rounded-2xl p-5 space-y-3">
-                  <div>
-                    <h3 className="text-sm font-semibold text-stone-100">{specialist.name}</h3>
-                    <p className="text-xs text-stone-500 mt-0.5">{specialist.city}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-stone-800 overflow-hidden flex-shrink-0">
+                      {specialist.photo
+                        ? <img src={specialist.photo} alt="" className="w-full h-full object-cover" />
+                        : <div className="w-full h-full flex items-center justify-center text-stone-600 text-lg font-semibold">
+                            {specialist.name?.charAt(0) || '?'}
+                          </div>
+                      }
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-stone-100">{specialist.name}</h3>
+                      <p className="text-xs text-stone-500 mt-0.5">{specialist.city}</p>
+                    </div>
                   </div>
 
                   {specialist.bio && (
