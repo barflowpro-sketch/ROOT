@@ -249,14 +249,9 @@ export default function ClientBookingsPage({ user }) {
               className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
             >
               <option value="">Select a time</option>
-              {TIME_SLOTS.map(slot => {
-                const taken = editBookedTimes.includes(slot.value)
-                return (
-                  <option key={slot.value} value={slot.value} disabled={taken}>
-                    {taken ? `${slot.label} — Unavailable` : slot.label}
-                  </option>
-                )
-              })}
+              {TIME_SLOTS.filter(slot => !editBookedTimes.includes(slot.value)).map(slot => (
+                <option key={slot.value} value={slot.value}>{slot.label}</option>
+              ))}
             </select>
             <div className="flex gap-2">
               <button

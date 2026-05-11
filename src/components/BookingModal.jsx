@@ -82,14 +82,9 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
             className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 disabled:opacity-50"
           >
             <option value="">{date ? 'Select a time' : 'Pick a date first'}</option>
-            {TIME_SLOTS.map(slot => {
-              const taken = bookedTimes.includes(slot.value)
-              return (
-                <option key={slot.value} value={slot.value} disabled={taken}>
-                  {taken ? `${slot.label} — Unavailable` : slot.label}
-                </option>
-              )
-            })}
+            {TIME_SLOTS.filter(slot => !bookedTimes.includes(slot.value)).map(slot => (
+              <option key={slot.value} value={slot.value}>{slot.label}</option>
+            ))}
           </select>
         </div>
 
