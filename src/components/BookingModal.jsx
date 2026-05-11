@@ -51,12 +51,22 @@ export default function BookingModal({ specialist, clientId, onClose, onSuccess 
 
         <div>
           <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Time</label>
-          <input
-            type="time"
+          <select
             value={time}
             onChange={e => setTime(e.target.value)}
             className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-950 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
-          />
+          >
+            <option value="">Select a time</option>
+            {Array.from({ length: 48 }, (_, i) => {
+              const h = Math.floor(i / 2)
+              const m = i % 2 === 0 ? '00' : '30'
+              const value = `${String(h).padStart(2, '0')}:${m}`
+              const hour12 = h === 0 ? 12 : h > 12 ? h - 12 : h
+              const ampm = h < 12 ? 'AM' : 'PM'
+              const label = `${hour12}:${m} ${ampm}`
+              return <option key={value} value={value}>{label}</option>
+            })}
+          </select>
         </div>
 
         <div>
