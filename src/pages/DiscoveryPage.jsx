@@ -133,7 +133,7 @@ export default function DiscoveryPage({ user, onBook }) {
           </button>
         </div>
 
-        {searched && (
+        {searched && !loading && (
           <div className="space-y-3">
             {results.length === 0 ? (
               <div className="text-center py-10">
