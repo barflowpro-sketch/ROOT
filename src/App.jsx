@@ -20,6 +20,7 @@ import SpecialistPublicPage from './pages/SpecialistPublicPage'
 import PasswordResetPage from './pages/PasswordResetPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import FeedbackModal from './components/FeedbackModal'
+import AdminPage from './pages/AdminPage'
 
 const CLIENT_ONBOARDING_KEY = 'root_onboarded'
 const SPECIALIST_ONBOARDING_KEY = 'root_specialist_onboarded'
@@ -38,6 +39,8 @@ function App() {
   const [appointmentBadge, setAppointmentBadge] = useState(0)
   const [showSettings, setShowSettings] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
+  const [showAdmin, setShowAdmin] = useState(false)
+  const isAdmin = user?.email === 'bmimp1@gmail.com'
 
   useEffect(() => {
     if (!user) { setRoleLoading(false); return }
@@ -131,6 +134,7 @@ function App() {
             !onboarded && role === 'specialist' ? <SpecialistOnboardingPage user={user} onDone={completeOnboarding} /> :
             !onboarded && role === 'client' ? <OnboardingPage user={user} onDone={completeOnboarding} /> :
             role === 'specialist' ? <SpecialistProfilePage user={user} /> :
+            showAdmin ? <AdminPage onBack={() => setShowAdmin(false)} /> :
             <>
               {showSettings && (
                 <AccountSettingsPage user={user} onBack={() => setShowSettings(false)} />
@@ -213,6 +217,14 @@ function App() {
                 >
                   Feedback
                 </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => setShowAdmin(true)}
+                    className="flex-1 py-4 text-xs font-medium transition-colors text-amber-700 hover:text-amber-500"
+                  >
+                    Admin
+                  </button>
+                )}
                 <button
                   onClick={() => setShowSettings(true)}
                   className="flex-1 py-4 text-xs font-medium transition-colors text-stone-600 hover:text-stone-400"
