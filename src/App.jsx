@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
 import { PushNotifications } from '@capacitor/push-notifications'
@@ -15,14 +15,19 @@ import DiscoveryPage from './pages/DiscoveryPage'
 import BookingModal from './components/BookingModal'
 import ClientBookingsPage from './pages/ClientBookingsPage'
 import SpecialistDetailPage from './pages/SpecialistDetailPage'
+import AccountSettingsPage from './pages/AccountSettingsPage'
+import SpecialistPublicPage from './pages/SpecialistPublicPage'
+import PasswordResetPage from './pages/PasswordResetPage'
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 
 const CLIENT_ONBOARDING_KEY = 'root_onboarded'
 const SPECIALIST_ONBOARDING_KEY = 'root_specialist_onboarded'
 const SEEN_NOTIFICATIONS_KEY = 'root_seen_notifications'
 
 function App() {
-  const { user, loading } = useAuth()
+  const { user, loading, authEvent } = useAuth()
   const [role, setRole] = useState(null)
+  const [showPasswordReset, setShowPasswordReset] = useState(false)
   const [roleLoading, setRoleLoading] = useState(true)
   const [onboarded, setOnboarded] = useState(false)
   const [activeTab, setActiveTab] = useState('profile')
@@ -30,6 +35,7 @@ function App() {
   const [bookingSuccess, setBookingSuccess] = useState(false)
   const [viewingSpecialist, setViewingSpecialist] = useState(null)
   const [appointmentBadge, setAppointmentBadge] = useState(0)
+  const [showSettings, setShowSettings] = useState(false)
 
   useEffect(() => {
     if (!user) { setRoleLoading(false); return }
@@ -50,13 +56,24 @@ function App() {
       .from('bookings')
       .select('id')
       .eq('client_id', user.id)
-      .in('status', ['accepted', 'declined'])
+      .in('status', ['accepted', 'declined', 'completed'])
       .then(({ data }) => {
         if (!data) return
         const seen = JSON.parse(localStorage.getItem(SEEN_NOTIFICATIONS_KEY) || '[]')
         const unseen = data.filter(b => !seen.includes(b.id))
         setAppointmentBadge(unseen.length)
       })
+  }, [user])
+
+  useEffect(() => {
+    if (!user || !Capacitor.isNativePlatform()) return
+    if (user.user_metadata?.role !== 'specialist') return
+    import('@revenuecat/purchases-capacitor').then(({ Purchases }) => {
+      Purchases.configure({
+        apiKey: import.meta.env.VITE_REVENUECAT_API_KEY,
+        appUserID: user.id,
+      })
+    })
   }, [user])
 
   useEffect(() => {
@@ -82,9 +99,17 @@ function App() {
     setOnboarded(true)
   }
 
+  useEffect(() => {
+    if (authEvent === 'PASSWORD_RECOVERY') setShowPasswordReset(true)
+  }, [authEvent])
+
+  if (showPasswordReset) {
+    return <PasswordResetPage onDone={() => setShowPasswordReset(false)} />
+  }
+
   if (loading || roleLoading) {
     return (
-      <div className="min-h-svh flex items-center justify-center bg-stone-950">
+      <div className="min-h-svh flex items-center justify-center bg-stone-800">
         <p className="text-stone-600 text-sm">Loading…</p>
       </div>
     )
@@ -93,19 +118,26 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
         <Route path="/share/:token" element={<SharePage />} />
         <Route path="/specialist/signup" element={<SpecialistSignupPage />} />
+        <Route path="/specialist/:id" element={<SpecialistPublicPage />} />
         <Route
           path="*"
           element={
             !user ? <AuthPage /> :
-            !onboarded && role === 'specialist' ? <SpecialistOnboardingPage onDone={completeOnboarding} /> :
-            !onboarded && role === 'client' ? <OnboardingPage onDone={completeOnboarding} /> :
+            !onboarded && role === 'specialist' ? <SpecialistOnboardingPage user={user} onDone={completeOnboarding} /> :
+            !onboarded && role === 'client' ? <OnboardingPage user={user} onDone={completeOnboarding} /> :
             role === 'specialist' ? <SpecialistProfilePage user={user} /> :
             <>
+              {showSettings && (
+                <AccountSettingsPage user={user} onBack={() => setShowSettings(false)} />
+              )}
+
               {viewingSpecialist && (
                 <SpecialistDetailPage
                   specialist={viewingSpecialist}
+                  currentUserId={user.id}
                   onBack={() => setViewingSpecialist(null)}
                   onBook={s => { setViewingSpecialist(null); setBookingTarget(s) }}
                 />
@@ -129,10 +161,10 @@ function App() {
               <div className="pb-20">
                 {activeTab === 'profile' && <ProfilePage user={user} />}
                 {activeTab === 'discover' && <DiscoveryPage user={user} onView={setViewingSpecialist} />}
-                {activeTab === 'bookings' && <ClientBookingsPage user={user} />}
+                {activeTab === 'bookings' && <ClientBookingsPage user={user} onBook={s => { setActiveTab('discover'); setBookingTarget(s) }} />}
               </div>
 
-              <nav className="fixed bottom-0 left-0 right-0 bg-stone-950 border-t border-stone-800 flex">
+              <nav className="fixed bottom-0 left-0 right-0 bg-stone-800 border-t border-stone-600 flex">
                 <button
                   onClick={() => setActiveTab('profile')}
                   className={`flex-1 py-4 text-xs font-medium transition-colors ${activeTab === 'profile' ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
@@ -153,7 +185,7 @@ function App() {
                         .from('bookings')
                         .select('id')
                         .eq('client_id', user.id)
-                        .in('status', ['accepted', 'declined'])
+                        .in('status', ['accepted', 'declined', 'completed'])
                         .then(({ data }) => {
                           if (data) localStorage.setItem(SEEN_NOTIFICATIONS_KEY, JSON.stringify(data.map(b => b.id)))
                         })
@@ -168,6 +200,12 @@ function App() {
                       {appointmentBadge}
                     </span>
                   )}
+                </button>
+                <button
+                  onClick={() => setShowSettings(true)}
+                  className="flex-1 py-4 text-xs font-medium transition-colors text-stone-600 hover:text-stone-400"
+                >
+                  Settings
                 </button>
               </nav>
             </>
