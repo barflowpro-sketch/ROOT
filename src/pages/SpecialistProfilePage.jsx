@@ -5,6 +5,7 @@ import ClientHairProfileModal from '../components/ClientHairProfileModal'
 import MessagingModal from '../components/MessagingModal'
 import CalendarView from '../components/CalendarView'
 import AccountSettingsPage from './AccountSettingsPage'
+import FeedbackModal from '../components/FeedbackModal'
 
 const CATEGORIES = ['Haircut', 'Braids', 'Locs']
 
@@ -56,6 +57,7 @@ export default function SpecialistProfilePage({ user }) {
   const [showSettings, setShowSettings] = useState(false)
   const [copied, setCopied] = useState(false)
   const [subscribing, setSubscribing] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
 
   const now = new Date()
   const trialEnd = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null
@@ -386,6 +388,10 @@ export default function SpecialistProfilePage({ user }) {
         <AccountSettingsPage user={user} onBack={() => setShowSettings(false)} />
       )}
 
+      {showFeedback && (
+        <FeedbackModal userId={user.id} role="specialist" onClose={() => setShowFeedback(false)} />
+      )}
+
       {messagingBooking && (
         <MessagingModal
           booking={messagingBooking}
@@ -447,6 +453,9 @@ export default function SpecialistProfilePage({ user }) {
         <div className="flex items-center gap-3">
           <button onClick={() => supabase.auth.signOut()} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
             Sign out
+          </button>
+          <button onClick={() => setShowFeedback(true)} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
+            Feedback
           </button>
           <button onClick={() => setShowSettings(true)} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
             Settings

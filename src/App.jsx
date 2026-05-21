@@ -19,6 +19,7 @@ import AccountSettingsPage from './pages/AccountSettingsPage'
 import SpecialistPublicPage from './pages/SpecialistPublicPage'
 import PasswordResetPage from './pages/PasswordResetPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import FeedbackModal from './components/FeedbackModal'
 
 const CLIENT_ONBOARDING_KEY = 'root_onboarded'
 const SPECIALIST_ONBOARDING_KEY = 'root_specialist_onboarded'
@@ -36,6 +37,7 @@ function App() {
   const [viewingSpecialist, setViewingSpecialist] = useState(null)
   const [appointmentBadge, setAppointmentBadge] = useState(0)
   const [showSettings, setShowSettings] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
 
   useEffect(() => {
     if (!user) { setRoleLoading(false); return }
@@ -134,6 +136,10 @@ function App() {
                 <AccountSettingsPage user={user} onBack={() => setShowSettings(false)} />
               )}
 
+              {showFeedback && (
+                <FeedbackModal userId={user.id} role="client" onClose={() => setShowFeedback(false)} />
+              )}
+
               {viewingSpecialist && (
                 <SpecialistDetailPage
                   specialist={viewingSpecialist}
@@ -200,6 +206,12 @@ function App() {
                       {appointmentBadge}
                     </span>
                   )}
+                </button>
+                <button
+                  onClick={() => setShowFeedback(true)}
+                  className="flex-1 py-4 text-xs font-medium transition-colors text-stone-600 hover:text-stone-400"
+                >
+                  Feedback
                 </button>
                 <button
                   onClick={() => setShowSettings(true)}
