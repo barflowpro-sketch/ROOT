@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function AuthPage() {
@@ -39,121 +39,160 @@ export default function AuthPage() {
     setPassword('')
   }
 
-  if (sent && mode === 'signup') {
+  if (sent) {
     return (
-      <div className="min-h-svh flex items-center justify-center px-6 bg-stone-800">
-        <div className="text-center max-w-sm">
-          <div className="text-4xl mb-4">✉️</div>
-          <h2 className="text-xl font-semibold text-stone-100 mb-2">Check your email</h2>
-          <p className="text-stone-500 text-sm">We sent a confirmation link to <strong className="text-stone-300">{email}</strong>. Click it to activate your account.</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (sent && mode === 'forgot') {
-    return (
-      <div className="min-h-svh flex items-center justify-center px-6 bg-stone-800">
-        <div className="text-center max-w-sm">
-          <div className="text-4xl mb-4">✉️</div>
-          <h2 className="text-xl font-semibold text-stone-100 mb-2">Reset link sent</h2>
-          <p className="text-stone-500 text-sm">Check your email at <strong className="text-stone-300">{email}</strong> and click the link to reset your password.</p>
-          <button
-            onClick={() => switchMode('signin')}
-            className="mt-6 text-sm text-amber-600 hover:text-amber-500 transition-colors"
-          >
-            Back to sign in
-          </button>
+      <div className="min-h-svh flex items-center justify-center px-6 bg-stone-900">
+        <div className="text-center max-w-sm space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-amber-700/20 border border-amber-700/30 flex items-center justify-center mx-auto text-2xl">
+            ✉
+          </div>
+          <h2 className="text-xl font-bold text-stone-100">
+            {mode === 'signup' ? 'Check your email' : 'Reset link sent'}
+          </h2>
+          <p className="text-stone-500 text-sm leading-relaxed">
+            {mode === 'signup'
+              ? <>We sent a confirmation link to <span className="text-stone-300">{email}</span>. Click it to activate your account.</>
+              : <>Check <span className="text-stone-300">{email}</span> for a link to reset your password.</>
+            }
+          </p>
+          {mode === 'forgot' && (
+            <button onClick={() => switchMode('signin')} className="text-sm text-amber-600 hover:text-amber-500 transition-colors">
+              Back to sign in
+            </button>
+          )}
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-svh flex items-center justify-center px-6 bg-stone-800">
-      <div className="w-full max-w-sm">
-        <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold text-stone-100 tracking-tight">Root</h1>
-          <p className="text-stone-500 text-sm mt-2">Your hair history, wherever you go.</p>
+    <div className="min-h-svh flex flex-col bg-stone-900">
+
+      {/* Top branding area */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 pt-16 pb-8">
+
+        {/* Logo */}
+        <div className="mb-8 text-center">
+          <div className="w-20 h-20 rounded-3xl bg-stone-800 border border-stone-700 flex items-center justify-center mx-auto mb-5 shadow-xl">
+            <span className="text-4xl font-bold text-amber-500 leading-none">R</span>
+          </div>
+          <h1 className="text-3xl font-bold text-stone-100 tracking-tight">Root</h1>
+          <p className="text-stone-500 text-sm mt-2">Your hair history, wherever you go</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
-              placeholder="you@example.com"
-            />
+        {/* Mode tabs — only for signin/signup */}
+        {mode !== 'forgot' && (
+          <div className="flex bg-stone-800 rounded-xl p-1 mb-6 w-full max-w-xs">
+            <button
+              onClick={() => switchMode('signin')}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                mode === 'signin' ? 'bg-stone-700 text-stone-100 shadow-sm' : 'text-stone-500 hover:text-stone-400'
+              }`}
+            >
+              Sign in
+            </button>
+            <button
+              onClick={() => switchMode('signup')}
+              className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+                mode === 'signup' ? 'bg-stone-700 text-stone-100 shadow-sm' : 'text-stone-500 hover:text-stone-400'
+              }`}
+            >
+              Sign up
+            </button>
           </div>
+        )}
+
+        {mode === 'forgot' && (
+          <div className="mb-6 text-center">
+            <p className="text-sm font-semibold text-stone-100">Reset your password</p>
+            <p className="text-xs text-stone-500 mt-1">Enter your email and we'll send a reset link</p>
+          </div>
+        )}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="w-full max-w-xs space-y-3">
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+            className="w-full px-4 py-3.5 rounded-xl border border-stone-700 bg-stone-800 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 focus:border-transparent placeholder:text-stone-600"
+            placeholder="Email address"
+          />
 
           {mode !== 'forgot' && (
-            <div>
-              <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
-                placeholder="••••••••"
-              />
-              {mode === 'signin' && (
-                <button
-                  type="button"
-                  onClick={() => switchMode('forgot')}
-                  className="mt-1.5 text-xs text-stone-500 hover:text-stone-400 transition-colors"
-                >
-                  Forgot password?
-                </button>
-              )}
-            </div>
+            <input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-3.5 rounded-xl border border-stone-700 bg-stone-800 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 focus:border-transparent placeholder:text-stone-600"
+              placeholder="Password"
+            />
           )}
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && (
+            <p className="text-red-400 text-xs px-1">{error}</p>
+          )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-amber-700 text-amber-50 rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
+            className="w-full py-3.5 bg-amber-700 text-amber-50 rounded-xl text-sm font-semibold hover:bg-amber-600 active:bg-amber-800 transition-colors disabled:opacity-50 shadow-lg shadow-amber-900/30"
           >
             {loading ? 'Please wait…' : mode === 'signin' ? 'Sign in' : mode === 'signup' ? 'Create account' : 'Send reset link'}
           </button>
-        </form>
 
-        {mode === 'forgot' ? (
-          <p className="text-center text-sm text-stone-600 mt-8">
-            <button onClick={() => switchMode('signin')} className="text-amber-600 font-medium hover:text-amber-500 transition-colors">
+          {mode === 'signin' && (
+            <button
+              type="button"
+              onClick={() => switchMode('forgot')}
+              className="w-full text-center text-xs text-stone-600 hover:text-stone-400 transition-colors pt-1"
+            >
+              Forgot password?
+            </button>
+          )}
+
+          {mode === 'forgot' && (
+            <button
+              type="button"
+              onClick={() => switchMode('signin')}
+              className="w-full text-center text-xs text-stone-600 hover:text-stone-400 transition-colors pt-1"
+            >
               Back to sign in
             </button>
-          </p>
-        ) : (
-          <p className="text-center text-sm text-stone-600 mt-8">
-            {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
-            <button
-              onClick={() => switchMode(mode === 'signin' ? 'signup' : 'signin')}
-              className="text-amber-600 font-medium hover:text-amber-500 transition-colors"
-            >
-              {mode === 'signin' ? 'Sign up' : 'Sign in'}
-            </button>
-          </p>
-        )}
+          )}
+        </form>
 
+        {/* Feature bullets — only on signin/signup */}
         {mode !== 'forgot' && (
-          <div className="mt-6 pt-6 border-t border-stone-600 text-center">
-            <p className="text-xs text-stone-600 mb-1">Are you a specialist?</p>
-            <a
-              href="/specialist/signup"
-              className="text-sm text-amber-600 font-medium hover:text-amber-500 transition-colors"
-            >
-              Join as a specialist →
-            </a>
+          <div className="mt-10 w-full max-w-xs space-y-3">
+            {[
+              { icon: '✦', text: 'Find hair specialists near you' },
+              { icon: '✦', text: 'Your hair history follows every appointment' },
+              { icon: '✦', text: 'Book in seconds, no DMs needed' },
+            ].map(({ icon, text }) => (
+              <div key={text} className="flex items-center gap-3">
+                <span className="text-amber-700 text-xs">{icon}</span>
+                <span className="text-xs text-stone-600">{text}</span>
+              </div>
+            ))}
           </div>
         )}
       </div>
+
+      {/* Specialist CTA at bottom */}
+      {mode !== 'forgot' && (
+        <div className="px-6 pb-10 text-center border-t border-stone-800 pt-6">
+          <p className="text-xs text-stone-600 mb-1">Are you a hair specialist?</p>
+          <a
+            href="/specialist/signup"
+            className="text-sm text-amber-600 font-semibold hover:text-amber-500 transition-colors"
+          >
+            Join Root as a specialist →
+          </a>
+        </div>
+      )}
     </div>
   )
 }
