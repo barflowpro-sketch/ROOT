@@ -27,8 +27,8 @@ export default function AdminPage({ onBack }) {
         supabase.from('specialist_profiles').select('id').gte('created_at', weekAgoStr),
         supabase.from('profiles').select('user_id').gte('created_at', weekAgoStr),
         supabase.from('bookings').select('id, status, created_at'),
-        supabase.from('feedback').select('*').order('created_at', { ascending: false }).limit(20),
-      ])
+        supabase.from('feedback').select('*').order('created_at', { ascending: false }).limit(20).then(r => r),
+      ]).catch(() => [[], [], [], [], [], []])
 
       const all = allSpecialists || []
       const now = new Date().toISOString()

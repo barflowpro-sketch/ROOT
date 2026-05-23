@@ -237,8 +237,8 @@ export default function ProfilePage({ user }) {
         </div>
       )}
 
-      {/* Completeness bar */}
-      <div className="bg-stone-700 border-b border-stone-600 px-6 py-3">
+      {/* Completeness bar — hidden when profile is complete */}
+      {!isComplete && <div className="bg-stone-700 border-b border-stone-600 px-6 py-3">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs text-stone-500">
@@ -258,7 +258,7 @@ export default function ProfilePage({ user }) {
             </p>
           )}
         </div>
-      </div>
+      </div>}
 
       <div className="max-w-lg mx-auto px-6 py-8 space-y-8">
         {/* Name */}
