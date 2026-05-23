@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
@@ -61,7 +61,7 @@ export default function SharePage() {
 
   if (loading) {
     return (
-      <div className="min-h-svh flex items-center justify-center bg-stone-950">
+      <div className="min-h-svh flex items-center justify-center bg-stone-800">
         <p className="text-stone-600 text-sm">Loading…</p>
       </div>
     )
@@ -69,7 +69,7 @@ export default function SharePage() {
 
   if (notFound) {
     return (
-      <div className="min-h-svh flex items-center justify-center bg-stone-950 px-6">
+      <div className="min-h-svh flex items-center justify-center bg-stone-800 px-6">
         <div className="text-center">
           <p className="text-stone-100 font-medium">Profile not found</p>
           <p className="text-stone-500 text-sm mt-1">This link may have expired or been removed.</p>
@@ -83,8 +83,8 @@ export default function SharePage() {
   const hasPhotos = photos.length > 0
 
   return (
-    <div className="min-h-svh bg-stone-950">
-      <header className="bg-stone-950 border-b border-stone-800 px-6 py-4">
+    <div className="min-h-svh bg-stone-800">
+      <header className="bg-stone-800 border-b border-stone-600 px-6 py-4">
         <p className="text-xs text-stone-600 uppercase tracking-widest font-medium">Root — Hair Profile</p>
       </header>
 
@@ -147,7 +147,7 @@ export default function SharePage() {
             </div>
           ))}
 
-        <div className="border-t border-stone-800 pt-6 text-center">
+        <div className="border-t border-stone-600 pt-6 text-center">
           <p className="text-xs text-stone-700">Shared via Root · The client owns this profile</p>
         </div>
       </div>

@@ -124,6 +124,22 @@ serve(async (req) => {
     )
   }
 
+  if (payload.type === 'UPDATE' && old?.status === 'accepted' && record.status === 'completed') {
+    const { data: client } = await fetchUser(record.client_id)
+    const { data: specialistProfile } = await fetchSpecialistProfile(record.specialist_id)
+    const clientToken = await fetchPushToken(record.client_id)
+    const specialistName = specialistProfile?.name || 'Your specialist'
+
+    if (client?.email) {
+      await sendEmail({
+        to: client.email,
+        subject: 'Your appointment is complete — leave a review!',
+        html: `<p>Your appointment with <strong>${specialistName}</strong> on ${record.requested_date} has been marked complete.</p><p>Open Root to leave a review!</p>`,
+      })
+    }
+    await sendPush(clientToken, 'Appointment complete!', `Leave a review for ${specialistName}`)
+  }
+
   return new Response(JSON.stringify({ ok: true }), { headers: { 'Content-Type': 'application/json' } })
 })
 
@@ -150,7 +166,7 @@ async function fetchSpecialistProfile(userId: string) {
     { headers: { 'apikey': Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, 'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}` } }
   )
   const data = await res.json()
-  return data?.[0]
+  return { data: data?.[0] }
 }
 
 async function fetchPushToken(userId: string) {

@@ -1,7 +1,17 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
+import ReportModal from '../components/ReportModal'
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+function formatDuration(mins) {
+  if (!mins) return ''
+  const m = parseInt(mins)
+  if (m < 60) return `${m} min`
+  const h = Math.floor(m / 60)
+  const rem = m % 60
+  return rem > 0 ? `${h} hr ${rem} min` : `${h} hr`
+}
 
 function formatTime(t) {
   if (!t) return ''
@@ -11,51 +21,73 @@ function formatTime(t) {
   return `${hour12}:${String(m).padStart(2, '0')} ${ampm}`
 }
 
-export default function SpecialistDetailPage({ specialist, onBook, onBack }) {
+export default function SpecialistDetailPage({ specialist: specialistProp, onBook, onBack, currentUserId }) {
+  const [specialist, setSpecialist] = useState(specialistProp)
   const [reviews, setReviews] = useState([])
   const [portfolio, setPortfolio] = useState([])
   const [loading, setLoading] = useState(true)
+  const [showReport, setShowReport] = useState(false)
 
   useEffect(() => {
     Promise.all([
       supabase
+        .from('specialist_profiles')
+        .select('*')
+        .eq('user_id', specialistProp.user_id)
+        .single(),
+      supabase
         .from('reviews')
         .select('*')
-        .eq('specialist_id', specialist.user_id)
+        .eq('specialist_id', specialistProp.user_id)
         .order('created_at', { ascending: false }),
       supabase
         .from('portfolio_photos')
         .select('*')
-        .eq('specialist_id', specialist.user_id)
+        .eq('specialist_id', specialistProp.user_id)
         .order('created_at', { ascending: false }),
-    ]).then(([{ data: reviewData }, { data: portfolioData }]) => {
+    ]).then(([{ data: spData }, { data: reviewData }, { data: portfolioData }]) => {
+      if (spData) setSpecialist(spData)
       setReviews(reviewData || [])
       setPortfolio(portfolioData || [])
       setLoading(false)
     })
-  }, [specialist.user_id])
+  }, [specialistProp.user_id])
 
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
     : null
 
   return (
-    <div className="fixed inset-0 z-40 bg-stone-950 overflow-y-auto">
+    <div className="fixed inset-0 z-40 bg-stone-800 overflow-y-auto">
+      {showReport && (
+        <ReportModal
+          reporterId={currentUserId}
+          reportedUserId={specialist.user_id}
+          context="specialist_profile"
+          onClose={() => setShowReport(false)}
+        />
+      )}
       {/* Header */}
-      <header className="sticky top-0 bg-stone-950/95 backdrop-blur border-b border-stone-800 px-6 py-4 flex items-center gap-3 z-10">
+      <header className="sticky top-0 bg-stone-800/95 backdrop-blur border-b border-stone-600 px-6 py-4 flex items-center justify-between z-10">
         <button
           onClick={onBack}
           className="text-stone-400 hover:text-stone-200 transition-colors text-sm flex items-center gap-1.5"
         >
           ← Back
         </button>
+        <button
+          onClick={() => setShowReport(true)}
+          className="text-xs text-stone-600 hover:text-red-400 transition-colors"
+        >
+          Report
+        </button>
       </header>
 
-      {/* Hero photo */}
-      <div className="w-full h-64 bg-stone-800">
+      {/* Hero banner */}
+      <div className="w-full h-64 bg-stone-600">
         {specialist.photo
           ? <img src={specialist.photo} alt="" className="w-full h-full object-cover" />
-          : <div className="w-full h-full flex items-center justify-center text-stone-600 text-7xl font-bold">
+          : <div className="w-full h-full flex items-center justify-center text-stone-500 text-7xl font-bold">
               {specialist.name?.charAt(0) || '?'}
             </div>
         }
@@ -88,24 +120,32 @@ export default function SpecialistDetailPage({ specialist, onBook, onBack }) {
         )}
 
         {/* Services + Pricing */}
-        {specialist.services?.length > 0 && (
-          <div>
-            <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">Services</h2>
-            <div className="space-y-1.5">
-              {specialist.services.map(s => {
-                const price = specialist.service_prices?.[s]
-                return (
-                  <div key={s} className="flex items-center justify-between px-3 py-2 bg-stone-800 rounded-xl">
-                    <span className="text-sm text-stone-300">{s}</span>
-                    {price ? (
-                      <span className="text-sm font-medium text-amber-500">${price}</span>
-                    ) : null}
-                  </div>
-                )
-              })}
+        {(() => {
+          const grouped = specialist.service_groups || {}
+          const fromGroups = Object.values(grouped).flat().filter(Boolean)
+          const services = fromGroups.length > 0 ? fromGroups : (specialist.services || [])
+          if (services.length === 0) return null
+          return (
+            <div>
+              <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-2">Services</h2>
+              <div className="space-y-1.5">
+                {services.map(s => {
+                  const price = specialist.service_prices?.[s]
+                  const dur = formatDuration(specialist.service_durations?.[s])
+                  return (
+                    <div key={s} className="flex items-center justify-between px-3 py-2 bg-stone-600 rounded-xl">
+                      <div>
+                        <span className="text-sm text-stone-300">{s}</span>
+                        {dur && <span className="text-xs text-stone-500 ml-2">{dur}</span>}
+                      </div>
+                      {price && <span className="text-sm font-medium text-amber-500">${price}</span>}
+                    </div>
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        })()}
 
         {/* Portfolio */}
         {!loading && portfolio.length > 0 && (
@@ -132,7 +172,7 @@ export default function SpecialistDetailPage({ specialist, onBook, onBack }) {
                   className={`flex-1 py-1.5 rounded-lg text-xs font-medium text-center ${
                     specialist.available_days.includes(day)
                       ? 'bg-amber-700/20 text-amber-500 border border-amber-700/40'
-                      : 'bg-stone-900 text-stone-700 border border-stone-800'
+                      : 'bg-stone-700 text-stone-700 border border-stone-600'
                   }`}
                 >
                   {day}
@@ -157,7 +197,7 @@ export default function SpecialistDetailPage({ specialist, onBook, onBack }) {
           ) : (
             <div className="space-y-3">
               {reviews.map(review => (
-                <div key={review.id} className="bg-stone-900 border border-stone-800 rounded-xl p-4 space-y-1.5">
+                <div key={review.id} className="bg-stone-700 border border-stone-600 rounded-xl p-4 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map(i => (
@@ -179,7 +219,7 @@ export default function SpecialistDetailPage({ specialist, onBook, onBack }) {
       </div>
 
       {/* Sticky book button */}
-      <div className="fixed bottom-0 left-0 right-0 bg-stone-950 border-t border-stone-800 px-6 py-4">
+      <div className="fixed bottom-0 left-0 right-0 bg-stone-800 border-t border-stone-600 px-6 py-4">
         <button
           onClick={() => onBook(specialist)}
           className="w-full py-4 bg-amber-700 text-amber-50 rounded-xl text-sm font-semibold hover:bg-amber-600 transition-colors"

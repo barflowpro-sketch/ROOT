@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 export default function SpecialistSignupPage() {
@@ -37,7 +37,7 @@ export default function SpecialistSignupPage() {
 
   if (sent) {
     return (
-      <div className="min-h-svh flex items-center justify-center px-6 bg-stone-950">
+      <div className="min-h-svh flex items-center justify-center px-6 bg-stone-800">
         <div className="text-center max-w-sm">
           <div className="text-4xl mb-4">✉️</div>
           <h2 className="text-xl font-semibold text-stone-100 mb-2">Check your email</h2>
@@ -48,7 +48,7 @@ export default function SpecialistSignupPage() {
   }
 
   return (
-    <div className="min-h-svh flex items-center justify-center px-6 bg-stone-950">
+    <div className="min-h-svh flex items-center justify-center px-6 bg-stone-800">
       <div className="w-full max-w-sm">
         <div className="mb-10">
           <a href="/" className="text-stone-600 text-sm hover:text-stone-400 transition-colors">← Back</a>
@@ -56,7 +56,7 @@ export default function SpecialistSignupPage() {
           <p className="text-stone-500 text-sm mt-2">Get discovered by clients who already know their hair history.</p>
         </div>
 
-        <div className="bg-stone-900 border border-stone-800 rounded-2xl p-4 mb-6 space-y-2">
+        <div className="bg-stone-700 border border-stone-600 rounded-2xl p-4 mb-6 space-y-2">
           {[
             'Clients arrive with their full hair history',
             'No more cold consultations',
@@ -77,7 +77,7 @@ export default function SpecialistSignupPage() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
               placeholder="you@example.com"
             />
           </div>
@@ -89,7 +89,7 @@ export default function SpecialistSignupPage() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
               placeholder="••••••••"
             />
           </div>

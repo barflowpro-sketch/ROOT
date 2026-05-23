@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+﻿import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../lib/supabase'
 import { Share } from '@capacitor/share'
 
@@ -21,7 +21,7 @@ function LabelPicker({ onSelect, onCancel }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60" onClick={onCancel}>
       <div
-        className="w-full max-w-lg bg-stone-900 border border-stone-800 rounded-t-3xl p-6 space-y-3"
+        className="w-full max-w-lg bg-stone-700 border border-stone-600 rounded-t-3xl p-6 space-y-3"
         onClick={e => e.stopPropagation()}
       >
         <p className="text-sm font-semibold text-stone-100 mb-4">What kind of photo is this?</p>
@@ -29,7 +29,7 @@ function LabelPicker({ onSelect, onCancel }) {
           <button
             key={key}
             onClick={() => onSelect(key)}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-700 hover:bg-stone-800 transition-colors"
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-700 hover:bg-stone-600 transition-colors"
           >
             <span className="text-sm font-medium text-stone-100">{text}</span>
             <span className="text-xs text-stone-500">{desc}</span>
@@ -213,7 +213,7 @@ export default function ProfilePage({ user }) {
   const isComplete = completedCount === total
 
   return (
-    <div className="min-h-svh bg-stone-950">
+    <div className="min-h-svh bg-stone-800">
       {pendingFile && (
         <LabelPicker
           onSelect={handleLabelSelect}
@@ -221,15 +221,24 @@ export default function ProfilePage({ user }) {
         />
       )}
 
-      <header className="bg-stone-950 border-b border-stone-800 px-6 py-4 flex items-center justify-between">
+      <header className="bg-stone-800 border-b border-stone-600 px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-stone-100 tracking-tight">Root</h1>
         <button onClick={signOut} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
           Sign out
         </button>
       </header>
 
+      {/* First-time prompt */}
+      {photos.length === 0 && !profile.history && !profile.loves && (
+        <div className="bg-amber-900/20 border-b border-amber-800/30 px-6 py-3">
+          <div className="max-w-lg mx-auto">
+            <p className="text-xs font-medium text-amber-500">Start here — add a photo of your hair and fill in your history. Specialists will see this when you book.</p>
+          </div>
+        </div>
+      )}
+
       {/* Completeness bar */}
-      <div className="bg-stone-900 border-b border-stone-800 px-6 py-3">
+      <div className="bg-stone-700 border-b border-stone-600 px-6 py-3">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-xs text-stone-500">
@@ -237,7 +246,7 @@ export default function ProfilePage({ user }) {
             </span>
             <span className="text-xs font-medium text-amber-600">{pct}%</span>
           </div>
-          <div className="h-1.5 bg-stone-800 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-stone-600 rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-green-500' : 'bg-amber-700'}`}
               style={{ width: `${pct}%` }}
@@ -259,7 +268,7 @@ export default function ProfilePage({ user }) {
             type="text"
             value={profile.name}
             onChange={e => setProfile(p => ({ ...p, name: e.target.value }))}
-            className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+            className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
             placeholder="What should your specialist call you?"
           />
         </div>
@@ -271,7 +280,7 @@ export default function ProfilePage({ user }) {
             <button
               onClick={() => fileRef.current.click()}
               disabled={uploading}
-              className="text-xs font-medium text-amber-600 hover:text-amber-500 px-3 py-1.5 rounded-lg border border-stone-800 hover:border-stone-700 transition-colors disabled:opacity-50"
+              className="text-xs font-medium text-amber-600 hover:text-amber-500 px-3 py-1.5 rounded-lg border border-stone-600 hover:border-stone-700 transition-colors disabled:opacity-50"
             >
               {uploading ? 'Uploading…' : '+ Add photo'}
             </button>
@@ -281,7 +290,7 @@ export default function ProfilePage({ user }) {
           {photos.length === 0 ? (
             <button
               onClick={() => fileRef.current.click()}
-              className="w-full border-2 border-dashed border-stone-800 rounded-2xl py-10 text-stone-600 text-sm hover:border-stone-700 transition-colors"
+              className="w-full border-2 border-dashed border-stone-600 rounded-2xl py-10 text-stone-600 text-sm hover:border-stone-700 transition-colors"
             >
               Add your first photo — before, after, reference, or "never again"
             </button>
@@ -291,7 +300,7 @@ export default function ProfilePage({ user }) {
                 <div key={photo.id} className="relative group aspect-square">
                   <img src={photo.url} alt="" className="w-full h-full object-cover rounded-xl" />
                   {photo.label && (
-                    <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-stone-800 text-stone-400'}`}>
+                    <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-stone-600 text-stone-400'}`}>
                       {LABEL_TEXT[photo.label] || photo.label}
                     </span>
                   )}
@@ -306,7 +315,7 @@ export default function ProfilePage({ user }) {
               <button
                 onClick={() => fileRef.current.click()}
                 disabled={uploading}
-                className="aspect-square border-2 border-dashed border-stone-800 rounded-xl text-stone-600 text-2xl hover:border-stone-700 transition-colors flex items-center justify-center"
+                className="aspect-square border-2 border-dashed border-stone-600 rounded-xl text-stone-600 text-2xl hover:border-stone-700 transition-colors flex items-center justify-center"
               >
                 +
               </button>
@@ -322,7 +331,7 @@ export default function ProfilePage({ user }) {
               value={profile[key]}
               onChange={e => setProfile(p => ({ ...p, [key]: e.target.value }))}
               rows={3}
-              className="w-full px-4 py-3 rounded-xl border border-stone-800 bg-stone-900 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 resize-none placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 resize-none placeholder:text-stone-600"
               placeholder={placeholder}
             />
           </div>
@@ -339,7 +348,7 @@ export default function ProfilePage({ user }) {
 
         {/* Share link */}
         {shareUrl && (
-          <div className="bg-stone-900 border border-stone-800 rounded-2xl p-5 space-y-3">
+          <div className="bg-stone-700 border border-stone-600 rounded-2xl p-5 space-y-3">
             <div>
               <p className="text-sm font-medium text-stone-100 mb-1">Share with your specialist</p>
               <p className="text-xs text-stone-500">Send this before your first appointment — no app required on their end.</p>

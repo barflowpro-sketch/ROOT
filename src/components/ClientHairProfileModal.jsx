@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
 const LABEL_COLORS = {
@@ -46,8 +46,8 @@ export default function ClientHairProfileModal({ clientId, clientName, onClose }
   )
 
   return (
-    <div className="fixed inset-0 z-50 bg-stone-950 overflow-y-auto">
-      <header className="sticky top-0 bg-stone-950/95 backdrop-blur border-b border-stone-800 px-6 py-4 flex items-center gap-3 z-10">
+    <div className="fixed inset-0 z-50 bg-stone-800 overflow-y-auto">
+      <header className="sticky top-0 bg-stone-800/95 backdrop-blur border-b border-stone-600 px-6 py-4 flex items-center gap-3 z-10">
         <button
           onClick={onClose}
           className="text-stone-400 hover:text-stone-200 transition-colors text-sm flex items-center gap-1.5"
@@ -75,7 +75,7 @@ export default function ClientHairProfileModal({ clientId, clientName, onClose }
                   <div key={photo.id} className="relative aspect-square">
                     <img src={photo.url} alt="" className="w-full h-full object-cover rounded-xl" />
                     {photo.label && (
-                      <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-stone-800 text-stone-400'}`}>
+                      <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-stone-600 text-stone-400'}`}>
                         {LABEL_TEXT[photo.label] || photo.label}
                       </span>
                     )}
