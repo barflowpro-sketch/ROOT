@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
     case 'customer.subscription.created':
     case 'customer.subscription.updated': {
       const sub = event.data.object as Stripe.Subscription
-      const isActive = sub.status === 'active'
+      const isActive = sub.status === 'active' || sub.status === 'trialing'
       await supabase
         .from('specialist_profiles')
         .update({
