@@ -385,7 +385,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
       )}
 
       {showSettings && (
-        <AccountSettingsPage user={user} onBack={() => setShowSettings(false)} />
+        <AccountSettingsPage user={user} role="specialist" onBack={() => setShowSettings(false)} />
       )}
 
       {showFeedback && (
@@ -451,17 +451,11 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           <p className="text-xs text-stone-600">Specialist dashboard</p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => supabase.auth.signOut()} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
-            Sign out
-          </button>
           {onAdmin && (
             <button onClick={onAdmin} className="text-sm text-amber-600 hover:text-amber-400 transition-colors">
               Admin
             </button>
           )}
-          <button onClick={() => setShowFeedback(true)} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
-            Feedback
-          </button>
           <button onClick={() => setShowSettings(true)} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
             Settings
           </button>
