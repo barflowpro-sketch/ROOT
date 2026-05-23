@@ -39,6 +39,8 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
     service_durations: {},
     service_groups: { Haircut: [], Braids: [], Locs: [], Other: [] },
     blocked_dates: [],
+    service_location: '',
+    location_address: '',
   })
   const [groupInputs, setGroupInputs] = useState({ Haircut: '', Braids: '', Locs: '', Other: '' })
   const [blockedDateInput, setBlockedDateInput] = useState('')
@@ -138,6 +140,8 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           trial_ends_at: data.trial_ends_at || null,
           subscription_status: data.subscription_status || 'trial',
           subscribed_until: data.subscribed_until || null,
+          service_location: data.service_location || '',
+          location_address: data.location_address || '',
         })
       }
 
@@ -591,6 +595,42 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
               className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
               placeholder="e.g. Austin, TX"
             />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-stone-400 mb-2 uppercase tracking-wider">Where do you work?</label>
+            <div className="flex gap-2 mb-3">
+              {[
+                { value: 'studio', label: 'Studio / Salon' },
+                { value: 'mobile', label: 'Mobile' },
+                { value: 'both', label: 'Both' },
+              ].map(opt => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setProfile(p => ({ ...p, service_location: opt.value }))}
+                  className={`flex-1 py-2.5 rounded-xl text-xs font-medium border transition-colors ${
+                    profile.service_location === opt.value
+                      ? 'bg-amber-700 border-amber-700 text-amber-50'
+                      : 'bg-transparent border-stone-600 text-stone-500 hover:border-stone-500'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            {(profile.service_location === 'studio' || profile.service_location === 'both') && (
+              <input
+                type="text"
+                value={profile.location_address}
+                onChange={e => setProfile(p => ({ ...p, location_address: e.target.value }))}
+                placeholder="Salon name or address"
+                className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+              />
+            )}
+            {profile.service_location === 'mobile' && (
+              <p className="text-xs text-stone-600">You travel to the client's location.</p>
+            )}
           </div>
 
           <div>
