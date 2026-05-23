@@ -73,9 +73,7 @@ export default function AuthPage() {
 
         {/* Logo */}
         <div className="mb-8 text-center">
-          <div className="w-20 h-20 rounded-3xl bg-stone-800 border border-stone-700 flex items-center justify-center mx-auto mb-5 shadow-xl">
-            <span className="text-4xl font-bold text-amber-500 leading-none">R</span>
-          </div>
+          <img src="/logo.png" alt="Root" className="w-20 h-20 rounded-3xl mx-auto mb-5 shadow-xl" />
           <h1 className="text-3xl font-bold text-stone-100 tracking-tight">Root</h1>
           <p className="text-stone-500 text-sm mt-2">Your hair history, wherever you go</p>
         </div>

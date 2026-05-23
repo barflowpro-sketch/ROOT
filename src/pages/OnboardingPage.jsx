@@ -62,9 +62,7 @@ export default function OnboardingPage({ user, onDone }) {
         {/* Step 0 — Welcome */}
         {step === 0 && (
           <div className="flex-1 flex flex-col">
-            <div className="w-16 h-16 rounded-2xl bg-stone-800 border border-stone-700 flex items-center justify-center mb-8 shadow-xl">
-              <span className="text-3xl font-bold text-amber-500 leading-none">R</span>
-            </div>
+            <img src="/logo.png" alt="Root" className="w-16 h-16 rounded-2xl mb-8 shadow-xl" />
             <h1 className="text-4xl font-bold text-stone-100 tracking-tight leading-tight mb-4">
               Your hair story,<br />always with you.
             </h1>
