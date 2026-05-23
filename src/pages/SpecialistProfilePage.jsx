@@ -31,7 +31,7 @@ const HOUR_SLOTS = Array.from({ length: 29 }, (_, i) => {
   return { value, label: `${hour12}:${m} ${ampm}` }
 })
 
-export default function SpecialistProfilePage({ user }) {
+export default function SpecialistProfilePage({ user, onAdmin }) {
   const [profile, setProfile] = useState({
     name: '', bio: '', city: '', services: [], photo: '',
     available_days: [], available_start: '09:00', available_end: '18:00',
@@ -454,6 +454,11 @@ export default function SpecialistProfilePage({ user }) {
           <button onClick={() => supabase.auth.signOut()} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
             Sign out
           </button>
+          {onAdmin && (
+            <button onClick={onAdmin} className="text-sm text-amber-600 hover:text-amber-400 transition-colors">
+              Admin
+            </button>
+          )}
           <button onClick={() => setShowFeedback(true)} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
             Feedback
           </button>

@@ -133,8 +133,8 @@ function App() {
             !user ? <AuthPage /> :
             !onboarded && role === 'specialist' ? <SpecialistOnboardingPage user={user} onDone={completeOnboarding} /> :
             !onboarded && role === 'client' ? <OnboardingPage user={user} onDone={completeOnboarding} /> :
-            role === 'specialist' ? <SpecialistProfilePage user={user} /> :
             showAdmin ? <AdminPage onBack={() => setShowAdmin(false)} /> :
+            role === 'specialist' ? <SpecialistProfilePage user={user} onAdmin={isAdmin ? () => setShowAdmin(true) : undefined} /> :
             <>
               {showSettings && (
                 <AccountSettingsPage user={user} onBack={() => setShowSettings(false)} />
@@ -211,16 +211,10 @@ function App() {
                     </span>
                   )}
                 </button>
-                <button
-                  onClick={() => setShowFeedback(true)}
-                  className="flex-1 py-4 text-xs font-medium transition-colors text-stone-600 hover:text-stone-400"
-                >
-                  Feedback
-                </button>
                 {isAdmin && (
                   <button
                     onClick={() => setShowAdmin(true)}
-                    className="flex-1 py-4 text-xs font-medium transition-colors text-amber-700 hover:text-amber-500"
+                    className="flex-1 py-4 text-xs font-medium transition-colors text-amber-600 hover:text-amber-400"
                   >
                     Admin
                   </button>
