@@ -1,46 +1,15 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { supabase } from '../lib/supabase'
-
-const SLIDES = [
-  {
-    title: 'Root',
-    subtitle: 'Your hair history, wherever you go.',
-    body: 'Stop re-explaining your hair to every new specialist. Root keeps your full story in one place — photos, history, allergies, and what you love.',
-    cta: 'Get started',
-  },
-  {
-    title: "What's your name?",
-    subtitle: "Your specialist will use this to greet you.",
-    body: null,
-    cta: 'Continue',
-    nameInput: true,
-  },
-  {
-    title: 'Here\'s how it works',
-    subtitle: null,
-    body: null,
-    features: [
-      { icon: '📸', title: 'Document your hair', desc: 'Add photos — before, after, inspiration, and the ones you never want repeated.' },
-      { icon: '📋', title: 'Build your hair file', desc: 'Record your history, what you love, what you hate, and any allergies.' },
-      { icon: '📅', title: 'Book with confidence', desc: 'Find a specialist and send your full hair profile with your booking request.' },
-    ],
-    cta: 'Build my hair file',
-  },
-]
 
 export default function OnboardingPage({ user, onDone }) {
   const [step, setStep] = useState(0)
   const [name, setName] = useState('')
   const [saving, setSaving] = useState(false)
 
-  const slide = SLIDES[step]
-  const isLast = step === SLIDES.length - 1
-  const isNameStep = slide.nameInput
-
   async function advance() {
-    if (isNameStep && !name.trim()) return
+    if (step === 1 && !name.trim()) return
 
-    if (isLast) {
+    if (step === 2) {
       setSaving(true)
       const shareToken = crypto.randomUUID()
       await supabase.from('profiles').upsert({
@@ -55,71 +24,119 @@ export default function OnboardingPage({ user, onDone }) {
     }
   }
 
-  return (
-    <div className="min-h-svh bg-stone-800 flex flex-col px-6 py-14">
+  const features = [
+    {
+      icon: '◈',
+      title: 'Document your hair',
+      desc: 'Add photos — before, after, inspiration, and the ones you never want repeated.',
+    },
+    {
+      icon: '◉',
+      title: 'Build your hair file',
+      desc: 'Record your history, what you love, what you hate, and any allergies.',
+    },
+    {
+      icon: '◎',
+      title: 'Book with confidence',
+      desc: 'Find a specialist and send your full hair profile with every booking.',
+    },
+  ]
 
-      {/* Progress dots */}
-      <div className="flex gap-1.5 mb-12">
-        {SLIDES.map((_, i) => (
-          <div
-            key={i}
-            className={`h-1 rounded-full transition-all duration-300 ${
-              i === step ? 'w-6 bg-amber-600' : i < step ? 'w-3 bg-amber-800' : 'w-3 bg-stone-600'
-            }`}
-          />
+  return (
+    <div className="min-h-svh bg-stone-900 flex flex-col">
+
+      {/* Progress bar */}
+      <div className="flex gap-1 px-6 pt-14">
+        {[0, 1, 2].map(i => (
+          <div key={i} className="flex-1 h-0.5 rounded-full overflow-hidden bg-stone-800">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${i <= step ? 'bg-amber-600' : 'bg-transparent'}`}
+            />
+          </div>
         ))}
       </div>
 
       {/* Content */}
-      <div className="flex-1 space-y-6">
-        <div>
-          <h1 className={`font-bold text-stone-100 tracking-tight ${step === 0 ? 'text-4xl' : 'text-2xl'}`}>
-            {slide.title}
-          </h1>
-          {slide.subtitle && (
-            <p className="text-stone-500 text-sm mt-2">{slide.subtitle}</p>
-          )}
-        </div>
+      <div className="flex-1 flex flex-col px-6 pt-12">
 
-        {slide.body && (
-          <p className="text-stone-400 text-sm leading-relaxed">{slide.body}</p>
-        )}
-
-        {isNameStep && (
-          <input
-            type="text"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && advance()}
-            autoFocus
-            placeholder="Your name"
-            className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
-          />
-        )}
-
-        {slide.features && (
-          <div className="space-y-5">
-            {slide.features.map(({ icon, title, desc }) => (
-              <div key={title} className="flex gap-4 items-start">
-                <span className="text-2xl">{icon}</span>
-                <div>
-                  <p className="text-stone-100 text-sm font-medium">{title}</p>
-                  <p className="text-stone-500 text-sm mt-0.5 leading-relaxed">{desc}</p>
+        {/* Step 0 — Welcome */}
+        {step === 0 && (
+          <div className="flex-1 flex flex-col">
+            <div className="w-16 h-16 rounded-2xl bg-stone-800 border border-stone-700 flex items-center justify-center mb-8 shadow-xl">
+              <span className="text-3xl font-bold text-amber-500 leading-none">R</span>
+            </div>
+            <h1 className="text-4xl font-bold text-stone-100 tracking-tight leading-tight mb-4">
+              Your hair story,<br />always with you.
+            </h1>
+            <p className="text-stone-500 text-sm leading-relaxed max-w-xs">
+              Stop re-explaining your hair to every new specialist. Root keeps your full story in one place — photos, history, allergies, and everything you love.
+            </p>
+            <div className="mt-10 space-y-3">
+              {[
+                'No more forgotten consultations',
+                'Specialists know you before you arrive',
+                'Every visit starts exactly right',
+              ].map(item => (
+                <div key={item} className="flex items-center gap-3">
+                  <span className="text-amber-700 text-xs">✦</span>
+                  <span className="text-xs text-stone-500">{item}</span>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Step 1 — Name */}
+        {step === 1 && (
+          <div className="flex-1 flex flex-col">
+            <h1 className="text-3xl font-bold text-stone-100 tracking-tight mb-2">
+              What's your name?
+            </h1>
+            <p className="text-stone-500 text-sm mb-10">Your specialist will use this to greet you.</p>
+            <input
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && advance()}
+              autoFocus
+              placeholder="Your name"
+              className="w-full px-5 py-4 rounded-2xl border border-stone-700 bg-stone-800 text-stone-100 text-lg focus:outline-none focus:ring-2 focus:ring-amber-700 focus:border-transparent placeholder:text-stone-600"
+            />
+          </div>
+        )}
+
+        {/* Step 2 — Features */}
+        {step === 2 && (
+          <div className="flex-1 flex flex-col">
+            <h1 className="text-3xl font-bold text-stone-100 tracking-tight mb-2">
+              {name ? `Welcome, ${name.split(' ')[0]}.` : 'Here\'s how it works.'}
+            </h1>
+            <p className="text-stone-500 text-sm mb-10">Everything you need, in one place.</p>
+            <div className="space-y-4">
+              {features.map(({ icon, title, desc }) => (
+                <div key={title} className="flex gap-4 items-start bg-stone-800 border border-stone-700 rounded-2xl p-4">
+                  <div className="w-10 h-10 rounded-xl bg-amber-700/20 border border-amber-700/30 flex items-center justify-center flex-shrink-0">
+                    <span className="text-amber-500 text-lg">{icon}</span>
+                  </div>
+                  <div>
+                    <p className="text-stone-100 text-sm font-semibold">{title}</p>
+                    <p className="text-stone-500 text-xs mt-1 leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
 
       {/* CTA */}
-      <div className="space-y-3 pt-8">
+      <div className="px-6 pb-12 pt-8 space-y-3">
         <button
           onClick={advance}
-          disabled={saving || (isNameStep && !name.trim())}
-          className="w-full py-4 bg-amber-700 text-amber-50 rounded-2xl text-sm font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
+          disabled={saving || (step === 1 && !name.trim())}
+          className="w-full py-4 bg-amber-700 text-amber-50 rounded-2xl text-sm font-semibold hover:bg-amber-600 active:bg-amber-800 transition-colors disabled:opacity-50 shadow-lg shadow-amber-900/30"
         >
-          {saving ? 'Setting up…' : slide.cta}
+          {saving ? 'Setting up…' : step === 0 ? 'Get started' : step === 1 ? 'Continue' : 'Build my hair file'}
         </button>
         {step > 0 && (
           <button
@@ -130,7 +147,7 @@ export default function OnboardingPage({ user, onDone }) {
           </button>
         )}
         {step === 0 && (
-          <p className="text-center text-xs text-stone-600">Your data stays yours. Always.</p>
+          <p className="text-center text-xs text-stone-700">Your data stays yours. Always.</p>
         )}
       </div>
     </div>
