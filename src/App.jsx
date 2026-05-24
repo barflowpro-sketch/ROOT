@@ -45,29 +45,46 @@ function App() {
   useEffect(() => {
     if (!user) { setRoleLoading(false); return }
 
-    const metaRole = user.user_metadata?.role
-    if (metaRole === 'specialist') {
-      setRole('specialist')
-      setOnboarded(!!localStorage.getItem(SPECIALIST_ONBOARDING_KEY))
+    async function detectRole() {
+      const metaRole = user.user_metadata?.role
+      if (metaRole === 'specialist') {
+        setRole('specialist')
+        setOnboarded(!!localStorage.getItem(SPECIALIST_ONBOARDING_KEY))
+        setRoleLoading(false)
+        return
+      }
+
+      const { data: specialistProfile } = await supabase
+        .from('specialist_profiles')
+        .select('user_id')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (specialistProfile) {
+        setRole('specialist')
+        setOnboarded(!!localStorage.getItem(SPECIALIST_ONBOARDING_KEY))
+        setRoleLoading(false)
+        return
+      }
+
+      setRole('client')
+      setOnboarded(!!localStorage.getItem(CLIENT_ONBOARDING_KEY))
       setRoleLoading(false)
-      return
+
+      supabase
+        .from('bookings')
+        .select('id')
+        .eq('client_id', user.id)
+        .in('status', ['accepted', 'declined', 'completed'])
+        .then(({ data }) => {
+          if (!data) return
+          const seen = JSON.parse(localStorage.getItem(SEEN_NOTIFICATIONS_KEY) || '[]')
+          const unseen = data.filter(b => !seen.includes(b.id))
+          setAppointmentBadge(unseen.length)
+        })
     }
 
-    setRole('client')
-    setOnboarded(!!localStorage.getItem(CLIENT_ONBOARDING_KEY))
-    setRoleLoading(false)
-
-    supabase
-      .from('bookings')
-      .select('id')
-      .eq('client_id', user.id)
-      .in('status', ['accepted', 'declined', 'completed'])
-      .then(({ data }) => {
-        if (!data) return
-        const seen = JSON.parse(localStorage.getItem(SEEN_NOTIFICATIONS_KEY) || '[]')
-        const unseen = data.filter(b => !seen.includes(b.id))
-        setAppointmentBadge(unseen.length)
-      })
+    detectRole()
   }, [user])
 
   useEffect(() => {
