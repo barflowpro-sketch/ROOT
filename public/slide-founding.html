@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Root — Founding Slide</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  /* 1080x1080 square for Instagram/TikTok */
+  .slide {
+    width: 540px;
+    height: 540px;
+    background: #1c1917;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    overflow: hidden;
+  }
+
+  /* Subtle background glow */
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(180,83,9,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .slide::after {
+    content: '';
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(180,83,9,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 32px;
+  }
+
+  .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(180,83,9,0.2);
+    border: 1px solid rgba(180,83,9,0.4);
+    color: #f59e0b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  .tag .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f59e0b;
+  }
+
+  .headline {
+    font-size: 36px;
+    font-weight: 800;
+    color: #f5f5f4;
+    text-align: center;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .headline span {
+    color: #f59e0b;
+  }
+
+  .sub {
+    font-size: 14px;
+    color: #78716c;
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 36px;
+    max-width: 340px;
+  }
+
+  .pricing {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .price-new {
+    text-align: center;
+  }
+
+  .price-new .amount {
+    font-size: 52px;
+    font-weight: 900;
+    color: #f5f5f4;
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+
+  .price-new .period {
+    font-size: 12px;
+    color: #78716c;
+    margin-top: 4px;
+  }
+
+  .price-new .duration {
+    font-size: 11px;
+    color: #f59e0b;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .divider {
+    width: 1px;
+    height: 60px;
+    background: #44403c;
+  }
+
+  .price-old {
+    text-align: center;
+  }
+
+  .price-old .amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: #44403c;
+    letter-spacing: -1px;
+    text-decoration: line-through;
+    line-height: 1;
+  }
+
+  .price-old .label {
+    font-size: 11px;
+    color: #57534e;
+    margin-top: 4px;
+  }
+
+  .spots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #292524;
+    border: 1px solid #44403c;
+    border-radius: 100px;
+    padding: 10px 20px;
+    margin-bottom: 32px;
+  }
+
+  .spots-bar {
+    width: 120px;
+    height: 4px;
+    background: #44403c;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .spots-fill {
+    height: 100%;
+    width: 15%;
+    background: #b45309;
+    border-radius: 4px;
+  }
+
+  .spots-text {
+    font-size: 12px;
+    color: #a8a29e;
+  }
+
+  .spots-text strong {
+    color: #f5f5f4;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 24px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .footer-logo {
+    font-size: 13px;
+    font-weight: 800;
+    color: #57534e;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .footer-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #44403c;
+  }
+
+  .footer-url {
+    font-size: 12px;
+    color: #44403c;
+  }
+</style>
+</head>
+<body>
+<div class="slide">
+  <img src="/logo.png" alt="Root" class="logo" />
+
+  <div class="tag">
+    <div class="dot"></div>
+    Founding member offer
+  </div>
+
+  <h1 class="headline">First <span>30 specialists</span><br />get a special rate.</h1>
+
+  <p class="sub">Join Root now and lock in the founding price<br />for your first 3 months.</p>
+
+  <div class="pricing">
+    <div class="price-new">
+      <div class="amount">$15</div>
+      <div class="period">per month</div>
+      <div class="duration">first 3 months</div>
+    </div>
+    <div class="divider"></div>
+    <div class="price-old">
+      <div class="amount">$17.99</div>
+      <div class="label">regular price</div>
+    </div>
+  </div>
+
+  <div class="spots">
+    <div class="spots-bar">
+      <div class="spots-fill"></div>
+    </div>
+    <div class="spots-text"><strong>30 spots</strong> · limited offer</div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-logo">Root</span>
+    <div class="footer-dot"></div>
+    <span class="footer-url">rootbook.org</span>
+  </div>
+</div>
+</body>
+</html>
