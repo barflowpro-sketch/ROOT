@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Root — Series 1 Carousel</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 24px;
+    padding: 40px 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .hint {
+    color: #44403c;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .slide {
+    width: 540px;
+    height: 540px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 52px 48px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  /* Glow */
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(180,83,9,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── Slide backgrounds ── */
+  .slide-1 { background: #1c1917; }
+  .slide-2 { background: #1c1917; }
+  .slide-3 { background: #1c1917; }
+  .slide-4 { background: #161412; }
+
+  /* Slide 4 amber glow */
+  .slide-4::before {
+    background: radial-gradient(circle, rgba(180,83,9,0.18) 0%, transparent 65%);
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 440px; height: 440px;
+  }
+
+  /* ── Shared elements ── */
+  .slide-num {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #44403c;
+    letter-spacing: 1px;
+  }
+
+  .logo-row {
+    position: absolute;
+    top: 22px;
+    left: 28px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .logo-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .logo-name {
+    font-size: 13px;
+    font-weight: 800;
+    color: #57534e;
+    letter-spacing: 1px;
+  }
+
+  /* ── Slide 1 — Hook ── */
+  .s1-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    color: #b45309;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .s1-headline {
+    font-size: 34px;
+    font-weight: 900;
+    color: #f5f5f4;
+    text-align: center;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  .s1-headline em {
+    color: #b45309;
+    font-style: normal;
+  }
+
+  .s1-sub {
+    font-size: 14px;
+    color: #78716c;
+    text-align: center;
+    line-height: 1.6;
+    max-width: 340px;
+    margin-bottom: 36px;
+  }
+
+  .swipe-hint {
+    display: flex;
+    align-items: center;
+    gap-8px;
+    font-size: 12px;
+    color: #44403c;
+    gap: 6px;
+  }
+
+  .swipe-arrow { color: #b45309; }
+
+  /* ── Slides 2 & 3 — Pain points ── */
+  .pain-number {
+    font-size: 72px;
+    font-weight: 900;
+    color: #292524;
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -4px;
+  }
+
+  .pain-headline {
+    font-size: 30px;
+    font-weight: 800;
+    color: #f5f5f4;
+    text-align: center;
+    letter-spacing: -0.8px;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .pain-headline em {
+    color: #b45309;
+    font-style: normal;
+  }
+
+  .pain-body {
+    font-size: 14px;
+    color: #78716c;
+    text-align: center;
+    line-height: 1.65;
+    max-width: 360px;
+    margin-bottom: 32px;
+  }
+
+  .pain-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #292524;
+    border: 1px solid #44403c;
+    border-radius: 100px;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #a8a29e;
+  }
+
+  .pain-tag .icon { font-size: 14px; }
+
+  /* ── Slide 4 — Solution ── */
+  .s4-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(180,83,9,0.15);
+    border: 1px solid rgba(180,83,9,0.35);
+    color: #f59e0b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  .s4-headline {
+    font-size: 36px;
+    font-weight: 900;
+    color: #f5f5f4;
+    text-align: center;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .s4-headline span { color: #f59e0b; }
+
+  .s4-sub {
+    font-size: 14px;
+    color: #78716c;
+    text-align: center;
+    line-height: 1.65;
+    max-width: 340px;
+    margin-bottom: 36px;
+  }
+
+  .s4-features {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 32px;
+  }
+
+  .s4-feature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #292524;
+    border: 1px solid #44403c;
+    border-radius: 12px;
+    padding: 10px 14px;
+  }
+
+  .s4-feature .check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(180,83,9,0.2);
+    border: 1px solid rgba(180,83,9,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #f59e0b;
+    flex-shrink: 0;
+  }
+
+  .s4-feature span { font-size: 13px; color: #a8a29e; }
+
+  .s4-cta {
+    background: #b45309;
+    color: #fef3c7;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 100px;
+    letter-spacing: 0.2px;
+    box-shadow: 0 8px 24px rgba(180,83,9,0.3);
+  }
+
+  /* Footer */
+  .footer {
+    position: absolute;
+    bottom: 20px;
+    left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .footer-text { font-size: 11px; color: #44403c; }
+  .footer-dot { width: 3px; height: 3px; border-radius: 50%; background: #44403c; }
+
+  /* Dots nav */
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #44403c;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .dot.active { background: #b45309; width: 18px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<p class="hint">Screenshot each slide individually for your carousel</p>
+
+<!-- SLIDE 1 — Hook -->
+<div class="slide slide-1" id="s1">
+  <div class="logo-row">
+    <div class="logo-img"><img src="/logo.png" alt="Root" /></div>
+    <span class="logo-name">ROOT</span>
+  </div>
+  <div class="slide-num">1 / 4</div>
+
+  <div class="s1-eyebrow">Sound familiar?</div>
+  <h1 class="s1-headline">What happens when your stylist doesn't know your <em>hair history.</em></h1>
+  <p class="s1-sub">Every client and specialist has been here. Here's what it costs — and how to stop it.</p>
+  <div class="swipe-hint"><span class="swipe-arrow">→</span> Swipe to see</div>
+
+  <div class="footer">
+    <span class="footer-text">rootbook.org</span>
+  </div>
+</div>
+
+<!-- SLIDE 2 — Pain point 1 -->
+<div class="slide slide-2" id="s2">
+  <div class="logo-row">
+    <div class="logo-img"><img src="/logo.png" alt="Root" /></div>
+    <span class="logo-name">ROOT</span>
+  </div>
+  <div class="slide-num">2 / 4</div>
+
+  <div class="pain-number">01</div>
+  <h2 class="pain-headline">You explain your hair<br /><em>every single time.</em></h2>
+  <p class="pain-body">New stylist, same story. Hair type, allergies, what went wrong last time, what you actually want. It's exhausting — and things still get missed.</p>
+  <div class="pain-tag">
+    <span class="icon">⏱</span>
+    <span>Avg. 15 min of every appointment wasted on re-explaining</span>
+  </div>
+
+  <div class="footer">
+    <span class="footer-text">rootbook.org</span>
+  </div>
+</div>
+
+<!-- SLIDE 3 — Pain point 2 -->
+<div class="slide slide-3" id="s3">
+  <div class="logo-row">
+    <div class="logo-img"><img src="/logo.png" alt="Root" /></div>
+    <span class="logo-name">ROOT</span>
+  </div>
+  <div class="slide-num">3 / 4</div>
+
+  <div class="pain-number">02</div>
+  <h2 class="pain-headline">Specialists lose clients<br />they never <em>really knew.</em></h2>
+  <p class="pain-body">No hair history. No record of what worked. No way to prepare. The result? A cold consultation, a rushed appointment, and a client who doesn't come back.</p>
+  <div class="pain-tag">
+    <span class="icon">📋</span>
+    <span>Most stylists start every appointment blind</span>
+  </div>
+
+  <div class="footer">
+    <span class="footer-text">rootbook.org</span>
+  </div>
+</div>
+
+<!-- SLIDE 4 — Solution -->
+<div class="slide slide-4" id="s4">
+  <div class="logo-row">
+    <div class="logo-img"><img src="/logo.png" alt="Root" /></div>
+    <span class="logo-name">ROOT</span>
+  </div>
+  <div class="slide-num">4 / 4</div>
+
+  <div class="s4-tag">✦ The fix</div>
+  <h2 class="s4-headline">Root sends your full<br /><span>hair file automatically.</span></h2>
+
+  <div class="s4-features">
+    <div class="s4-feature">
+      <div class="check">✓</div>
+      <span>Photos, history & allergies attached to every booking</span>
+    </div>
+    <div class="s4-feature">
+      <div class="check">✓</div>
+      <span>Specialists know you before you walk in</span>
+    </div>
+    <div class="s4-feature">
+      <div class="check">✓</div>
+      <span>No more cold consultations — ever</span>
+    </div>
+  </div>
+
+  <div class="s4-cta">Join free at rootbook.org</div>
+
+  <div class="footer">
+    <span class="footer-text">rootbook.org</span>
+  </div>
+</div>
+
+<div class="dots">
+  <div class="dot active"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
+
+</body>
+</html>
