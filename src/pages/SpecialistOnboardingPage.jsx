@@ -7,7 +7,7 @@ export default function SpecialistOnboardingPage({ user, onDone }) {
   const [saving, setSaving] = useState(false)
 
   async function advance() {
-    if (step === 1 && !name.trim()) return
+    if (step === 2 && !name.trim()) return
 
     if (step === 2) {
       setSaving(true)
