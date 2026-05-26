@@ -347,6 +347,19 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
   async function respondToBooking(bookingId, status) {
     await supabase.from('bookings').update({ status }).eq('id', bookingId)
     setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status } : b))
+
+    const booking = bookings.find(b => b.id === bookingId)
+    if (booking) {
+      const title = status === 'accepted' ? 'Booking confirmed!' : 'Booking update'
+      const body = status === 'accepted'
+        ? `${profile.name || 'Your specialist'} confirmed your appointment.`
+        : `${profile.name || 'Your specialist'} couldn't take your request.`
+      fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-push-notification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}` },
+        body: JSON.stringify({ user_id: booking.client_id, title, body }),
+      }).catch(() => {})
+    }
   }
 
   async function cancelBooking(bookingId) {
