@@ -25,18 +25,18 @@ export default function SpecialistOnboardingPage({ user, onDone }) {
   const features = [
     {
       icon: '◈',
-      title: 'Clients come prepared',
-      desc: 'Full hair history, allergies, and photos attached to every booking — before they walk through the door.',
+      title: 'Start free',
+      desc: 'Get discovered, receive hair files, and accept up to 3 bookings per month — no card needed.',
     },
     {
       icon: '◉',
-      title: 'Get discovered',
-      desc: 'Clients in your city searching for your specialty will find your profile and send their hair file.',
+      title: 'Clients come prepared',
+      desc: 'Full hair history, allergies, and photos attached to every booking before they walk in.',
     },
     {
       icon: '◎',
-      title: 'Manage with ease',
-      desc: 'Accept bookings, message clients, and keep everything in one place.',
+      title: 'Upgrade when ready',
+      desc: 'Unlock unlimited bookings, messaging, and priority placement for $17.99/month.',
     },
   ]
 

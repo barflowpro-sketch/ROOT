@@ -101,38 +101,66 @@ export default function LandingPage() {
             Know every client<br />before they arrive.
           </h2>
           <p className="text-stone-400 text-sm leading-relaxed mb-6">
-            Every client on Root carries a full hair file. It's sent to you automatically when they book — photos, history, allergies, and preferences included.
+            Every client on Root carries a full hair file — sent to you automatically when they book.
           </p>
 
+          {/* Free vs Premium tiers */}
           <div className="space-y-3 mb-6">
-            {[
-              'No more cold consultations',
-              'Get discovered by clients in your city',
-              'Manage bookings all in one place',
-              'Portfolio, calendar & messaging included',
-            ].map(item => (
-              <div key={item} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full bg-amber-700/20 border border-amber-700/30 flex items-center justify-center flex-shrink-0">
-                  <span className="text-amber-500 text-xs">✓</span>
-                </div>
-                <span className="text-sm text-stone-300">{item}</span>
+            {/* Free */}
+            <div className="bg-stone-700 border border-stone-600 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-sm font-bold text-stone-100">Free</p>
+                <span className="text-xs font-bold text-stone-400">$0 / month</span>
               </div>
-            ))}
-          </div>
+              <div className="space-y-2">
+                {[
+                  'Profile visible to clients',
+                  'Receive client hair files',
+                  'Up to 3 bookings / month',
+                  'Portfolio photos',
+                  'Calendar management',
+                ].map(item => (
+                  <div key={item} className="flex items-center gap-2">
+                    <span className="text-stone-500 text-xs">✓</span>
+                    <span className="text-xs text-stone-400">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          {/* Founding offer */}
-          <div className="bg-stone-900 border border-amber-700/30 rounded-2xl p-4 mb-5">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-bold text-amber-500 uppercase tracking-wider">Founding member offer</span>
-            </div>
-            <div className="flex items-baseline gap-3">
-              <span className="text-4xl font-black text-stone-100">$15</span>
-              <div>
-                <p className="text-xs text-stone-400">/ month for 3 months</p>
-                <p className="text-xs text-stone-600 line-through">$17.99 / month after</p>
+            {/* Premium */}
+            <div className="bg-stone-900 border border-amber-700/40 rounded-2xl p-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-amber-700 text-amber-50 text-xs font-bold px-3 py-1 rounded-bl-xl">
+                Premium
+              </div>
+              <div className="flex items-center justify-between mb-3 pr-16">
+                <p className="text-sm font-bold text-stone-100">Premium</p>
+                <span className="text-xs font-bold text-amber-500">$17.99 / month</span>
+              </div>
+              <div className="space-y-2">
+                {[
+                  'Everything in Free',
+                  'Unlimited booking requests',
+                  'Messaging with clients',
+                  'Appear higher in search results',
+                ].map(item => (
+                  <div key={item} className="flex items-center gap-2">
+                    <span className="text-amber-600 text-xs">✓</span>
+                    <span className="text-xs text-stone-300">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Founding offer */}
+              <div className="mt-4 pt-3 border-t border-amber-700/20">
+                <p className="text-xs font-bold text-amber-500 mb-1">Founding member offer</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-2xl font-black text-stone-100">$15</span>
+                  <span className="text-xs text-stone-400">/ mo for first 3 months</span>
+                </div>
+                <p className="text-xs text-amber-600 mt-1">Only 30 spots · 14-day free trial included</p>
               </div>
             </div>
-            <p className="text-xs text-amber-600 mt-2">Only 30 spots · 14-day free trial included</p>
           </div>
 
           <a
