@@ -66,30 +66,39 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* How it works — clients */}
+      {/* For clients */}
       <section className="px-6 pb-16">
-        <div className="max-w-sm mx-auto">
+        <div className="max-w-sm mx-auto bg-stone-800 border border-stone-700 rounded-3xl p-6">
           <p className="text-xs font-bold text-amber-700 uppercase tracking-widest mb-3">For clients</p>
-          <h2 className="text-3xl font-black tracking-tight mb-8 leading-tight">
+          <h2 className="text-3xl font-black tracking-tight mb-4 leading-tight">
             Stop re-explaining<br />your hair.
           </h2>
-          <div className="space-y-4">
+          <p className="text-stone-400 text-sm leading-relaxed mb-6">
+            Build your hair file once — photos, history, allergies, and preferences. Root sends it automatically every time you book a specialist.
+          </p>
+
+          <div className="space-y-3 mb-6">
             {[
-              { step: '01', title: 'Build your hair file', desc: 'Add your photos, hair type, allergies, history, and what you love or hate.' },
-              { step: '02', title: 'Find a specialist', desc: 'Browse specialists in your city by specialty, availability, and price.' },
-              { step: '03', title: 'Book in seconds', desc: 'Your full hair file is sent automatically. Your specialist knows you before you arrive.' },
-            ].map(({ step, title, desc }) => (
-              <div key={step} className="flex gap-4 bg-stone-800 border border-stone-700 rounded-2xl p-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-700/20 border border-amber-700/30 flex items-center justify-center flex-shrink-0">
-                  <span className="text-amber-500 text-xs font-black">{step}</span>
+              'Build your hair file in minutes',
+              'Find specialists in your city',
+              'Book in seconds — hair file sent automatically',
+              'Free forever for clients',
+            ].map(item => (
+              <div key={item} className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full bg-amber-700/20 border border-amber-700/30 flex items-center justify-center flex-shrink-0">
+                  <span className="text-amber-500 text-xs">✓</span>
                 </div>
-                <div>
-                  <p className="text-stone-100 text-sm font-semibold">{title}</p>
-                  <p className="text-stone-500 text-xs mt-1 leading-relaxed">{desc}</p>
-                </div>
+                <span className="text-sm text-stone-300">{item}</span>
               </div>
             ))}
           </div>
+
+          <a
+            href="/login"
+            className="block w-full py-4 bg-stone-700 border border-stone-600 text-stone-100 rounded-2xl text-sm font-bold hover:bg-stone-600 transition-colors text-center"
+          >
+            Join as a client — free →
+          </a>
         </div>
       </section>
 
