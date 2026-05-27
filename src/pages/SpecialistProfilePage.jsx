@@ -470,11 +470,6 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
         </div>
       )}
 
-      {!profile.city && !profile.bio && (
-        <div className="bg-amber-900/20 border-b border-amber-800/30 px-6 py-3">
-          <p className="text-xs font-medium text-amber-500 max-w-lg mx-auto">Add your city and a photo so clients can find and book you.</p>
-        </div>
-      )}
 
       <header className="bg-stone-800 border-b border-stone-600 px-6 py-4 flex items-center justify-between">
         <div>
