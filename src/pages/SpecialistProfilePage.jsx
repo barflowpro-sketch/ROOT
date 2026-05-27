@@ -62,12 +62,9 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
   const [showFeedback, setShowFeedback] = useState(false)
 
   const now = new Date()
-  const trialEnd = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null
   const isActive = profile.subscription_status === 'active'
-  const isInTrial = profile.subscription_status === 'trial' && trialEnd && trialEnd > now
-  const isFree = !isActive && !isInTrial
-  const isPremium = isActive || isInTrial
-  const trialDaysLeft = trialEnd ? Math.max(0, Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24))) : 0
+  const isFree = !isActive
+  const isPremium = isActive
 
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
   const monthlyBookings = bookings.filter(b =>
@@ -446,18 +443,6 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
               className="flex-shrink-0 px-4 py-2 bg-amber-700 text-amber-50 rounded-xl text-xs font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
             >
               {subscribing ? 'Loading…' : 'Upgrade $17.99/mo'}
-            </button>
-          </div>
-        </div>
-      )}
-      {isInTrial && (
-        <div className="bg-amber-900/20 border-b border-amber-800/30 px-6 py-3">
-          <div className="max-w-lg mx-auto flex items-center justify-between">
-            <p className="text-xs text-amber-500">
-              {trialDaysLeft === 0 ? 'Trial ends today' : `Free trial — ${trialDaysLeft} day${trialDaysLeft === 1 ? '' : 's'} left`}
-            </p>
-            <button onClick={handleSubscribe} disabled={subscribing} className="text-xs text-amber-400 underline hover:text-amber-300 disabled:opacity-50">
-              {subscribing ? 'Loading…' : 'Subscribe now'}
             </button>
           </div>
         </div>

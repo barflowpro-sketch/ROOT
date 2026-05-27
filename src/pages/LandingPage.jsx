@@ -46,7 +46,7 @@ export default function LandingPage() {
         <div className="grid grid-cols-3 gap-3 max-w-sm mx-auto">
           {[
             { value: '100%', label: 'Free for clients' },
-            { value: '14', label: 'Day free trial' },
+            { value: 'Free', label: 'Specialist basic plan' },
             { value: '$15', label: 'Founding price/mo' },
           ].map(({ value, label }) => (
             <div key={label} className="bg-stone-800 border border-stone-700 rounded-2xl p-4 text-center">
@@ -158,7 +158,7 @@ export default function LandingPage() {
                   <span className="text-2xl font-black text-stone-100">$15</span>
                   <span className="text-xs text-stone-400">/ mo for first 3 months</span>
                 </div>
-                <p className="text-xs text-amber-600 mt-1">Only 30 spots · 14-day free trial included</p>
+                <p className="text-xs text-amber-600 mt-1">Only 30 spots remaining</p>
               </div>
             </div>
           </div>

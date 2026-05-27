@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
     payment_method_types: ['card'],
     line_items: [{ price: Deno.env.get('STRIPE_PRICE_ID')!, quantity: 1 }],
     mode: 'subscription',
-    subscription_data: { trial_period_days: 14 },
+    subscription_data: {},
     ...(couponId ? { discounts: [{ coupon: couponId }] } : {}),
     success_url: `${Deno.env.get('APP_URL')}/subscription-success.html`,
     cancel_url: `${Deno.env.get('APP_URL')}/subscription-cancel.html`,
