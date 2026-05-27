@@ -9,7 +9,7 @@ export default function LandingPage() {
           <span className="text-lg font-bold tracking-tight">Root</span>
         </div>
         <div className="flex items-center gap-3">
-          <a href="/login" className="text-sm text-stone-400 hover:text-stone-200 transition-colors">
+          <a href="/login" className="text-sm font-semibold px-4 py-2 bg-stone-700 border border-stone-600 text-stone-200 rounded-xl hover:bg-stone-600 transition-colors">
             Join as client
           </a>
           <a
