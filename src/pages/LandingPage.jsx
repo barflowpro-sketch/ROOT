@@ -10,7 +10,7 @@ export default function LandingPage() {
         </div>
         <div className="flex items-center gap-3">
           <a href="/login" className="text-sm text-stone-400 hover:text-stone-200 transition-colors">
-            Sign in
+            Join as client
           </a>
           <a
             href="/specialist/signup"
@@ -23,11 +23,6 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="flex flex-col items-center text-center px-6 pt-20 pb-16">
-        <div className="inline-flex items-center gap-2 bg-amber-700/15 border border-amber-700/30 text-amber-500 text-xs font-semibold px-4 py-2 rounded-full mb-8 tracking-wide">
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-          Now live — founding member offer available
-        </div>
-
         <h1 className="text-5xl font-black tracking-tight leading-tight mb-6 max-w-sm">
           Your hair story,<br />
           <span className="text-amber-500">always with you.</span>
