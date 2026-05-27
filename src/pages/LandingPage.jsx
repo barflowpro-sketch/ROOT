@@ -155,9 +155,8 @@ export default function LandingPage() {
             The hair booking app that ends cold consultations. For clients and specialists.
           </p>
           <div className="flex flex-wrap gap-4 text-xs text-stone-600">
-            <a href="/login" className="hover:text-stone-400 transition-colors">Sign in</a>
-            <a href="/specialist/signup" className="hover:text-stone-400 transition-colors">Join as specialist</a>
-            <a href="/privacy" className="hover:text-stone-400 transition-colors">Privacy</a>
+            <a href="/privacy" className="hover:text-stone-400 transition-colors">Privacy Policy</a>
+            <a href="/terms" className="hover:text-stone-400 transition-colors">Terms & Conditions</a>
             <a href="mailto:hello@rootbook.org" className="hover:text-stone-400 transition-colors">hello@rootbook.org</a>
           </div>
           <p className="text-xs text-stone-700 mt-6">© 2026 Root · rootbook.org</p>
