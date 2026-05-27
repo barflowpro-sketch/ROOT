@@ -184,7 +184,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-wrap gap-4 text-xs text-stone-600">
             <a href="/privacy" className="hover:text-stone-400 transition-colors">Privacy Policy</a>
-            <a href="/terms" className="hover:text-stone-400 transition-colors">Terms & Conditions</a>
+            <a href="/terms.html" className="hover:text-stone-400 transition-colors">Terms & Conditions</a>
             <a href="mailto:hello@rootbook.org" className="hover:text-stone-400 transition-colors">hello@rootbook.org</a>
           </div>
           <p className="text-xs text-stone-700 mt-6">© 2026 Root · rootbook.org</p>
