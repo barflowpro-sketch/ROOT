@@ -33,18 +33,9 @@ export default function LandingPage() {
         </p>
 
         <div className="flex flex-col gap-3 w-full max-w-xs">
-          <a
-            href="/login"
-            className="w-full py-4 bg-amber-700 text-amber-50 rounded-2xl text-sm font-bold hover:bg-amber-600 active:bg-amber-800 transition-colors shadow-lg shadow-amber-900/30 text-center"
-          >
+          <div className="w-full py-4 bg-amber-700 text-amber-50 rounded-2xl text-sm font-bold shadow-lg shadow-amber-900/30 text-center">
             Get started — it's free
-          </a>
-          <a
-            href="/specialist/signup"
-            className="w-full py-4 bg-stone-800 border border-stone-700 text-stone-300 rounded-2xl text-sm font-semibold hover:bg-stone-700 transition-colors text-center"
-          >
-            I'm a hair specialist →
-          </a>
+          </div>
         </div>
 
         <p className="text-xs text-stone-700 mt-5">No credit card required · Free for clients</p>
