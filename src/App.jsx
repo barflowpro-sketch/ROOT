@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
 import { PushNotifications } from '@capacitor/push-notifications'
 import { useAuth } from './hooks/useAuth'
@@ -21,6 +21,7 @@ import PasswordResetPage from './pages/PasswordResetPage'
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
 import FeedbackModal from './components/FeedbackModal'
 import AdminPage from './pages/AdminPage'
+import LandingPage from './pages/LandingPage'
 
 const VAPID_PUBLIC_KEY = 'BPI7tMdtshKS-yb6JyvQ3hBl--HcmXdD2FW-IH-g0SNvipgIV009gv_BeRW_3X7e_HejwyHcAOoOV-dnVnNgsLw'
 
@@ -171,10 +172,11 @@ function App() {
         <Route path="/share/:token" element={<SharePage />} />
         <Route path="/specialist/signup" element={<SpecialistSignupPage />} />
         <Route path="/specialist/:id" element={<SpecialistPublicPage />} />
+        <Route path="/login" element={!user ? <AuthPage /> : <Navigate to="/" replace />} />
         <Route
           path="*"
           element={
-            !user ? <AuthPage /> :
+            !user ? <LandingPage /> :
             !onboarded && role === 'specialist' ? <SpecialistOnboardingPage user={user} onDone={completeOnboarding} /> :
             !onboarded && role === 'client' ? <OnboardingPage user={user} onDone={completeOnboarding} /> :
             showAdmin ? <AdminPage onBack={() => setShowAdmin(false)} /> :
