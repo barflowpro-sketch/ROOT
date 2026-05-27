@@ -144,6 +144,12 @@ export default function LandingPage() {
             <p className="text-xs text-amber-600 mt-2">Only 30 spots · 14-day free trial included</p>
           </div>
 
+          <a
+            href="/specialist/signup"
+            className="block w-full py-4 bg-amber-700 text-amber-50 rounded-2xl text-sm font-bold hover:bg-amber-600 transition-colors shadow-lg shadow-amber-900/30 text-center"
+          >
+            Claim your founding spot →
+          </a>
         </div>
       </section>
 
