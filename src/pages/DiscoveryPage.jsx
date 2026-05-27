@@ -90,13 +90,18 @@ export default function DiscoveryPage({ user, onView }) {
       .neq('name', '')
 
     const now = new Date().toISOString()
-    const visible = (data || []).filter(s =>
-      s.subscription_status === 'active' ||
-      (s.subscription_status === 'trial' && s.trial_ends_at && s.trial_ends_at > now) ||
-      !s.subscription_status
-    )
+    const visible = (data || []).filter(s => s.name && s.name.trim())
     const filtered = filterByService(visible)
-    setResults(await attachRatings(filtered))
+    const withRatings = await attachRatings(filtered)
+
+    // Sort: premium (active) first, then trial, then free
+    const priorityOrder = (s) => {
+      if (s.subscription_status === 'active') return 0
+      if (s.subscription_status === 'trial' && s.trial_ends_at > now) return 1
+      return 2
+    }
+    withRatings.sort((a, b) => priorityOrder(a) - priorityOrder(b))
+    setResults(withRatings)
     setLoading(false)
   }
 

@@ -65,8 +65,16 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
   const trialEnd = profile.trial_ends_at ? new Date(profile.trial_ends_at) : null
   const isActive = profile.subscription_status === 'active'
   const isInTrial = profile.subscription_status === 'trial' && trialEnd && trialEnd > now
-  const isExpired = !isActive && !isInTrial
+  const isFree = !isActive && !isInTrial
+  const isPremium = isActive || isInTrial
   const trialDaysLeft = trialEnd ? Math.max(0, Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24))) : 0
+
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+  const monthlyBookings = bookings.filter(b =>
+    (b.status === 'accepted' || b.status === 'pending') &&
+    b.created_at >= monthStart
+  ).length
+  const bookingLimitReached = isFree && monthlyBookings >= 3
 
   async function handleSubscribe() {
     setSubscribing(true)
@@ -421,19 +429,23 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
       )}
 
       {/* Subscription banner */}
-      {isExpired && (
-        <div className="bg-red-900/30 border-b border-red-800/40 px-6 py-4">
+      {isFree && (
+        <div className="bg-stone-700/50 border-b border-stone-600 px-6 py-4">
           <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-red-400">Your trial has ended</p>
-              <p className="text-xs text-red-500/80 mt-0.5">Your profile is hidden from clients. Subscribe to stay listed.</p>
+              <p className="text-sm font-semibold text-stone-300">Free plan</p>
+              <p className="text-xs text-stone-500 mt-0.5">
+                {bookingLimitReached
+                  ? 'You\'ve reached your 3 booking limit this month. Upgrade for unlimited.'
+                  : `${3 - monthlyBookings} booking${3 - monthlyBookings === 1 ? '' : 's'} remaining this month.`}
+              </p>
             </div>
             <button
               onClick={handleSubscribe}
               disabled={subscribing}
               className="flex-shrink-0 px-4 py-2 bg-amber-700 text-amber-50 rounded-xl text-xs font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
             >
-              {subscribing ? 'Loading…' : 'Subscribe $17.99/mo'}
+              {subscribing ? 'Loading…' : 'Upgrade $17.99/mo'}
             </button>
           </div>
         </div>
@@ -895,13 +907,27 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                       View hair profile →
                     </button>
                   )}
+                  {bookingLimitReached && (
+                    <div className="bg-amber-900/20 border border-amber-700/30 rounded-xl px-3 py-2">
+                      <p className="text-xs text-amber-500">Monthly limit reached. <button onClick={handleSubscribe} className="underline hover:text-amber-400">Upgrade to accept more.</button></p>
+                    </div>
+                  )}
                   <div className="flex gap-2 pt-1">
-                    <button onClick={() => setMessagingBooking(booking)}
-                      className="flex-1 py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
-                      Message
-                    </button>
-                    <button onClick={() => respondToBooking(booking.id, 'accepted')}
-                      className="flex-1 py-2 bg-green-800 text-green-200 rounded-lg text-xs font-medium hover:bg-green-700 transition-colors">
+                    {isPremium ? (
+                      <button onClick={() => setMessagingBooking(booking)}
+                        className="flex-1 py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                        Message
+                      </button>
+                    ) : (
+                      <button onClick={handleSubscribe}
+                        className="flex-1 py-2 bg-stone-600 text-stone-500 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                        🔒 Message
+                      </button>
+                    )}
+                    <button
+                      onClick={() => !bookingLimitReached && respondToBooking(booking.id, 'accepted')}
+                      disabled={bookingLimitReached}
+                      className="flex-1 py-2 bg-green-800 text-green-200 rounded-lg text-xs font-medium hover:bg-green-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                       Accept
                     </button>
                     <button onClick={() => respondToBooking(booking.id, 'declined')}
@@ -940,10 +966,17 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                     </button>
                   )}
                   <div className="flex gap-2">
-                    <button onClick={() => setMessagingBooking(booking)}
-                      className="flex-1 py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
-                      Message
-                    </button>
+                    {isPremium ? (
+                      <button onClick={() => setMessagingBooking(booking)}
+                        className="flex-1 py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                        Message
+                      </button>
+                    ) : (
+                      <button onClick={handleSubscribe}
+                        className="flex-1 py-2 bg-stone-600 text-stone-500 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                        🔒 Message
+                      </button>
+                    )}
                     <button onClick={() => markComplete(booking.id)}
                       className="flex-1 py-2 bg-green-900 text-green-300 rounded-lg text-xs font-medium hover:bg-green-800 transition-colors">
                       Mark complete
