@@ -90,12 +90,6 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-          <a
-            href="/login"
-            className="mt-6 block w-full py-4 bg-amber-700 text-amber-50 rounded-2xl text-sm font-bold hover:bg-amber-600 transition-colors shadow-lg shadow-amber-900/30 text-center"
-          >
-            Create your hair file — free
-          </a>
         </div>
       </section>
 
