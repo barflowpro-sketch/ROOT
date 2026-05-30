@@ -243,10 +243,44 @@
     letter-spacing: -0.2px;
   }
 
+  /* ── SOCIAL ROW ── */
+  .social-row {
+    background: #f5ede0;
+    border-top: 1px solid #e4d0b8;
+    padding: 9px 0.38in;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .social-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+  }
+
+  .social-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .social-handle {
+    font-size: 10px;
+    font-weight: 700;
+    color: #4a3728;
+  }
+
   /* ── FOOTER ── */
   .footer-strip {
     background: #1a0e06;
-    padding: 9px 0.38in;
+    padding: 8px 0.38in;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -333,6 +367,26 @@
     </div>
   </div>
 
+  <!-- SOCIAL ROW -->
+  <div class="social-row">
+    <a class="social-item" href="https://www.instagram.com/rootbookapp" target="_blank">
+      <div class="social-icon" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+        </svg>
+      </div>
+      <span class="social-handle">@rootbookapp</span>
+    </a>
+    <a class="social-item" href="https://www.tiktok.com/@root84509" target="_blank">
+      <div class="social-icon" style="background: #010101;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="white">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
+        </svg>
+      </div>
+      <span class="social-handle">@root84509</span>
+    </a>
+  </div>
+
   <!-- FOOTER -->
   <div class="footer-strip">
     <span>hello@rootbook.org</span>
@@ -342,7 +396,7 @@
 
 </div>
 
-<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+<button type="button" class="print-btn" onclick="window.print()">Print / Save as PDF</button>
 
 <script>
   new QRCode(document.getElementById('qrcode'), {
