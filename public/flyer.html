@@ -27,52 +27,48 @@
     text-transform: uppercase;
   }
 
-  /* ── FLYER: 11in × 8.5in ── */
+  /* ── FLYER: 5in × 7in portrait ── */
   .flyer {
-    width: 11in;
-    height: 8.5in;
+    width: 5in;
+    height: 7in;
     background: #fdf7f0;
-    border-radius: 0;
     overflow: hidden;
-    display: grid;
-    grid-template-rows: 1fr auto;
-    grid-template-columns: 2.8in 1fr;
-    box-shadow: 0 32px 80px rgba(80, 40, 10, 0.18);
-  }
-
-  /* ── LEFT PANEL ── */
-  .left {
-    background: #1a0e06;
-    padding: 0.55in 0.45in;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-    grid-row: 1 / 2;
+    box-shadow: 0 24px 64px rgba(80, 40, 10, 0.22);
   }
 
-  .left-glow {
+  /* ── HEADER (dark) ── */
+  .header {
+    background: #1a0e06;
+    padding: 0.34in 0.38in 0.32in;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .header-glow {
     position: absolute;
-    top: -0.6in;
-    left: -0.6in;
+    top: -0.5in;
+    right: -0.5in;
     width: 3.5in;
     height: 3.5in;
-    background: radial-gradient(circle, rgba(245,158,11,0.16) 0%, transparent 65%);
+    background: radial-gradient(circle, rgba(245,158,11,0.14) 0%, transparent 60%);
     pointer-events: none;
   }
 
   .logo-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 9px;
+    margin-bottom: 0.2in;
     position: relative;
   }
 
   .logo-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 11px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
     overflow: hidden;
     flex-shrink: 0;
   }
@@ -80,165 +76,115 @@
   .logo-img img { width: 100%; height: 100%; object-fit: cover; }
 
   .logo-name {
-    font-size: 19px;
+    font-size: 16px;
     font-weight: 800;
     color: #fdf7f0;
-    letter-spacing: -0.3px;
+    letter-spacing: -0.2px;
   }
 
   .tagline {
-    font-size: 34px;
+    font-size: 28px;
     font-weight: 900;
     color: #fdf7f0;
-    letter-spacing: -0.8px;
+    letter-spacing: -0.7px;
     line-height: 1.18;
+    margin-bottom: 0.12in;
     position: relative;
   }
 
   .tagline span { color: #f59e0b; }
 
-  .qr-wrap { position: relative; }
-
-  .qr-label {
-    font-size: 9px;
-    font-weight: 700;
+  .sub {
+    font-size: 11px;
     color: #a07850;
-    text-transform: uppercase;
-    letter-spacing: 1.3px;
-    margin-bottom: 10px;
+    line-height: 1.6;
+    max-width: 3.6in;
+    position: relative;
   }
 
-  .qr-box {
-    width: 90px;
-    height: 90px;
-    background: #fdf7f0;
-    border-radius: 12px;
-    padding: 7px;
+  /* ── FOUNDING BAND ── */
+  .founding-band {
+    background: #f59e0b;
+    padding: 0.14in 0.38in;
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-
-  .qr-box canvas, .qr-box img { width: 100% !important; height: 100% !important; }
-
-  .qr-url {
-    font-size: 13px;
-    font-weight: 700;
-    color: #f59e0b;
-    letter-spacing: 0.2px;
-  }
-
-  /* ── RIGHT PANEL ── */
-  .right {
-    padding: 0.52in 0.52in 0.36in;
-    display: flex;
-    flex-direction: column;
-    gap: 0.22in;
-    grid-row: 1 / 2;
-  }
-
-  .right-top {
-    display: flex;
-    align-items: flex-start;
     justify-content: space-between;
-    gap: 0.2in;
-  }
-
-  .sub {
-    font-size: 13.5px;
-    color: #7c5c3e;
-    line-height: 1.7;
-    max-width: 3.6in;
-  }
-
-  /* ── FOUNDING BADGE ── */
-  .founding-badge {
-    background: #1a0e06;
-    border-radius: 18px;
-    padding: 16px 22px;
     flex-shrink: 0;
-    text-align: center;
-    min-width: 1.9in;
   }
 
-  .founding-eyebrow {
-    font-size: 8.5px;
-    font-weight: 700;
-    color: #a07850;
+  .founding-left .eyebrow {
+    font-size: 8px;
+    font-weight: 800;
+    color: rgba(26,14,6,0.6);
     text-transform: uppercase;
-    letter-spacing: 1.3px;
-    margin-bottom: 6px;
+    letter-spacing: 1.2px;
+    margin-bottom: 2px;
   }
 
-  .founding-price {
-    font-size: 38px;
+  .founding-left .offer {
+    font-size: 13px;
     font-weight: 900;
-    color: #f59e0b;
+    color: #1a0e06;
+    letter-spacing: -0.3px;
+  }
+
+  .founding-price-big {
+    font-size: 36px;
+    font-weight: 900;
+    color: #1a0e06;
     letter-spacing: -1px;
     line-height: 1;
   }
 
-  .founding-price sup {
-    font-size: 18px;
+  .founding-price-big sup {
+    font-size: 16px;
     font-weight: 700;
     vertical-align: super;
+  }
+
+  .founding-price-big span {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(26,14,6,0.55);
     letter-spacing: 0;
   }
 
-  .founding-per {
-    font-size: 11px;
-    color: #a07850;
-    margin-top: 3px;
-  }
-
-  .founding-note {
-    font-size: 10px;
-    font-weight: 700;
-    color: #f59e0b;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(245,158,11,0.2);
-    line-height: 1.4;
-  }
-
-  /* ── TWO COLUMNS ── */
+  /* ── FEATURES ── */
   .cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 1px;
+    background: #e4d0b8;
     flex: 1;
   }
 
-  .col-card {
-    background: #f5ede0;
-    border: 1px solid #e4d0b8;
-    border-radius: 20px;
-    padding: 20px 18px;
+  .col {
+    background: #fdf7f0;
+    padding: 0.22in 0.22in 0.18in;
   }
 
   .col-label {
-    font-size: 9px;
+    font-size: 8.5px;
     font-weight: 800;
     color: #b45309;
     text-transform: uppercase;
-    letter-spacing: 1.4px;
-    margin-bottom: 13px;
+    letter-spacing: 1.3px;
+    margin-bottom: 0.13in;
   }
 
   .col-item {
     display: flex;
     align-items: flex-start;
-    gap: 9px;
-    margin-bottom: 10px;
+    gap: 7px;
+    margin-bottom: 8px;
   }
 
   .col-item .dot {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
-    background: rgba(180,83,9,0.12);
-    border: 1px solid rgba(180,83,9,0.3);
+    background: rgba(180,83,9,0.1);
+    border: 1px solid rgba(180,83,9,0.28);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -246,30 +192,76 @@
     margin-top: 1px;
   }
 
-  .col-item .dot span { font-size: 8px; color: #b45309; }
-  .col-item p { font-size: 12px; color: #4a3728; line-height: 1.45; }
+  .col-item .dot span { font-size: 7px; color: #b45309; }
+  .col-item p { font-size: 10.5px; color: #4a3728; line-height: 1.4; }
 
-  /* ── FOOTER STRIP ── */
-  .footer-strip {
-    background: #f0e4d2;
+  /* ── QR ROW ── */
+  .qr-row {
+    background: #f5ede0;
     border-top: 1px solid #e4d0b8;
-    padding: 11px 0.52in;
+    padding: 0.15in 0.38in;
+    display: flex;
+    align-items: center;
+    gap: 0.18in;
+    flex-shrink: 0;
+  }
+
+  .qr-box {
+    width: 66px;
+    height: 66px;
+    background: #fff;
+    border-radius: 9px;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .qr-box canvas, .qr-box img { width: 100% !important; height: 100% !important; }
+
+  .qr-text .label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #b45309;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .qr-text .desc {
+    font-size: 10.5px;
+    color: #7c5c3e;
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+
+  .qr-text .url {
+    font-size: 12px;
+    font-weight: 800;
+    color: #1a0e06;
+    letter-spacing: -0.2px;
+  }
+
+  /* ── FOOTER ── */
+  .footer-strip {
+    background: #1a0e06;
+    padding: 9px 0.38in;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    grid-column: 1 / -1;
-    grid-row: 2 / 3;
+    flex-shrink: 0;
   }
 
-  .footer-strip span { font-size: 11px; color: #9c7a5e; }
-  .footer-strip .brand { font-weight: 800; color: #1a0e06; font-size: 12px; }
+  .footer-strip span { font-size: 9.5px; color: #a07850; }
+  .footer-strip .brand { font-weight: 800; color: #f59e0b; font-size: 10px; }
 
   /* ── PRINT ── */
   @media print {
-    @page { size: 11in 8.5in; margin: 0; }
+    @page { size: 5in 7in; margin: 0; }
     body { background: white; padding: 0; min-height: unset; }
     .hint, .print-btn { display: none; }
-    .flyer { box-shadow: none; border-radius: 0; }
+    .flyer { box-shadow: none; }
   }
 
   .print-btn {
@@ -289,61 +281,59 @@
 </head>
 <body>
 
-<p class="hint">Screenshot or print this flyer · 11 × 8.5 in</p>
+<p class="hint">Screenshot or print this flyer · 5 × 7 in</p>
 
 <div class="flyer">
 
-  <!-- LEFT -->
-  <div class="left">
-    <div class="left-glow"></div>
-
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-glow"></div>
     <div class="logo-row">
       <div class="logo-img"><img src="/logo.png" alt="Root" /></div>
       <span class="logo-name">Root</span>
     </div>
+    <h1 class="tagline">Your hair story,<br /><span>always with you.</span></h1>
+    <p class="sub">Root connects clients and hair specialists — every client's full hair history shared automatically at every booking.</p>
+  </div>
 
-    <h1 class="tagline">Your hair story,<br /><span>always<br />with you.</span></h1>
+  <!-- FOUNDING BAND -->
+  <div class="founding-band">
+    <div class="founding-left">
+      <p class="eyebrow">Founding Member Offer</p>
+      <p class="offer">First 30 specialist spots only</p>
+    </div>
+    <div class="founding-price-big"><sup>$</sup>15<span>/mo</span></div>
+  </div>
 
-    <div class="qr-wrap">
-      <p class="qr-label">Scan to get started</p>
-      <div class="qr-box" id="qrcode"></div>
-      <div class="qr-url">rootbook.org</div>
+  <!-- FEATURES -->
+  <div class="cols">
+    <div class="col">
+      <p class="col-label">For Clients</p>
+      <div class="col-item"><div class="dot"><span>✓</span></div><p>Build your hair file — photos, history & allergies</p></div>
+      <div class="col-item"><div class="dot"><span>✓</span></div><p>Find specialists in your city</p></div>
+      <div class="col-item"><div class="dot"><span>✓</span></div><p>Hair file sent automatically every booking</p></div>
+      <div class="col-item"><div class="dot"><span>✓</span></div><p>Free forever</p></div>
+    </div>
+    <div class="col">
+      <p class="col-label">For Specialists</p>
+      <div class="col-item"><div class="dot"><span>✓</span></div><p>Know every client before they arrive</p></div>
+      <div class="col-item"><div class="dot"><span>✓</span></div><p>Get discovered by clients near you</p></div>
+      <div class="col-item"><div class="dot"><span>✓</span></div><p>Manage bookings, calendar & portfolio</p></div>
+      <div class="col-item"><div class="dot"><span>✓</span></div><p>Unlimited bookings & messaging — premium</p></div>
     </div>
   </div>
 
-  <!-- RIGHT -->
-  <div class="right">
-    <div class="right-top">
-      <p class="sub">Root connects clients and hair specialists — every client's full hair history is shared automatically at every booking. No more cold consultations. Free for clients, free plan for specialists.</p>
-
-      <!-- Founding badge -->
-      <div class="founding-badge">
-        <p class="founding-eyebrow">Founding Member Offer</p>
-        <div class="founding-price"><sup>$</sup>15</div>
-        <p class="founding-per">per month</p>
-        <p class="founding-note">First 30 specialist spots<br />only — lock in your rate</p>
-      </div>
-    </div>
-
-    <div class="cols">
-      <div class="col-card">
-        <p class="col-label">For Clients</p>
-        <div class="col-item"><div class="dot"><span>✓</span></div><p>Build your hair file — photos, history & allergies</p></div>
-        <div class="col-item"><div class="dot"><span>✓</span></div><p>Find specialists in your city</p></div>
-        <div class="col-item"><div class="dot"><span>✓</span></div><p>Hair file sent automatically every booking</p></div>
-        <div class="col-item"><div class="dot"><span>✓</span></div><p>Free forever</p></div>
-      </div>
-      <div class="col-card">
-        <p class="col-label">For Specialists</p>
-        <div class="col-item"><div class="dot"><span>✓</span></div><p>Know every client before they arrive</p></div>
-        <div class="col-item"><div class="dot"><span>✓</span></div><p>Get discovered by clients near you</p></div>
-        <div class="col-item"><div class="dot"><span>✓</span></div><p>Manage bookings, calendar & portfolio</p></div>
-        <div class="col-item"><div class="dot"><span>✓</span></div><p>Unlimited bookings & messaging with premium</p></div>
-      </div>
+  <!-- QR ROW -->
+  <div class="qr-row">
+    <div class="qr-box" id="qrcode"></div>
+    <div class="qr-text">
+      <p class="label">Scan to get started</p>
+      <p class="desc">Create your free account in minutes.<br />Clients & specialists welcome.</p>
+      <p class="url">rootbook.org</p>
     </div>
   </div>
 
-  <!-- FOOTER STRIP -->
+  <!-- FOOTER -->
   <div class="footer-strip">
     <span>hello@rootbook.org</span>
     <span class="brand">Root</span>
@@ -357,10 +347,10 @@
 <script>
   new QRCode(document.getElementById('qrcode'), {
     text: 'https://rootbook.org',
-    width: 76,
-    height: 76,
+    width: 56,
+    height: 56,
     colorDark: '#1a0e06',
-    colorLight: '#fdf7f0',
+    colorLight: '#ffffff',
     correctLevel: QRCode.CorrectLevel.H,
   })
 </script>
