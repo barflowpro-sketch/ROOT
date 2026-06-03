@@ -712,7 +712,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                     {(profile.service_groups[category] || []).map(type => (
                       <div key={type} className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 px-4 py-2.5 rounded-xl border border-amber-700/40 bg-amber-700/10 text-sm text-amber-200">{type}</div>
+                          <div className="flex-1 px-4 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-sm text-stone-100">{type}</div>
                           <button onClick={() => removeServiceType(category, type)} className="w-8 h-8 flex items-center justify-center text-stone-600 hover:text-red-400 transition-colors text-lg">×</button>
                         </div>
                         <div className="flex gap-2 pr-10">
@@ -756,7 +756,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                 {(profile.service_groups['Other'] || []).map(type => (
                   <div key={type} className="space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 px-4 py-2.5 rounded-xl border border-amber-700/40 bg-amber-700/10 text-sm text-amber-200">{type}</div>
+                      <div className="flex-1 px-4 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-sm text-stone-100">{type}</div>
                       <button onClick={() => removeServiceType('Other', type)} className="w-8 h-8 flex items-center justify-center text-stone-600 hover:text-red-400 transition-colors text-lg">×</button>
                     </div>
                     <div className="flex gap-2">
