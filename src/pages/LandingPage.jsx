@@ -163,6 +163,14 @@ export default function LandingPage() {
             </div>
           </div>
 
+          {/* Switching banner */}
+          <div className="bg-stone-700/60 border border-stone-600 rounded-2xl p-4 mb-6">
+            <p className="text-xs font-bold text-amber-500 mb-1">Already on Booksy or Vagaro?</p>
+            <p className="text-xs text-stone-400 leading-relaxed">
+              Bring your clients with you. Upload your client list and Root emails every one of them for you — automatically. One upload, done.
+            </p>
+          </div>
+
           <a
             href="/specialist/signup"
             className="block w-full py-4 bg-amber-700 text-amber-50 rounded-2xl text-sm font-bold hover:bg-amber-600 transition-colors shadow-lg shadow-amber-900/30 text-center"
