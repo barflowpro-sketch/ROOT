@@ -60,6 +60,10 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
   const [copied, setCopied] = useState(false)
   const [subscribing, setSubscribing] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
+  const [inviteParsed, setInviteParsed] = useState([])
+  const [inviteSending, setInviteSending] = useState(false)
+  const [inviteResult, setInviteResult] = useState(null)
+  const inviteFileRef = useRef()
 
   const now = new Date()
   const isActive = profile.subscription_status === 'active'
@@ -340,6 +344,55 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
+  }
+
+  function handleInviteCSV(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    inviteFileRef.current.value = ''
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      const text = ev.target.result
+      const lines = text.trim().split('\n').filter(l => l.trim())
+      if (lines.length < 2) { alert('CSV must have a header row and at least one client.'); return }
+      const header = lines[0].toLowerCase().split(',').map(h => h.trim().replace(/['"]/g, ''))
+      const emailIdx = header.findIndex(h => h.includes('email'))
+      const nameIdx = header.findIndex(h => h.includes('name') || h.includes('first'))
+      if (emailIdx === -1) { alert('CSV must have an "email" column.'); return }
+      const parsed = lines.slice(1).map(line => {
+        const cols = line.split(',').map(c => c.trim().replace(/^["']|["']$/g, ''))
+        return { name: nameIdx !== -1 ? cols[nameIdx] : '', email: cols[emailIdx] || '' }
+      }).filter(c => c.email && c.email.includes('@'))
+      setInviteParsed(parsed)
+      setInviteResult(null)
+    }
+    reader.readAsText(file)
+  }
+
+  async function sendInvites() {
+    if (!inviteParsed.length) return
+    setInviteSending(true)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-client-invites`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          specialist_id: user.id,
+          specialist_name: profile.name || 'Your specialist',
+          clients: inviteParsed,
+        }),
+      })
+      const data = await res.json()
+      setInviteResult(data)
+      setInviteParsed([])
+    } catch {
+      setInviteResult({ error: 'Something went wrong. Please try again.' })
+    }
+    setInviteSending(false)
   }
 
   function shareProfile() {
@@ -835,6 +888,70 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           >
             {copied ? 'Link copied!' : 'Share profile link'}
           </button>
+        </div>
+
+        {/* Invite clients */}
+        <div className="bg-stone-700 border border-stone-600 rounded-2xl p-5 space-y-4">
+          <div>
+            <h2 className="text-sm font-bold text-stone-100 mb-1">Invite your existing clients</h2>
+            <p className="text-xs text-stone-500 leading-relaxed">
+              Switching from Booksy, Vagaro, or another platform? Export your client list as a CSV and Root will email each one automatically.
+            </p>
+          </div>
+
+          <input ref={inviteFileRef} type="file" accept=".csv" className="hidden" onChange={handleInviteCSV} />
+
+          {inviteParsed.length === 0 && !inviteResult && (
+            <button
+              onClick={() => inviteFileRef.current.click()}
+              className="w-full py-3 border-2 border-dashed border-stone-500 rounded-xl text-sm text-stone-400 hover:border-amber-700 hover:text-amber-600 transition-colors"
+            >
+              Upload CSV file
+            </button>
+          )}
+
+          {inviteParsed.length > 0 && (
+            <div className="space-y-3">
+              <div className="max-h-40 overflow-y-auto space-y-1.5">
+                {inviteParsed.map((c, i) => (
+                  <div key={i} className="flex items-center justify-between px-3 py-2 bg-stone-600 rounded-lg">
+                    <span className="text-xs text-stone-300 font-medium truncate">{c.name || '—'}</span>
+                    <span className="text-xs text-stone-500 truncate ml-3">{c.email}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { setInviteParsed([]); setInviteResult(null) }}
+                  className="flex-1 py-2.5 bg-stone-600 text-stone-400 rounded-xl text-xs font-medium hover:bg-stone-700 transition-colors"
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={sendInvites}
+                  disabled={inviteSending}
+                  className="flex-1 py-2.5 bg-amber-700 text-amber-50 rounded-xl text-xs font-semibold hover:bg-amber-600 transition-colors disabled:opacity-50"
+                >
+                  {inviteSending ? 'Sending…' : `Send ${inviteParsed.length} invite${inviteParsed.length === 1 ? '' : 's'}`}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {inviteResult && (
+            <div className={`rounded-xl px-4 py-3 text-xs font-medium ${inviteResult.error ? 'bg-red-900/30 text-red-400' : 'bg-green-900/30 text-green-400'}`}>
+              {inviteResult.error
+                ? inviteResult.error
+                : `✓ ${inviteResult.sent} invite${inviteResult.sent === 1 ? '' : 's'} sent${inviteResult.failed > 0 ? ` · ${inviteResult.failed} failed` : ''}`}
+              {!inviteResult.error && (
+                <button onClick={() => { setInviteResult(null); inviteFileRef.current.click() }} className="ml-3 underline text-green-500">
+                  Send more
+                </button>
+              )}
+            </div>
+          )}
+
+          <p className="text-xs text-stone-600">CSV must have an <span className="text-stone-500">email</span> column. A <span className="text-stone-500">name</span> column is optional but recommended.</p>
         </div>
 
         {/* Tabs */}
