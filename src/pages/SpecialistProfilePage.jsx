@@ -448,11 +448,11 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
     return `${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} at ${time?.slice(0, 5)}`
   }
 
-  const STATUS_BADGE = { pending: 'text-amber-500', accepted: 'text-green-500', declined: 'text-red-400', cancelled: 'text-stone-500', completed: 'text-stone-400' }
+  const STATUS_BADGE = { pending: 'text-amber-500', accepted: 'text-green-500', declined: 'text-red-400', cancelled: 'text-[#9c7a5e]', completed: 'text-[#7c5c3e]' }
   const STATUS_LABEL = { pending: 'Pending', accepted: 'Confirmed', declined: 'Declined', cancelled: 'Cancelled', completed: 'Completed' }
 
   return (
-    <div className="min-h-svh bg-stone-800">
+    <div className="min-h-svh" style={{background: '#fdf7f0'}}>
       {viewingClientId && (
         <ClientHairProfileModal
           clientId={viewingClientId}
@@ -480,11 +480,11 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
 
       {/* Subscription banner */}
       {isFree && (
-        <div className="bg-stone-700/50 border-b border-stone-600 px-6 py-4">
+        <div className="bg-stone-700/50 border-b border-[#e4d0b8] px-6 py-4">
           <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
             <div>
-              <p className="text-sm font-semibold text-stone-300">Free plan</p>
-              <p className="text-xs text-stone-500 mt-0.5">
+              <p className="text-sm font-semibold text-[#4a3728]">Free plan</p>
+              <p className="text-xs text-[#9c7a5e] mt-0.5">
                 {bookingLimitReached
                   ? 'You\'ve reached your 3 booking limit this month. Upgrade for unlimited.'
                   : `${3 - monthlyBookings} booking${3 - monthlyBookings === 1 ? '' : 's'} remaining this month.`}
@@ -509,10 +509,10 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
       )}
 
 
-      <header className="bg-stone-800 border-b border-stone-600 px-6 py-4 flex items-center justify-between">
+      <header className="px-6 py-4 flex items-center justify-between" style={{background: '#fdf7f0', borderBottom: '1px solid #e4d0b8'}}>
         <div>
-          <h1 className="text-xl font-bold text-stone-100 tracking-tight">Root</h1>
-          <p className="text-xs text-stone-600">Specialist dashboard</p>
+          <h1 className="text-xl font-bold tracking-tight" style={{color: '#1a0e06'}}>Root</h1>
+          <p className="text-xs" style={{color: '#9c7a5e'}}>Specialist dashboard</p>
         </div>
         <div className="flex items-center gap-3">
           {onAdmin && (
@@ -520,7 +520,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
               Admin
             </button>
           )}
-          <button onClick={() => setShowSettings(true)} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
+          <button onClick={() => setShowSettings(true)} className="text-sm text-[#b8a090] hover:text-[#7c5c3e] transition-colors">
             Settings
           </button>
         </div>
@@ -540,19 +540,19 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
         const pct = Math.round((done / items.length) * 100)
         const complete = done === items.length
         return (
-          <div className="bg-stone-700 border-b border-stone-600 px-6 py-3">
+          <div className="px-6 py-3" style={{background: '#f5ede0', borderBottom: '1px solid #e4d0b8'}}>
             <div className="max-w-lg mx-auto">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-xs text-stone-500">
+                <span className="text-xs" style={{color: '#9c7a5e'}}>
                   {complete ? 'Profile complete — clients can find you!' : `${done} of ${items.length} sections complete`}
                 </span>
-                <span className="text-xs font-medium text-amber-600">{pct}%</span>
+                <span className="text-xs font-medium text-amber-700">{pct}%</span>
               </div>
-              <div className="h-1.5 bg-stone-600 rounded-full overflow-hidden">
+              <div className="h-1.5 rounded-full overflow-hidden" style={{background: '#e4d0b8'}}>
                 <div className={`h-full rounded-full transition-all duration-500 ${complete ? 'bg-green-500' : 'bg-amber-700'}`} style={{ width: `${pct}%` }} />
               </div>
               {!complete && (
-                <p className="text-xs text-stone-600 mt-1.5">Missing: {items.filter(i => !i.done).map(i => i.label).join(', ')}</p>
+                <p className="text-xs mt-1.5" style={{color: '#b8a090'}}>Missing: {items.filter(i => !i.done).map(i => i.label).join(', ')}</p>
               )}
             </div>
           </div>
@@ -563,18 +563,18 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
 
         {/* Profile form */}
         <div className="space-y-5">
-          <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider">Your Profile</h2>
+          <h2 className="text-xs font-medium text-[#7c5c3e] uppercase tracking-wider">Your Profile</h2>
 
           <div className="relative w-full h-56 rounded-2xl overflow-hidden">
             <div
               onClick={() => photoRef.current.click()}
-              className="w-full h-full bg-stone-600 border-2 border-dashed border-stone-700 flex items-center justify-center cursor-pointer hover:border-stone-500 transition-colors"
+              className="w-full h-full bg-[#e8d5b7] border-2 border-dashed border-[#e4d0b8] flex items-center justify-center cursor-pointer hover:border-stone-500 transition-colors"
             >
               {profile.photo
                 ? <img src={profile.photo} alt="" className="w-full h-full object-contain" />
                 : <div className="flex flex-col items-center gap-2">
-                    <span className="text-stone-500 text-4xl">+</span>
-                    <span className="text-xs text-stone-500">Add profile photo</span>
+                    <span className="text-[#9c7a5e] text-4xl">+</span>
+                    <span className="text-xs text-[#9c7a5e]">Add profile photo</span>
                   </div>
               }
             </div>
@@ -592,11 +592,11 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           {/* Portfolio */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-stone-400 uppercase tracking-wider">Portfolio</label>
+              <label className="text-xs font-medium text-[#7c5c3e] uppercase tracking-wider">Portfolio</label>
               <button
                 onClick={() => portfolioRef.current.click()}
                 disabled={uploadingPortfolio}
-                className="text-xs font-medium text-amber-600 hover:text-amber-500 px-3 py-1.5 rounded-lg border border-stone-600 hover:border-stone-700 transition-colors disabled:opacity-50"
+                className="text-xs font-medium text-amber-600 hover:text-amber-500 px-3 py-1.5 rounded-lg border border-[#e4d0b8] hover:border-[#e4d0b8] transition-colors disabled:opacity-50"
               >
                 {uploadingPortfolio ? 'Uploading…' : '+ Add photo'}
               </button>
@@ -605,7 +605,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
             {portfolioPhotos.length === 0 ? (
               <button
                 onClick={() => portfolioRef.current.click()}
-                className="w-full border-2 border-dashed border-stone-600 rounded-2xl py-8 text-stone-600 text-sm hover:border-stone-700 transition-colors"
+                className="w-full border-2 border-dashed border-[#e4d0b8] rounded-2xl py-8 text-[#b8a090] text-sm hover:border-[#e4d0b8] transition-colors"
               >
                 Add photos of your work
               </button>
@@ -625,7 +625,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                 <button
                   onClick={() => portfolioRef.current.click()}
                   disabled={uploadingPortfolio}
-                  className="aspect-square border-2 border-dashed border-stone-600 rounded-xl text-stone-600 text-2xl hover:border-stone-700 transition-colors flex items-center justify-center"
+                  className="aspect-square border-2 border-dashed border-[#e4d0b8] rounded-xl text-[#b8a090] text-2xl hover:border-[#e4d0b8] transition-colors flex items-center justify-center"
                 >
                   +
                 </button>
@@ -634,29 +634,29 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Name</label>
+            <label className="block text-xs font-medium text-[#7c5c3e] mb-1.5 uppercase tracking-wider">Name</label>
             <input
               type="text"
               value={profile.name}
               onChange={e => setProfile(p => ({ ...p, name: e.target.value }))}
-              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[#b8a090]"
               placeholder="Your name or business name"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">City</label>
+            <label className="block text-xs font-medium text-[#7c5c3e] mb-1.5 uppercase tracking-wider">City</label>
             <input
               type="text"
               value={profile.city}
               onChange={e => setProfile(p => ({ ...p, city: e.target.value }))}
-              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[#b8a090]"
               placeholder="e.g. Austin, TX"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-400 mb-2 uppercase tracking-wider">Where do you work?</label>
+            <label className="block text-xs font-medium text-[#7c5c3e] mb-2 uppercase tracking-wider">Where do you work?</label>
             <div className="flex gap-2 mb-3">
               {[
                 { value: 'studio', label: 'Studio / Salon' },
@@ -670,7 +670,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                   className={`flex-1 py-2.5 rounded-xl text-xs font-medium border transition-colors ${
                     profile.service_location === opt.value
                       ? 'bg-amber-700 border-amber-700 text-amber-50'
-                      : 'bg-transparent border-stone-600 text-stone-500 hover:border-stone-500'
+                      : 'bg-transparent border-[#e4d0b8] text-[#9c7a5e] hover:border-stone-500'
                   }`}
                 >
                   {opt.label}
@@ -683,48 +683,48 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                 value={profile.location_address}
                 onChange={e => setProfile(p => ({ ...p, location_address: e.target.value }))}
                 placeholder="Salon name or address"
-                className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[#b8a090]"
               />
             )}
             {profile.service_location === 'mobile' && (
-              <p className="text-xs text-stone-600">You travel to the client's location.</p>
+              <p className="text-xs text-[#b8a090]">You travel to the client's location.</p>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Bio</label>
+            <label className="block text-xs font-medium text-[#7c5c3e] mb-1.5 uppercase tracking-wider">Bio</label>
             <textarea
               value={profile.bio}
               onChange={e => setProfile(p => ({ ...p, bio: e.target.value }))}
               rows={3}
-              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 resize-none placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 resize-none placeholder:text-[#b8a090]"
               placeholder="Tell clients about your experience and specialty…"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-stone-400 mb-4 uppercase tracking-wider">Services & Pricing</label>
+            <label className="block text-xs font-medium text-[#7c5c3e] mb-4 uppercase tracking-wider">Services & Pricing</label>
             <div className="space-y-6">
               {CATEGORIES.map(category => (
                 <div key={category}>
-                  <p className="text-sm font-semibold text-stone-300 mb-2">{category}</p>
+                  <p className="text-sm font-semibold text-[#4a3728] mb-2">{category}</p>
                   <div className="space-y-2">
                     {(profile.service_groups[category] || []).map(type => (
                       <div key={type} className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 px-4 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-sm text-stone-100">{type}</div>
-                          <button onClick={() => removeServiceType(category, type)} className="w-8 h-8 flex items-center justify-center text-stone-600 hover:text-red-400 transition-colors text-lg">×</button>
+                          <div className="flex-1 px-4 py-2.5 rounded-xl border border-[#e4d0b8] bg-stone-700 text-sm text-[#1a0e06]">{type}</div>
+                          <button onClick={() => removeServiceType(category, type)} className="w-8 h-8 flex items-center justify-center text-[#b8a090] hover:text-red-400 transition-colors text-lg">×</button>
                         </div>
                         <div className="flex gap-2 pr-10">
                           <div className="relative flex-1">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-600 text-sm">$</span>
                             <input type="number" min="0" placeholder="Price" value={profile.service_prices[type] || ''}
                               onChange={e => setProfile(p => ({ ...p, service_prices: { ...p.service_prices, [type]: e.target.value } }))}
-                              className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-amber-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600" />
+                              className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-[#e4d0b8] bg-stone-700 text-amber-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-[#b8a090]" />
                           </div>
                           <select value={profile.service_durations[type] || ''}
                             onChange={e => setProfile(p => ({ ...p, service_durations: { ...p.service_durations, [type]: e.target.value } }))}
-                            className="flex-1 px-3 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700">
+                            className="flex-1 px-3 py-2.5 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600">
                             {DURATION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                           </select>
                         </div>
@@ -737,12 +737,12 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                         onChange={e => setGroupInputs(g => ({ ...g, [category]: e.target.value }))}
                         onKeyDown={e => e.key === 'Enter' && addServiceType(category)}
                         placeholder={`Add a type of ${category.toLowerCase()}…`}
-                        className="flex-1 px-4 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+                        className="flex-1 px-4 py-2.5 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[#b8a090]"
                       />
                       <button
                         onClick={() => addServiceType(category)}
                         disabled={!groupInputs[category].trim()}
-                        className="px-4 py-2.5 bg-stone-600 text-stone-300 rounded-xl text-sm font-medium hover:bg-stone-700 transition-colors disabled:opacity-40"
+                        className="px-4 py-2.5 bg-[#e8d5b7] text-[#4a3728] rounded-xl text-sm font-medium hover:bg-[#dcc9a8] transition-colors disabled:opacity-40"
                       >
                         Add
                       </button>
@@ -756,19 +756,19 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                 {(profile.service_groups['Other'] || []).map(type => (
                   <div key={type} className="space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 px-4 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-sm text-stone-100">{type}</div>
-                      <button onClick={() => removeServiceType('Other', type)} className="w-8 h-8 flex items-center justify-center text-stone-600 hover:text-red-400 transition-colors text-lg">×</button>
+                      <div className="flex-1 px-4 py-2.5 rounded-xl border border-[#e4d0b8] bg-stone-700 text-sm text-[#1a0e06]">{type}</div>
+                      <button onClick={() => removeServiceType('Other', type)} className="w-8 h-8 flex items-center justify-center text-[#b8a090] hover:text-red-400 transition-colors text-lg">×</button>
                     </div>
                     <div className="flex gap-2">
                       <div className="relative flex-1">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 text-sm">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9c7a5e] text-sm">$</span>
                         <input type="number" min="0" placeholder="Price" value={profile.service_prices[type] || ''}
                           onChange={e => setProfile(p => ({ ...p, service_prices: { ...p.service_prices, [type]: e.target.value } }))}
-                          className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600" />
+                          className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-[#e4d0b8] bg-stone-700 text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-[#b8a090]" />
                       </div>
                       <select value={profile.service_durations[type] || ''}
                         onChange={e => setProfile(p => ({ ...p, service_durations: { ...p.service_durations, [type]: e.target.value } }))}
-                        className="flex-1 px-3 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700">
+                        className="flex-1 px-3 py-2.5 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600">
                         {DURATION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </div>
@@ -781,12 +781,12 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                     onChange={e => setGroupInputs(g => ({ ...g, Other: e.target.value }))}
                     onKeyDown={e => e.key === 'Enter' && addServiceType('Other')}
                     placeholder="Add a service…"
-                    className="flex-1 px-4 py-2.5 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[#b8a090]"
                   />
                   <button
                     onClick={() => addServiceType('Other')}
                     disabled={!groupInputs['Other'].trim()}
-                    className="px-4 py-2.5 bg-stone-600 text-stone-300 rounded-xl text-sm font-medium hover:bg-stone-700 transition-colors disabled:opacity-40"
+                    className="px-4 py-2.5 bg-[#e8d5b7] text-[#4a3728] rounded-xl text-sm font-medium hover:bg-[#dcc9a8] transition-colors disabled:opacity-40"
                   >
                     Add
                   </button>
@@ -797,7 +797,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
 
           {/* Availability */}
           <div className="space-y-3">
-            <label className="block text-xs font-medium text-stone-400 uppercase tracking-wider">Availability</label>
+            <label className="block text-xs font-medium text-[#7c5c3e] uppercase tracking-wider">Availability</label>
             <div className="flex gap-1.5">
               {DAYS.map(day => (
                 <button
@@ -806,7 +806,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                   className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-colors ${
                     profile.available_days.includes(day)
                       ? 'bg-amber-700 border-amber-700 text-amber-50'
-                      : 'bg-transparent border-stone-700 text-stone-500 hover:border-stone-500'
+                      : 'bg-transparent border-[#e4d0b8] text-[#9c7a5e] hover:border-stone-500'
                   }`}
                 >
                   {day}
@@ -815,45 +815,45 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
             </div>
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="block text-xs text-stone-500 mb-1">From</label>
+                <label className="block text-xs text-[#9c7a5e] mb-1">From</label>
                 <select
                   value={profile.available_start}
                   onChange={e => setProfile(p => ({ ...p, available_start: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+                  className="w-full px-3 py-2 rounded-xl border border-[#e4d0b8] bg-stone-700 text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
                 >
                   {HOUR_SLOTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                 </select>
               </div>
               <div className="flex-1">
-                <label className="block text-xs text-stone-500 mb-1">To</label>
+                <label className="block text-xs text-[#9c7a5e] mb-1">To</label>
                 <select
                   value={profile.available_end}
                   onChange={e => setProfile(p => ({ ...p, available_end: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+                  className="w-full px-3 py-2 rounded-xl border border-[#e4d0b8] bg-stone-700 text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
                 >
                   {HOUR_SLOTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                 </select>
               </div>
             </div>
             {profile.available_days.length === 0 && (
-              <p className="text-xs text-stone-600">No days selected — clients can book any day.</p>
+              <p className="text-xs text-[#b8a090]">No days selected — clients can book any day.</p>
             )}
 
             {/* Blocked dates */}
             <div className="pt-1">
-              <p className="text-xs text-stone-500 mb-2">Block specific dates (vacation, days off)</p>
+              <p className="text-xs text-[#9c7a5e] mb-2">Block specific dates (vacation, days off)</p>
               <div className="flex gap-2">
                 <input
                   type="date"
                   value={blockedDateInput}
                   onChange={e => setBlockedDateInput(e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className="flex-1 px-3 py-2 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+                  className="flex-1 px-3 py-2 rounded-xl bg-white border border-[#e4d0b8] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600"
                 />
                 <button
                   onClick={addBlockedDate}
                   disabled={!blockedDateInput}
-                  className="px-4 py-2 bg-stone-600 text-stone-300 rounded-xl text-sm font-medium hover:bg-stone-700 transition-colors disabled:opacity-40"
+                  className="px-4 py-2 bg-[#e8d5b7] text-[#4a3728] rounded-xl text-sm font-medium hover:bg-[#dcc9a8] transition-colors disabled:opacity-40"
                 >
                   Block
                 </button>
@@ -861,11 +861,11 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
               {profile.blocked_dates.length > 0 && (
                 <div className="mt-2 space-y-1.5">
                   {profile.blocked_dates.map(d => (
-                    <div key={d} className="flex items-center justify-between px-3 py-2 bg-stone-600 rounded-xl">
-                      <span className="text-xs text-stone-300">
+                    <div key={d} className="flex items-center justify-between px-3 py-2 bg-[#e8d5b7] rounded-xl">
+                      <span className="text-xs text-[#4a3728]">
                         {new Date(d + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
                       </span>
-                      <button onClick={() => removeBlockedDate(d)} className="text-stone-600 hover:text-red-400 transition-colors text-lg leading-none">×</button>
+                      <button onClick={() => removeBlockedDate(d)} className="text-[#b8a090] hover:text-red-400 transition-colors text-lg leading-none">×</button>
                     </div>
                   ))}
                 </div>
@@ -884,17 +884,17 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
 
           <button
             onClick={shareProfile}
-            className="w-full py-3 bg-stone-600 text-stone-300 rounded-xl text-sm font-medium hover:bg-stone-700 transition-colors"
+            className="w-full py-3 bg-[#e8d5b7] text-[#4a3728] rounded-xl text-sm font-medium hover:bg-[#dcc9a8] transition-colors"
           >
             {copied ? 'Link copied!' : 'Share profile link'}
           </button>
         </div>
 
         {/* Invite clients */}
-        <div className="bg-stone-700 border border-stone-600 rounded-2xl p-5 space-y-4">
+        <div className="bg-stone-700 border border-[#e4d0b8] rounded-2xl p-5 space-y-4">
           <div>
-            <h2 className="text-sm font-bold text-stone-100 mb-1">Invite your existing clients</h2>
-            <p className="text-xs text-stone-500 leading-relaxed">
+            <h2 className="text-sm font-bold text-[#1a0e06] mb-1">Invite your existing clients</h2>
+            <p className="text-xs text-[#9c7a5e] leading-relaxed">
               Switching from Booksy, Vagaro, or another platform? Export your client list as a CSV and Root will email each one automatically.
             </p>
           </div>
@@ -904,7 +904,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           {inviteParsed.length === 0 && !inviteResult && (
             <button
               onClick={() => inviteFileRef.current.click()}
-              className="w-full py-3 border-2 border-dashed border-stone-500 rounded-xl text-sm text-stone-400 hover:border-amber-700 hover:text-amber-600 transition-colors"
+              className="w-full py-3 border-2 border-dashed border-stone-500 rounded-xl text-sm text-[#7c5c3e] hover:border-amber-700 hover:text-amber-600 transition-colors"
             >
               Upload CSV file
             </button>
@@ -914,16 +914,16 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
             <div className="space-y-3">
               <div className="max-h-40 overflow-y-auto space-y-1.5">
                 {inviteParsed.map((c, i) => (
-                  <div key={i} className="flex items-center justify-between px-3 py-2 bg-stone-600 rounded-lg">
-                    <span className="text-xs text-stone-300 font-medium truncate">{c.name || '—'}</span>
-                    <span className="text-xs text-stone-500 truncate ml-3">{c.email}</span>
+                  <div key={i} className="flex items-center justify-between px-3 py-2 bg-[#e8d5b7] rounded-lg">
+                    <span className="text-xs text-[#4a3728] font-medium truncate">{c.name || '—'}</span>
+                    <span className="text-xs text-[#9c7a5e] truncate ml-3">{c.email}</span>
                   </div>
                 ))}
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => { setInviteParsed([]); setInviteResult(null) }}
-                  className="flex-1 py-2.5 bg-stone-600 text-stone-400 rounded-xl text-xs font-medium hover:bg-stone-700 transition-colors"
+                  className="flex-1 py-2.5 bg-[#e8d5b7] text-[#7c5c3e] rounded-xl text-xs font-medium hover:bg-[#dcc9a8] transition-colors"
                 >
                   Clear
                 </button>
@@ -951,12 +951,12 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
             </div>
           )}
 
-          <p className="text-xs text-stone-600">CSV must have an <span className="text-stone-500">email</span> column. A <span className="text-stone-500">name</span> column is optional but recommended.</p>
+          <p className="text-xs text-[#b8a090]">CSV must have an <span className="text-[#9c7a5e]">email</span> column. A <span className="text-[#9c7a5e]">name</span> column is optional but recommended.</p>
         </div>
 
         {/* Tabs */}
         <div>
-          <div className="flex border-b border-stone-600 mb-5">
+          <div className="flex border-b border-[#e4d0b8] mb-5">
             {[
               { key: 'requests', label: 'Requests', count: pending.length },
               { key: 'upcoming', label: 'Upcoming', count: 0 },
@@ -967,7 +967,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex-1 py-2.5 text-xs font-medium transition-colors relative ${activeTab === tab.key ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
+                className={`flex-1 py-2.5 text-xs font-medium transition-colors relative ${activeTab === tab.key ? 'text-amber-500' : 'text-[#b8a090] hover:text-[#7c5c3e]'}`}
               >
                 {tab.label}
                 {tab.count > 0 && (
@@ -982,19 +982,19 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           {activeTab === 'requests' && (
             <div className="space-y-3">
               {pending.length === 0 ? (
-                <div className="bg-stone-700 border border-stone-600 rounded-2xl p-6 text-center">
-                  <p className="text-stone-500 text-sm">No pending requests.</p>
-                  <p className="text-stone-600 text-xs mt-1">Complete your profile so clients can find you.</p>
+                <div className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-6 text-center">
+                  <p className="text-[#9c7a5e] text-sm">No pending requests.</p>
+                  <p className="text-[#b8a090] text-xs mt-1">Complete your profile so clients can find you.</p>
                 </div>
               ) : pending.map(booking => (
-                <div key={booking.id} className="bg-stone-700 border border-stone-600 rounded-2xl p-5 space-y-3">
+                <div key={booking.id} className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-5 space-y-3">
                   <div>
-                    <p className="text-sm font-semibold text-stone-100">{booking.client_profile?.name || 'Client'}</p>
-                    <p className="text-xs text-stone-500 mt-0.5">{formatDateTime(booking.requested_date, booking.requested_time)}</p>
+                    <p className="text-sm font-semibold text-[#1a0e06]">{booking.client_profile?.name || 'Client'}</p>
+                    <p className="text-xs text-[#9c7a5e] mt-0.5">{formatDateTime(booking.requested_date, booking.requested_time)}</p>
                     {booking.service_name && <p className="text-xs text-amber-600 mt-0.5">{booking.service_name}</p>}
                   </div>
                   {booking.client_note && (
-                    <p className="text-xs text-stone-400 bg-stone-600 rounded-lg px-3 py-2">{booking.client_note}</p>
+                    <p className="text-xs text-[#7c5c3e] bg-[#e8d5b7] rounded-lg px-3 py-2">{booking.client_note}</p>
                   )}
                   {booking.client_id && (
                     <button
@@ -1012,12 +1012,12 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                   <div className="flex gap-2 pt-1">
                     {isPremium ? (
                       <button onClick={() => setMessagingBooking(booking)}
-                        className="flex-1 py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                        className="flex-1 py-2 bg-[#e8d5b7] text-[#4a3728] rounded-lg text-xs font-medium hover:bg-[#dcc9a8] transition-colors">
                         Message
                       </button>
                     ) : (
                       <button onClick={handleSubscribe}
-                        className="flex-1 py-2 bg-stone-600 text-stone-500 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                        className="flex-1 py-2 bg-[#e8d5b7] text-[#9c7a5e] rounded-lg text-xs font-medium hover:bg-[#dcc9a8] transition-colors">
                         🔒 Message
                       </button>
                     )}
@@ -1028,7 +1028,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                       Accept
                     </button>
                     <button onClick={() => respondToBooking(booking.id, 'declined')}
-                      className="flex-1 py-2 bg-stone-600 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                      className="flex-1 py-2 bg-[#e8d5b7] text-[#7c5c3e] rounded-lg text-xs font-medium hover:bg-[#dcc9a8] transition-colors">
                       Decline
                     </button>
                   </div>
@@ -1041,15 +1041,15 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           {activeTab === 'upcoming' && (
             <div className="space-y-3">
               {upcoming.length === 0 ? (
-                <div className="bg-stone-700 border border-stone-600 rounded-2xl p-6 text-center">
-                  <p className="text-stone-500 text-sm">No confirmed appointments yet.</p>
+                <div className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-6 text-center">
+                  <p className="text-[#9c7a5e] text-sm">No confirmed appointments yet.</p>
                 </div>
               ) : upcoming.map(booking => (
-                <div key={booking.id} className="bg-stone-700 border border-stone-600 rounded-2xl p-5 space-y-3">
+                <div key={booking.id} className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-5 space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-stone-100">{booking.client_profile?.name || 'Client'}</p>
-                      <p className="text-xs text-stone-500 mt-0.5">{formatDateTime(booking.requested_date, booking.requested_time)}</p>
+                      <p className="text-sm font-semibold text-[#1a0e06]">{booking.client_profile?.name || 'Client'}</p>
+                      <p className="text-xs text-[#9c7a5e] mt-0.5">{formatDateTime(booking.requested_date, booking.requested_time)}</p>
                       {booking.service_name && <p className="text-xs text-amber-600 mt-0.5">{booking.service_name}</p>}
                     </div>
                     <span className="text-xs font-medium text-green-500">Confirmed</span>
@@ -1065,12 +1065,12 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                   <div className="flex gap-2">
                     {isPremium ? (
                       <button onClick={() => setMessagingBooking(booking)}
-                        className="flex-1 py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                        className="flex-1 py-2 bg-[#e8d5b7] text-[#4a3728] rounded-lg text-xs font-medium hover:bg-[#dcc9a8] transition-colors">
                         Message
                       </button>
                     ) : (
                       <button onClick={handleSubscribe}
-                        className="flex-1 py-2 bg-stone-600 text-stone-500 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                        className="flex-1 py-2 bg-[#e8d5b7] text-[#9c7a5e] rounded-lg text-xs font-medium hover:bg-[#dcc9a8] transition-colors">
                         🔒 Message
                       </button>
                     )}
@@ -1079,7 +1079,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                       Mark complete
                     </button>
                     <button onClick={() => cancelBooking(booking.id)}
-                      className="flex-1 py-2 bg-stone-600 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                      className="flex-1 py-2 bg-[#e8d5b7] text-[#7c5c3e] rounded-lg text-xs font-medium hover:bg-[#dcc9a8] transition-colors">
                       Cancel
                     </button>
                   </div>
@@ -1100,15 +1100,15 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           {activeTab === 'past' && (
             <div className="space-y-3">
               {past.length === 0 ? (
-                <div className="bg-stone-700 border border-stone-600 rounded-2xl p-6 text-center">
-                  <p className="text-stone-500 text-sm">No past appointments.</p>
+                <div className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-6 text-center">
+                  <p className="text-[#9c7a5e] text-sm">No past appointments.</p>
                 </div>
               ) : past.map(booking => (
-                <div key={booking.id} className="bg-stone-700 border border-stone-600 rounded-2xl p-5 space-y-2">
+                <div key={booking.id} className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-5 space-y-2">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-sm font-semibold text-stone-100">{booking.client_profile?.name || 'Client'}</p>
-                      <p className="text-xs text-stone-500 mt-0.5">{formatDateTime(booking.requested_date, booking.requested_time)}</p>
+                      <p className="text-sm font-semibold text-[#1a0e06]">{booking.client_profile?.name || 'Client'}</p>
+                      <p className="text-xs text-[#9c7a5e] mt-0.5">{formatDateTime(booking.requested_date, booking.requested_time)}</p>
                       {booking.service_name && <p className="text-xs text-amber-600 mt-0.5">{booking.service_name}</p>}
                     </div>
                     <span className={`text-xs font-medium ${STATUS_BADGE[booking.status]}`}>
@@ -1124,7 +1124,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                     </button>
                   )}
                   <button onClick={() => setMessagingBooking(booking)}
-                    className="w-full py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors">
+                    className="w-full py-2 bg-[#e8d5b7] text-[#4a3728] rounded-lg text-xs font-medium hover:bg-[#dcc9a8] transition-colors">
                     Message
                   </button>
                 </div>
@@ -1136,16 +1136,16 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
           {activeTab === 'reviews' && (
             <div className="space-y-3">
               {reviews.length === 0 ? (
-                <div className="bg-stone-700 border border-stone-600 rounded-2xl p-6 text-center">
-                  <p className="text-stone-500 text-sm">No reviews yet.</p>
-                  <p className="text-stone-600 text-xs mt-1">Reviews appear here after clients rate their appointments.</p>
+                <div className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-6 text-center">
+                  <p className="text-[#9c7a5e] text-sm">No reviews yet.</p>
+                  <p className="text-[#b8a090] text-xs mt-1">Reviews appear here after clients rate their appointments.</p>
                 </div>
               ) : (
                 <>
-                  <div className="bg-stone-700 border border-stone-600 rounded-2xl p-4 flex items-center gap-4">
+                  <div className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-4 flex items-center gap-4">
                     <div className="text-center">
-                      <p className="text-3xl font-bold text-stone-100">{avgRating}</p>
-                      <p className="text-xs text-stone-500 mt-0.5">avg rating</p>
+                      <p className="text-3xl font-bold text-[#1a0e06]">{avgRating}</p>
+                      <p className="text-xs text-[#9c7a5e] mt-0.5">avg rating</p>
                     </div>
                     <div>
                       <div className="flex">
@@ -1153,14 +1153,14 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                           <span key={i} className={`text-xl ${i <= Math.round(avgRating) ? 'text-amber-500' : 'text-stone-700'}`}>★</span>
                         ))}
                       </div>
-                      <p className="text-xs text-stone-500 mt-1">{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</p>
+                      <p className="text-xs text-[#9c7a5e] mt-1">{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</p>
                     </div>
                   </div>
 
                   {reviews.map(review => (
-                    <div key={review.id} className="bg-stone-700 border border-stone-600 rounded-2xl p-4 space-y-2">
+                    <div key={review.id} className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-4 space-y-2">
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-semibold text-stone-100">{review.client_name}</p>
+                        <p className="text-sm font-semibold text-[#1a0e06]">{review.client_name}</p>
                         <div className="flex">
                           {[1,2,3,4,5].map(i => (
                             <span key={i} className={`text-sm ${i <= review.rating ? 'text-amber-500' : 'text-stone-700'}`}>★</span>
@@ -1168,9 +1168,9 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                         </div>
                       </div>
                       {review.comment && (
-                        <p className="text-xs text-stone-400 leading-relaxed">"{review.comment}"</p>
+                        <p className="text-xs text-[#7c5c3e] leading-relaxed">"{review.comment}"</p>
                       )}
-                      <p className="text-xs text-stone-600">
+                      <p className="text-xs text-[#b8a090]">
                         {new Date(review.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                       </p>
                     </div>
