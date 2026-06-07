@@ -21,23 +21,23 @@ function LabelPicker({ onSelect, onCancel }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60" onClick={onCancel}>
       <div
-        className="w-full max-w-lg bg-stone-700 border border-stone-600 rounded-t-3xl p-6 space-y-3"
+        className="w-full max-w-lg bg-[#f5ede0] border border-[#e4d0b8] rounded-t-3xl p-6 space-y-3"
         onClick={e => e.stopPropagation()}
       >
-        <p className="text-sm font-semibold text-stone-100 mb-4">What kind of photo is this?</p>
+        <p className="text-sm font-semibold text-[#1a0e06] mb-4">What kind of photo is this?</p>
         {LABELS.map(({ key, text, desc }) => (
           <button
             key={key}
             onClick={() => onSelect(key)}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-stone-700 hover:bg-stone-600 transition-colors"
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-[#e4d0b8] hover:bg-[#e8d5b7] transition-colors"
           >
-            <span className="text-sm font-medium text-stone-100">{text}</span>
-            <span className="text-xs text-stone-500">{desc}</span>
+            <span className="text-sm font-medium text-[#1a0e06]">{text}</span>
+            <span className="text-xs text-[#9c7a5e]">{desc}</span>
           </button>
         ))}
         <button
           onClick={onCancel}
-          className="w-full py-3 text-sm text-stone-600 hover:text-stone-400 transition-colors"
+          className="w-full py-3 text-sm text-[#b8a090] hover:text-[#7c5c3e] transition-colors"
         >
           Cancel
         </button>
@@ -213,7 +213,7 @@ export default function ProfilePage({ user }) {
   const isComplete = completedCount === total
 
   return (
-    <div className="min-h-svh bg-stone-800">
+    <div className="min-h-svh bg-[#fdf7f0]">
       {pendingFile && (
         <LabelPicker
           onSelect={handleLabelSelect}
@@ -221,9 +221,9 @@ export default function ProfilePage({ user }) {
         />
       )}
 
-      <header className="bg-stone-800 border-b border-stone-600 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-stone-100 tracking-tight">Root</h1>
-        <button onClick={signOut} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
+      <header className="bg-[#fdf7f0] border-b border-[#e4d0b8] px-6 py-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-[#1a0e06] tracking-tight">Root</h1>
+        <button onClick={signOut} className="text-sm text-[#b8a090] hover:text-[#7c5c3e] transition-colors">
           Sign out
         </button>
       </header>
@@ -238,22 +238,22 @@ export default function ProfilePage({ user }) {
       )}
 
       {/* Completeness bar — hidden when profile is complete */}
-      {!isComplete && <div className="bg-stone-700 border-b border-stone-600 px-6 py-3">
+      {!isComplete && <div className="bg-[#f5ede0] border-b border-[#e4d0b8] px-6 py-3">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-stone-500">
+            <span className="text-xs text-[#9c7a5e]">
               {isComplete ? 'Profile complete — ready to share!' : `${completedCount} of ${total} sections complete`}
             </span>
             <span className="text-xs font-medium text-amber-600">{pct}%</span>
           </div>
-          <div className="h-1.5 bg-stone-600 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-[#e8d5b7] rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-500 ${isComplete ? 'bg-green-500' : 'bg-amber-700'}`}
               style={{ width: `${pct}%` }}
             />
           </div>
           {!isComplete && (
-            <p className="text-xs text-stone-600 mt-1.5">
+            <p className="text-xs text-[#b8a090] mt-1.5">
               Missing: {completionItems.filter(i => !i.done).map(i => i.label).join(', ')}
             </p>
           )}
@@ -263,12 +263,12 @@ export default function ProfilePage({ user }) {
       <div className="max-w-lg mx-auto px-6 py-8 space-y-8">
         {/* Name */}
         <div>
-          <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">Your name</label>
+          <label className="block text-xs font-medium text-[#7c5c3e] mb-1.5 uppercase tracking-wider">Your name</label>
           <input
             type="text"
             value={profile.name}
             onChange={e => setProfile(p => ({ ...p, name: e.target.value }))}
-            className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+            className="w-full px-4 py-3 rounded-xl border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[#b8a090]"
             placeholder="What should your specialist call you?"
           />
         </div>
@@ -276,11 +276,11 @@ export default function ProfilePage({ user }) {
         {/* Photos */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider">Photos</h2>
+            <h2 className="text-xs font-medium text-[#7c5c3e] uppercase tracking-wider">Photos</h2>
             <button
               onClick={() => fileRef.current.click()}
               disabled={uploading}
-              className="text-xs font-medium text-amber-600 hover:text-amber-500 px-3 py-1.5 rounded-lg border border-stone-600 hover:border-stone-700 transition-colors disabled:opacity-50"
+              className="text-xs font-medium text-amber-600 hover:text-amber-500 px-3 py-1.5 rounded-lg border border-[#e4d0b8] hover:border-[#e4d0b8] transition-colors disabled:opacity-50"
             >
               {uploading ? 'Uploading…' : '+ Add photo'}
             </button>
@@ -290,7 +290,7 @@ export default function ProfilePage({ user }) {
           {photos.length === 0 ? (
             <button
               onClick={() => fileRef.current.click()}
-              className="w-full border-2 border-dashed border-stone-600 rounded-2xl py-10 text-stone-600 text-sm hover:border-stone-700 transition-colors"
+              className="w-full border-2 border-dashed border-[#e4d0b8] rounded-2xl py-10 text-[#b8a090] text-sm hover:border-[#e4d0b8] transition-colors"
             >
               Add your first photo — before, after, reference, or "never again"
             </button>
@@ -300,7 +300,7 @@ export default function ProfilePage({ user }) {
                 <div key={photo.id} className="relative group aspect-square">
                   <img src={photo.url} alt="" className="w-full h-full object-cover rounded-xl" />
                   {photo.label && (
-                    <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-stone-600 text-stone-400'}`}>
+                    <span className={`absolute bottom-1 left-1 text-xs font-medium px-1.5 py-0.5 rounded-md ${LABEL_COLORS[photo.label] || 'bg-[#e8d5b7] text-[#7c5c3e]'}`}>
                       {LABEL_TEXT[photo.label] || photo.label}
                     </span>
                   )}
@@ -315,7 +315,7 @@ export default function ProfilePage({ user }) {
               <button
                 onClick={() => fileRef.current.click()}
                 disabled={uploading}
-                className="aspect-square border-2 border-dashed border-stone-600 rounded-xl text-stone-600 text-2xl hover:border-stone-700 transition-colors flex items-center justify-center"
+                className="aspect-square border-2 border-dashed border-[#e4d0b8] rounded-xl text-[#b8a090] text-2xl hover:border-[#e4d0b8] transition-colors flex items-center justify-center"
               >
                 +
               </button>
@@ -326,12 +326,12 @@ export default function ProfilePage({ user }) {
         {/* Text sections */}
         {SECTIONS.map(({ key, label, placeholder }) => (
           <div key={key}>
-            <label className="block text-xs font-medium text-stone-400 mb-1.5 uppercase tracking-wider">{label}</label>
+            <label className="block text-xs font-medium text-[#7c5c3e] mb-1.5 uppercase tracking-wider">{label}</label>
             <textarea
               value={profile[key]}
               onChange={e => setProfile(p => ({ ...p, [key]: e.target.value }))}
               rows={3}
-              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 resize-none placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl border border-[#e4d0b8] bg-[#f5ede0] text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 resize-none placeholder:text-[#b8a090]"
               placeholder={placeholder}
             />
           </div>
@@ -348,10 +348,10 @@ export default function ProfilePage({ user }) {
 
         {/* Share link */}
         {shareUrl && (
-          <div className="bg-stone-700 border border-stone-600 rounded-2xl p-5 space-y-3">
+          <div className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-5 space-y-3">
             <div>
-              <p className="text-sm font-medium text-stone-100 mb-1">Share with your specialist</p>
-              <p className="text-xs text-stone-500">Send this before your first appointment — no app required on their end.</p>
+              <p className="text-sm font-medium text-[#1a0e06] mb-1">Share with your specialist</p>
+              <p className="text-xs text-[#9c7a5e]">Send this before your first appointment — no app required on their end.</p>
             </div>
             <button
               onClick={nativeShare}

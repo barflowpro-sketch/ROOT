@@ -161,8 +161,8 @@ export default function ClientBookingsPage({ user, onBook }) {
 
   if (loading) {
     return (
-      <div className="min-h-svh flex items-center justify-center bg-stone-800">
-        <p className="text-stone-600 text-sm">Loading…</p>
+      <div className="min-h-svh flex items-center justify-center bg-[#fdf7f0]">
+        <p className="text-[#b8a090] text-sm">Loading…</p>
       </div>
     )
   }
@@ -171,8 +171,8 @@ export default function ClientBookingsPage({ user, onBook }) {
     pending: 'text-amber-500',
     accepted: 'text-green-500',
     declined: 'text-red-400',
-    cancelled: 'text-stone-500',
-    completed: 'text-stone-400',
+    cancelled: 'text-[#9c7a5e]',
+    completed: 'text-[#7c5c3e]',
   }
 
   const STATUS_LABEL = {
@@ -189,13 +189,13 @@ export default function ClientBookingsPage({ user, onBook }) {
     const existingReview = reviews[booking.id]
 
     return (
-      <div className="bg-stone-700 border border-stone-600 rounded-2xl p-5 space-y-3">
+      <div className="bg-[#f5ede0] border border-[#e4d0b8] rounded-2xl p-5 space-y-3">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm font-semibold text-stone-100">
+            <p className="text-sm font-semibold text-[#1a0e06]">
               {booking.specialist_profile?.name || 'Specialist'}
             </p>
-            <p className="text-xs text-stone-500 mt-0.5">
+            <p className="text-xs text-[#9c7a5e] mt-0.5">
               {booking.specialist_profile?.city && `${booking.specialist_profile.city} · `}
               {formatDateTime(booking.requested_date, booking.requested_time)}
             </p>
@@ -207,7 +207,7 @@ export default function ClientBookingsPage({ user, onBook }) {
         </div>
 
         {booking.client_note && (
-          <p className="text-xs text-stone-400 bg-stone-600 rounded-lg px-3 py-2">{booking.client_note}</p>
+          <p className="text-xs text-[#7c5c3e] bg-[#e8d5b7] rounded-lg px-3 py-2">{booking.client_note}</p>
         )}
 
         {existingReview && (
@@ -218,7 +218,7 @@ export default function ClientBookingsPage({ user, onBook }) {
               ))}
             </div>
             {existingReview.comment && (
-              <p className="text-xs text-stone-400 italic">"{existingReview.comment}"</p>
+              <p className="text-xs text-[#7c5c3e] italic">"{existingReview.comment}"</p>
             )}
           </div>
         )}
@@ -231,12 +231,12 @@ export default function ClientBookingsPage({ user, onBook }) {
               onChange={e => setRatingComment(e.target.value)}
               rows={2}
               placeholder="Share your experience… (optional)"
-              className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-800 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 resize-none placeholder:text-stone-600"
+              className="w-full px-3 py-2 rounded-lg border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 resize-none placeholder:text-[#b8a090]"
             />
             <div className="flex gap-2">
               <button
                 onClick={() => setRatingId(null)}
-                className="flex-1 py-2 bg-stone-600 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+                className="flex-1 py-2 bg-[#e8d5b7] text-[#7c5c3e] rounded-lg text-xs font-medium hover:bg-[#f5ede0] transition-colors"
               >
                 Cancel
               </button>
@@ -262,12 +262,12 @@ export default function ClientBookingsPage({ user, onBook }) {
                 fetchEditBookedTimes(booking.specialist_id, e.target.value, booking.id)
               }}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-800 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+              className="w-full px-3 py-2 rounded-lg border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600"
             />
             <select
               value={editTime}
               onChange={e => setEditTime(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-800 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+              className="w-full px-3 py-2 rounded-lg border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600"
             >
               <option value="">Select a time</option>
               {TIME_SLOTS.filter(slot => !editBookedTimes.includes(slot.value)).map(slot => (
@@ -279,12 +279,12 @@ export default function ClientBookingsPage({ user, onBook }) {
               onChange={e => setEditNote(e.target.value)}
               rows={2}
               placeholder="Note to your specialist… (optional)"
-              className="w-full px-3 py-2 rounded-lg border border-stone-700 bg-stone-800 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 resize-none placeholder:text-stone-600"
+              className="w-full px-3 py-2 rounded-lg border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 resize-none placeholder:text-[#b8a090]"
             />
             <div className="flex gap-2">
               <button
                 onClick={() => setEditingId(null)}
-                className="flex-1 py-2 bg-stone-600 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+                className="flex-1 py-2 bg-[#e8d5b7] text-[#7c5c3e] rounded-lg text-xs font-medium hover:bg-[#f5ede0] transition-colors"
               >
                 Cancel
               </button>
@@ -302,14 +302,14 @@ export default function ClientBookingsPage({ user, onBook }) {
           <div className="flex gap-2">
             <button
               onClick={() => setMessagingBooking(booking)}
-              className="flex-1 py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+              className="flex-1 py-2 bg-[#e8d5b7] text-[#4a3728] rounded-lg text-xs font-medium hover:bg-[#f5ede0] transition-colors"
             >
               Message
             </button>
             {showRate && !existingReview && (
               <button
                 onClick={() => { setRatingId(booking.id); setRatingStars(0); setRatingComment('') }}
-                className="flex-1 py-2 bg-stone-600 text-amber-500 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+                className="flex-1 py-2 bg-[#e8d5b7] text-amber-500 rounded-lg text-xs font-medium hover:bg-[#f5ede0] transition-colors"
               >
                 Leave a review
               </button>
@@ -325,7 +325,7 @@ export default function ClientBookingsPage({ user, onBook }) {
             {showEdit && (
               <button
                 onClick={() => startEdit(booking)}
-                className="flex-1 py-2 bg-stone-600 text-stone-300 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+                className="flex-1 py-2 bg-[#e8d5b7] text-[#4a3728] rounded-lg text-xs font-medium hover:bg-[#f5ede0] transition-colors"
               >
                 Edit
               </button>
@@ -333,7 +333,7 @@ export default function ClientBookingsPage({ user, onBook }) {
             {showCancel && (
               <button
                 onClick={() => cancelBooking(booking.id)}
-                className="flex-1 py-2 bg-stone-600 text-stone-400 rounded-lg text-xs font-medium hover:bg-stone-700 transition-colors"
+                className="flex-1 py-2 bg-[#e8d5b7] text-[#7c5c3e] rounded-lg text-xs font-medium hover:bg-[#f5ede0] transition-colors"
               >
                 Cancel
               </button>
@@ -345,7 +345,7 @@ export default function ClientBookingsPage({ user, onBook }) {
   }
 
   return (
-    <div className="min-h-svh bg-stone-800">
+    <div className="min-h-svh bg-[#fdf7f0]">
       {messagingBooking && (
         <MessagingModal
           booking={messagingBooking}
@@ -355,15 +355,15 @@ export default function ClientBookingsPage({ user, onBook }) {
         />
       )}
 
-      <header className="bg-stone-800 border-b border-stone-600 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-stone-100 tracking-tight">My Appointments</h1>
-        <button onClick={() => supabase.auth.signOut()} className="text-sm text-stone-600 hover:text-stone-400 transition-colors">
+      <header className="bg-[#fdf7f0] border-b border-[#e4d0b8] px-6 py-4 flex items-center justify-between">
+        <h1 className="text-xl font-bold text-[#1a0e06] tracking-tight">My Appointments</h1>
+        <button onClick={() => supabase.auth.signOut()} className="text-sm text-[#b8a090] hover:text-[#7c5c3e] transition-colors">
           Sign out
         </button>
       </header>
 
       <div className="max-w-lg mx-auto px-6 py-6">
-        <div className="flex border-b border-stone-600 mb-5">
+        <div className="flex border-b border-[#e4d0b8] mb-5">
           {[
             { key: 'upcoming', label: 'Upcoming', count: upcoming.length },
             { key: 'pending', label: 'Pending', count: pending.length },
@@ -373,7 +373,7 @@ export default function ClientBookingsPage({ user, onBook }) {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 py-2.5 text-xs font-medium transition-colors relative ${activeTab === tab.key ? 'text-amber-500' : 'text-stone-600 hover:text-stone-400'}`}
+              className={`flex-1 py-2.5 text-xs font-medium transition-colors relative ${activeTab === tab.key ? 'text-amber-500' : 'text-[#b8a090] hover:text-[#7c5c3e]'}`}
             >
               {tab.label}
               {tab.count > 0 && (
@@ -387,25 +387,25 @@ export default function ClientBookingsPage({ user, onBook }) {
         <div className="space-y-3">
           {activeTab === 'upcoming' && (
             upcoming.length === 0
-              ? <p className="text-stone-500 text-sm text-center py-10">No confirmed appointments yet.</p>
+              ? <p className="text-[#9c7a5e] text-sm text-center py-10">No confirmed appointments yet.</p>
               : upcoming.map(b => <BookingCard key={b.id} booking={b} showCancel={true} />)
           )}
 
           {activeTab === 'pending' && (
             pending.length === 0
-              ? <p className="text-stone-500 text-sm text-center py-10">No pending requests.</p>
+              ? <p className="text-[#9c7a5e] text-sm text-center py-10">No pending requests.</p>
               : pending.map(b => <BookingCard key={b.id} booking={b} showCancel={true} showEdit={true} />)
           )}
 
           {activeTab === 'past' && (
             past.length === 0
-              ? <p className="text-stone-500 text-sm text-center py-10">No past appointments.</p>
+              ? <p className="text-[#9c7a5e] text-sm text-center py-10">No past appointments.</p>
               : past.map(b => <BookingCard key={b.id} booking={b} showCancel={false} showRate={b.status === 'accepted' || b.status === 'completed'} />)
           )}
 
           {activeTab === 'updates' && (
             notifications.length === 0
-              ? <p className="text-stone-500 text-sm text-center py-10">No updates yet.</p>
+              ? <p className="text-[#9c7a5e] text-sm text-center py-10">No updates yet.</p>
               : <div className="space-y-2">
                   {notifications.map(b => {
                     const name = b.specialist_profile?.name || 'Your specialist'
@@ -419,9 +419,9 @@ export default function ClientBookingsPage({ user, onBook }) {
                       b.status === 'completed' ? 'bg-stone-500' :
                       'bg-red-400'
                     return (
-                      <div key={b.id} className="flex items-start gap-3 bg-stone-700 border border-stone-600 rounded-xl px-4 py-3">
+                      <div key={b.id} className="flex items-start gap-3 bg-[#f5ede0] border border-[#e4d0b8] rounded-xl px-4 py-3">
                         <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${dot}`} />
-                        <p className="text-sm text-stone-300 leading-snug">{msg}</p>
+                        <p className="text-sm text-[#4a3728] leading-snug">{msg}</p>
                       </div>
                     )
                   })}

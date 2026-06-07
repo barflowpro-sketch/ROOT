@@ -480,7 +480,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
 
       {/* Subscription banner */}
       {isFree && (
-        <div className="bg-stone-700/50 border-b border-[#e4d0b8] px-6 py-4">
+        <div className="bg-amber-50 border-b border-[#e4d0b8] px-6 py-4">
           <div className="max-w-lg mx-auto flex items-center justify-between gap-4">
             <div>
               <p className="text-sm font-semibold text-[#4a3728]">Free plan</p>
@@ -712,7 +712,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                     {(profile.service_groups[category] || []).map(type => (
                       <div key={type} className="space-y-1.5">
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 px-4 py-2.5 rounded-xl border border-[#e4d0b8] bg-stone-700 text-sm text-[#1a0e06]">{type}</div>
+                          <div className="flex-1 px-4 py-2.5 rounded-xl border border-[#e4d0b8] bg-white text-sm text-[#1a0e06]">{type}</div>
                           <button onClick={() => removeServiceType(category, type)} className="w-8 h-8 flex items-center justify-center text-[#b8a090] hover:text-red-400 transition-colors text-lg">×</button>
                         </div>
                         <div className="flex gap-2 pr-10">
@@ -720,7 +720,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-600 text-sm">$</span>
                             <input type="number" min="0" placeholder="Price" value={profile.service_prices[type] || ''}
                               onChange={e => setProfile(p => ({ ...p, service_prices: { ...p.service_prices, [type]: e.target.value } }))}
-                              className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-[#e4d0b8] bg-stone-700 text-amber-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-[#b8a090]" />
+                              className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-[#e4d0b8] bg-white text-amber-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-[#b8a090]" />
                           </div>
                           <select value={profile.service_durations[type] || ''}
                             onChange={e => setProfile(p => ({ ...p, service_durations: { ...p.service_durations, [type]: e.target.value } }))}
@@ -756,7 +756,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                 {(profile.service_groups['Other'] || []).map(type => (
                   <div key={type} className="space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 px-4 py-2.5 rounded-xl border border-[#e4d0b8] bg-stone-700 text-sm text-[#1a0e06]">{type}</div>
+                      <div className="flex-1 px-4 py-2.5 rounded-xl border border-[#e4d0b8] bg-white text-sm text-[#1a0e06]">{type}</div>
                       <button onClick={() => removeServiceType('Other', type)} className="w-8 h-8 flex items-center justify-center text-[#b8a090] hover:text-red-400 transition-colors text-lg">×</button>
                     </div>
                     <div className="flex gap-2">
@@ -764,7 +764,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9c7a5e] text-sm">$</span>
                         <input type="number" min="0" placeholder="Price" value={profile.service_prices[type] || ''}
                           onChange={e => setProfile(p => ({ ...p, service_prices: { ...p.service_prices, [type]: e.target.value } }))}
-                          className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-[#e4d0b8] bg-stone-700 text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-[#b8a090]" />
+                          className="w-full pl-7 pr-3 py-2.5 rounded-xl border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-[#b8a090]" />
                       </div>
                       <select value={profile.service_durations[type] || ''}
                         onChange={e => setProfile(p => ({ ...p, service_durations: { ...p.service_durations, [type]: e.target.value } }))}
@@ -819,7 +819,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                 <select
                   value={profile.available_start}
                   onChange={e => setProfile(p => ({ ...p, available_start: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-xl border border-[#e4d0b8] bg-stone-700 text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+                  className="w-full px-3 py-2 rounded-xl border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
                 >
                   {HOUR_SLOTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                 </select>
@@ -829,7 +829,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
                 <select
                   value={profile.available_end}
                   onChange={e => setProfile(p => ({ ...p, available_end: e.target.value }))}
-                  className="w-full px-3 py-2 rounded-xl border border-[#e4d0b8] bg-stone-700 text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
+                  className="w-full px-3 py-2 rounded-xl border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-700"
                 >
                   {HOUR_SLOTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
                 </select>
@@ -891,7 +891,7 @@ export default function SpecialistProfilePage({ user, onAdmin }) {
         </div>
 
         {/* Invite clients */}
-        <div className="bg-stone-700 border border-[#e4d0b8] rounded-2xl p-5 space-y-4">
+        <div className="bg-white border border-[#e4d0b8] rounded-2xl p-5 space-y-4">
           <div>
             <h2 className="text-sm font-bold text-[#1a0e06] mb-1">Invite your existing clients</h2>
             <p className="text-xs text-[#9c7a5e] leading-relaxed">
