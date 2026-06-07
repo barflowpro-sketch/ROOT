@@ -54,48 +54,48 @@ export default function AccountSettingsPage({ user, onBack, role }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-stone-800 overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-[#fdf7f0] overflow-y-auto">
       {showFeedback && (
         <FeedbackModal userId={user.id} role={role || 'specialist'} onClose={() => setShowFeedback(false)} />
       )}
-      <header className="sticky top-0 bg-stone-800/95 backdrop-blur border-b border-stone-600 px-6 py-4 flex items-center gap-3 z-10">
+      <header className="sticky top-0 bg-[#fdf7f0]/95 backdrop-blur border-b border-[#e4d0b8] px-6 py-4 flex items-center gap-3 z-10">
         <button
           onClick={onBack}
-          className="text-stone-400 hover:text-stone-200 transition-colors text-sm flex items-center gap-1.5"
+          className="text-[#7c5c3e] hover:text-[#1a0e06] transition-colors text-sm flex items-center gap-1.5"
         >
           ← Back
         </button>
-        <span className="text-sm font-semibold text-stone-100">Account Settings</span>
+        <span className="text-sm font-semibold text-[#1a0e06]">Account Settings</span>
       </header>
 
       <div className="max-w-lg mx-auto px-6 py-8 space-y-8">
 
         {/* Email */}
         <div>
-          <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">Account</h2>
-          <div className="bg-stone-700 border border-stone-600 rounded-xl px-4 py-3">
-            <p className="text-xs text-stone-500">Signed in as</p>
-            <p className="text-sm text-stone-200 mt-0.5">{user.email}</p>
+          <h2 className="text-xs font-medium text-[#7c5c3e] uppercase tracking-wider mb-3">Account</h2>
+          <div className="bg-[#f5ede0] border border-[#e4d0b8] rounded-xl px-4 py-3">
+            <p className="text-xs text-[#9c7a5e]">Signed in as</p>
+            <p className="text-sm text-[#1a0e06] mt-0.5">{user.email}</p>
           </div>
         </div>
 
         {/* Change password */}
         <div>
-          <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">Change Password</h2>
+          <h2 className="text-xs font-medium text-[#7c5c3e] uppercase tracking-wider mb-3">Change Password</h2>
           <div className="space-y-3">
             <input
               type="password"
               value={newPassword}
               onChange={e => setNewPassword(e.target.value)}
               placeholder="New password"
-              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[#b8a090]"
             />
             <input
               type="password"
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
               placeholder="Confirm new password"
-              className="w-full px-4 py-3 rounded-xl border border-stone-600 bg-stone-700 text-stone-100 text-sm focus:outline-none focus:ring-2 focus:ring-amber-700 placeholder:text-stone-600"
+              className="w-full px-4 py-3 rounded-xl border border-[#e4d0b8] bg-white text-[#1a0e06] text-sm focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[#b8a090]"
             />
             {pwMessage && (
               <p className={`text-xs ${pwMessage.error ? 'text-red-400' : 'text-green-400'}`}>{pwMessage.text}</p>
@@ -112,10 +112,10 @@ export default function AccountSettingsPage({ user, onBack, role }) {
 
         {/* Feedback */}
         <div>
-          <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">Feedback</h2>
+          <h2 className="text-xs font-medium text-[#7c5c3e] uppercase tracking-wider mb-3">Feedback</h2>
           <button
             onClick={() => setShowFeedback(true)}
-            className="w-full py-3 bg-stone-700 border border-stone-600 text-stone-300 rounded-xl text-sm font-medium hover:bg-stone-600 transition-colors"
+            className="w-full py-3 bg-[#f5ede0] border border-[#e4d0b8] text-[#4a3728] rounded-xl text-sm font-medium hover:bg-[#e8d5b7] transition-colors"
           >
             Send feedback
           </button>
@@ -123,10 +123,10 @@ export default function AccountSettingsPage({ user, onBack, role }) {
 
         {/* Sign out */}
         <div>
-          <h2 className="text-xs font-medium text-stone-400 uppercase tracking-wider mb-3">Session</h2>
+          <h2 className="text-xs font-medium text-[#7c5c3e] uppercase tracking-wider mb-3">Session</h2>
           <button
             onClick={() => supabase.auth.signOut()}
-            className="w-full py-3 bg-stone-600 text-stone-300 rounded-xl text-sm font-medium hover:bg-stone-700 transition-colors"
+            className="w-full py-3 bg-[#e8d5b7] text-[#4a3728] rounded-xl text-sm font-medium hover:bg-[#f5ede0] transition-colors"
           >
             Sign out
           </button>
@@ -138,17 +138,17 @@ export default function AccountSettingsPage({ user, onBack, role }) {
           {!deleteConfirm ? (
             <button
               onClick={() => setDeleteConfirm(true)}
-              className="w-full py-3 bg-stone-700 border border-red-900 text-red-400 rounded-xl text-sm font-medium hover:bg-red-950 transition-colors"
+              className="w-full py-3 bg-[#f5ede0] border border-red-900 text-red-400 rounded-xl text-sm font-medium hover:bg-red-950 transition-colors"
             >
               Delete account
             </button>
           ) : (
-            <div className="bg-stone-700 border border-red-900 rounded-xl p-5 space-y-4">
-              <p className="text-sm text-stone-300">This will permanently delete your account and all your data. This cannot be undone.</p>
+            <div className="bg-[#f5ede0] border border-red-900 rounded-xl p-5 space-y-4">
+              <p className="text-sm text-[#4a3728]">This will permanently delete your account and all your data. This cannot be undone.</p>
               <div className="flex gap-2">
                 <button
                   onClick={() => setDeleteConfirm(false)}
-                  className="flex-1 py-3 bg-stone-600 text-stone-400 rounded-xl text-sm font-medium hover:bg-stone-700 transition-colors"
+                  className="flex-1 py-3 bg-[#e8d5b7] text-[#7c5c3e] rounded-xl text-sm font-medium hover:bg-[#f5ede0] transition-colors"
                 >
                   Cancel
                 </button>
