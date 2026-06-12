@@ -1,4 +1,4 @@
-package com.root.app;
+package com.rootbooking.app;
 
 import com.getcapacitor.BridgeActivity;
 
